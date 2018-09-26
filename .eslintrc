@@ -1,0 +1,69 @@
+{
+  "extends": "eslint:recommended", // https://eslint.org/docs/rules/
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "env": {
+    "es6": true,          // es6 global variables
+    "browser": true,      // browser global variables.
+    "node": true,         // Node.js global variables and Node.js-specific rules.
+    "worker": true,       // web workers global variables.
+    "amd": false,         // defines require() and define() as global variables as per the amd spec.
+    "mocha": true,        // adds all of the Mocha testing global variables.
+    "jasmine": false,     // adds all of the Jasmine testing global variables for version 1.3 and 2.0.
+    "phantomjs": false,   // phantomjs global variables.
+    "jquery": false,      // jquery global variables.
+    "prototypejs": false, // prototypejs global variables.
+    "shelljs": false,     // shelljs global variables.
+    "meteor": false,      // meteor global variables.
+    "mongo": false,       // mongo global variables.
+    "applescript": false, // applescript global variables.
+  },
+
+  "rules": {
+    // Best Practices
+    "curly": "error",                 // specify curly brace conventions for all control statements
+    "no-eval": "error",               // disallow use of eval()
+    "no-extend-native": "error",      // disallow adding to native types
+    "no-new-wrappers": "error",       // disallows creating new instances of String, Number, and Boolean
+    "no-with": "error",               // disallow use of the with statement
+    "space-infix-ops": "error",       // ensure space between every element.
+    "comma-spacing": "error",         // ensure no space before comma and space after comma
+    "keyword-spacing": "error",       // ensure space after keyword
+    "no-shadow": "error",             // disallow variable from shadowing variables declared in the outer scope
+    "eqeqeq": ["warn", "smart"], // https://eslint.org/docs/rules/eqeqeq#smart
+
+    // Stylistic Issues
+    "array-bracket-spacing": ["error", "never"], // enforce spacing inside array brackets (off by default)
+    "indent": ["error", 4, {
+      SwitchCase: 1
+    }],                      // this option sets a specific tab width for your code (off by default)
+    "no-array-constructor": "error",             // disallow use of the Array constructor
+    "no-new-object": "error",                    // disallow use of the Object constructor
+    "object-curly-spacing": ["warn", "never"],  // require or disallow padding inside curly braces (off by default)
+    "semi": "error",                             // require or disallow use of semicolons instead of ASI
+    "dot-notation": "error",
+    "brace-style": ["warn", "1tbs"],
+    "space-before-function-paren": ["warn", "never"],
+    "quotes": ["warn", "single", "avoid-escape"], // http://eslint.org/docs/rules/quotes
+
+    // Performance
+    // when complexity gets to high it's likely a function that needs to be refactored
+    "complexity": ["warn", {max: 5}], // https://eslint.org/docs/rules/complexity
+
+    // Debugging
+    "no-alert": "error",
+
+    "max-len": ["error", 120, 2, {
+      "ignoreComments": true,
+      "ignoreUrls": true
+    }], // Treat anything longer than 120 characters as an error (except if it is a comment or a link)
+  },
+
+  "plugins": [
+    "flowtype"
+  ]
+
+}
