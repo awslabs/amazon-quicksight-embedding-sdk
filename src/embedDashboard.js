@@ -2,6 +2,8 @@
 
 import EmbeddableDashboard from './EmbeddableDashboard';
 import type {EmbeddingOptions} from './lib/types';
+import {OUT_GOING_POST_MESSAGE_EVENT_NAMES} from './lib/constants';
+import constructEvent from './lib/constructEvent';
 
 /**
  * Embed a dashboard.
@@ -20,7 +22,9 @@ function embedDashboard(options: EmbeddingOptions): EmbeddableDashboard {
         width = size.width;
         height = size.height;
     }
-    setTimeout(attachToDom.bind(null, url, container, width, height), 0);
+    const iframe = document.createElement('iframe');
+    dashboard.iframe = iframe;
+    setTimeout(attachToDom.bind(null, iframe, url, container, width, height), 0);
     return dashboard;
 }
 
@@ -28,13 +32,20 @@ function embedDashboard(options: EmbeddingOptions): EmbeddableDashboard {
  * Create a iframe and attach it to parent element.
  * @function
  * @name attachToDom
+ * @param {HTMLIFrameElement} iframe
  * @param {string} url - url of the dashboard to embed with parameter values appended.
  * @param {HTMLElement} container - parent html element.
  * @param {string} width - width of the iframe element.
  * @param {string} height - height of the iframe element.
  */
-function attachToDom(url: string, container: ?HTMLElement, width: ?string, height: ?string) {
-    const iframe = document.createElement('iframe');
+function attachToDom(
+    iframe: ?HTMLIFrameElement,
+    url: string,
+    container: ?HTMLElement,
+    width: ?string,
+    height: ?string
+) {
+    iframe.onload = sendInitialPostMessage.bind(null, iframe, url);
 
     iframe.src = url;
 
@@ -70,5 +81,17 @@ function useParameterValuesInUrl(url: string, parameters: Object) {
 
     return `${url}#${parameterStrings.join('&')}`;
 }
+
+function sendInitialPostMessage(iframe, domain) {
+    if (iframe.contentWindow === null) {
+        setTimeout(sendInitialPostMessage.bind(null, iframe, domain), 100);
+    }
+
+    const eventName = OUT_GOING_POST_MESSAGE_EVENT_NAMES.ESTABLISH_MESSAGE_CHANNEL;
+    const event = constructEvent(eventName);
+    // wait until iframe.contentWindow exists and send message to iframe window
+    iframe.contentWindow.postMessage(event, domain);
+}
+
 
 export default embedDashboard;

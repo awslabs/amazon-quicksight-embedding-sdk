@@ -1,7 +1,9 @@
 // @flow
 
 import eventify from './lib/eventify';
+import constructEvent from './lib/constructEvent';
 import type {EmbeddingOptions} from './lib/types';
+import {IN_GOING_POST_MESSAGE_EVENT_NAMES, OUT_GOING_POST_MESSAGE_EVENT_NAMES} from './lib/constants';
 
 /**
  * Embedding options.
@@ -29,6 +31,7 @@ class EmbeddableDashboard {
     on: Function;
     off: Function;
     trigger: Function;
+    iframe: ?HTMLIFrameElement;
     constructor(options: EmbeddingOptions) {
         if (!options) {
             throw new Error('options is required');
@@ -70,12 +73,24 @@ class EmbeddableDashboard {
         eventify(this);
 
         if (typeof errorCallback === 'function') {
-            this.on('error', errorCallback);
+            this.on(IN_GOING_POST_MESSAGE_EVENT_NAMES.ERROR, errorCallback);
         }
 
         if (typeof loadCallback === 'function') {
-            this.on('load', loadCallback);
+            this.on(IN_GOING_POST_MESSAGE_EVENT_NAMES.LOAD, loadCallback);
         }
+
+        window.addEventListener('message', (function (event) {
+            if (event.source === this.iframe.contentWindow) {
+                this.trigger(event.data.eventName, event.data);
+            }
+        }).bind(this), false);
+
+        this.getUrl = this.getUrl.bind(this);
+        this.getContainer = this.getContainer.bind(this);
+        this.getSize = this.getSize.bind(this);
+        this.getParameters = this.getParameters.bind(this);
+        this.setParameters = this.setParameters.bind(this);
     }
 
     getUrl(): string {
@@ -94,8 +109,11 @@ class EmbeddableDashboard {
         return this.size;
     }
 
-    setParameters(): void {
-        throw new Error('setParameters Not implemented');
+    setParameters(parameters: Object): void {
+        const eventName = OUT_GOING_POST_MESSAGE_EVENT_NAMES.UPDATE_PARAMETER_VALUES;
+        const payload = {parameters};
+        const event = constructEvent(eventName, payload);
+        this.iframe.contentWindow.postMessage(event, this.url);
     }
 }
 
