@@ -18,22 +18,29 @@ const mockOptions = {
 };
 
 describe('embedDashboard', function () {
-    let dashboard;
+    const dashboard = new embedDashboard(mockOptions);
+
     it ('should return dashboard object after embedding', () => {
-        dashboard = new embedDashboard(mockOptions);
-        expect(dashboard).to.not.equal(undefined);
+        expect(dashboard).to.not.be.undefined;
     });
 
     it ('should attach iframe element to container', () => {
-        expect(dashboard.container.childNodes[0] instanceof HTMLIFrameElement).to.equal(true);
+        const iFrame = dashboard.container.childNodes[0];
+
+        expect(iFrame).to.not.be.undefined;
+        expect(iFrame).to.be.an.instanceof(HTMLIFrameElement);
     });
 
     it ('should update url with encoded parameter values', () => {
-        expect(dashboard.container.childNodes[0].src).to.equal('a test url#p.country=United%20States');
+        const iFrame = dashboard.container.childNodes[0];
+
+        expect(iFrame.src).to.equal('a test url#p.country=United%20States');
     });
 
     it ('should set correct width and height for the iframe', () => {
-        expect(dashboard.container.childNodes[0].width).to.equal('800px');
-        expect(dashboard.container.childNodes[0].height).to.equal('600px');
+        const iFrame = dashboard.container.childNodes[0];
+
+        expect(iFrame.width).to.equal('800px');
+        expect(iFrame.height).to.equal('600px');
     });
 });
