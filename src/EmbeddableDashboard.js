@@ -82,7 +82,7 @@ class EmbeddableDashboard {
 
         window.addEventListener('message', (function (event) {
             if (event.source === this.iframe.contentWindow) {
-                this.trigger(event.data.eventName, event.data);
+                this.trigger(event.data.eventName, event.data.payload);
             }
         }).bind(this), false);
 
