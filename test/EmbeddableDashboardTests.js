@@ -13,7 +13,7 @@ const mockOptions = {
     height: '600px'
 };
 
-describe('EmbeddableDashboard', function () {
+describe('EmbeddableDashboard', function() {
     let dashboard;
     it ('should construct basic object correctly', () => {
         dashboard = new EmbeddableDashboard(mockOptions);

@@ -45,6 +45,10 @@ function attachToDom(
     width: ?string,
     height: ?string
 ) {
+    if (iframe == null) {
+        return;
+    }
+
     iframe.onload = sendInitialPostMessage.bind(null, iframe, url);
 
     iframe.src = url;

@@ -17,7 +17,7 @@ const mockOptions = {
     }
 };
 
-describe('embedDashboard', function () {
+describe('embedDashboard', function() {
     const dashboard = new embedDashboard(mockOptions);
 
     it ('should return dashboard object after embedding', () => {

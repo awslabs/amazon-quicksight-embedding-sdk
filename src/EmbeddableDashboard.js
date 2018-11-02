@@ -31,7 +31,9 @@ class EmbeddableDashboard {
     on: Function;
     off: Function;
     trigger: Function;
-    iframe: ?HTMLIFrameElement;
+    iframe: HTMLIFrameElement;
+
+    /* eslint-disable complexity */
     constructor(options: EmbeddingOptions) {
         if (!options) {
             throw new Error('options is required');
@@ -64,9 +66,9 @@ class EmbeddableDashboard {
         this.parameters = parameters;
 
         const width = options.width ||
-            (this.container && this.container.offsetWidth ? this.container.offsetWidth + 'px' : undefined);
+            (this.container.offsetWidth ? this.container.offsetWidth + 'px' : undefined);
         const height = options.height ||
-            (this.container && this.container.offsetWidth ? this.container.offsetWidth + 'px' : undefined);
+            (this.container.offsetHeight ? this.container.offsetHeight + 'px' : undefined);
 
         this.size = {width, height};
 
@@ -80,17 +82,17 @@ class EmbeddableDashboard {
             this.on(IN_GOING_POST_MESSAGE_EVENT_NAMES.LOAD, loadCallback);
         }
 
-        window.addEventListener('message', (function (event) {
-            if (event.source === this.iframe.contentWindow) {
+        window.addEventListener('message', (function(event) {
+            if (event.source === (this.iframe && this.iframe.contentWindow)) {
                 this.trigger(event.data.eventName, event.data.payload);
             }
         }).bind(this), false);
 
-        this.getUrl = this.getUrl.bind(this);
-        this.getContainer = this.getContainer.bind(this);
-        this.getSize = this.getSize.bind(this);
-        this.getParameters = this.getParameters.bind(this);
-        this.setParameters = this.setParameters.bind(this);
+        (this:any).getContainer = this.getContainer.bind(this);
+        (this:any).getParameters = this.getParameters.bind(this);
+        (this:any).getSize = this.getSize.bind(this);
+        (this:any).getUrl = this.getUrl.bind(this);
+        (this:any).setParameters = this.setParameters.bind(this);
     }
 
     getUrl(): string {
