@@ -1,0 +1,3 @@
+test/
+*.sh
+webpack.config.js
