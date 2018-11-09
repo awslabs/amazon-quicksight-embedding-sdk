@@ -67,10 +67,8 @@ class EmbeddableDashboard {
 
         this.parameters = parameters;
 
-        const width = options.width ||
-            (this.container.offsetWidth ? this.container.offsetWidth + 'px' : undefined);
-        const height = options.height ||
-            (this.container.offsetHeight ? this.container.offsetHeight + 'px' : undefined);
+        const width = options.width || '100%';
+        const height = options.height || '100%';
 
         this.size = {width, height};
 
