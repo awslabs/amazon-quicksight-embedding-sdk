@@ -6,6 +6,7 @@ import eventify from './lib/eventify';
 import constructEvent from './lib/constructEvent';
 import type {EmbeddingOptions} from './lib/types';
 import {IN_GOING_POST_MESSAGE_EVENT_NAMES, OUT_GOING_POST_MESSAGE_EVENT_NAMES} from './lib/constants';
+import punycode from 'punycode';
 
 /**
  * Embedding options.
@@ -17,6 +18,7 @@ import {IN_GOING_POST_MESSAGE_EVENT_NAMES, OUT_GOING_POST_MESSAGE_EVENT_NAMES} f
  * @property {Object} parameters
  * @property {string} width - width of the iframe
  * @property {string} height - height of the iframe
+ * @property {string} scrolling
  */
 
 /**
@@ -29,7 +31,6 @@ class EmbeddableDashboard {
     url: string;
     container: ?HTMLElement;
     parameters: ?Object;
-    size: ?Object;
     on: Function;
     off: Function;
     trigger: Function;
@@ -67,10 +68,7 @@ class EmbeddableDashboard {
 
         this.parameters = parameters;
 
-        const width = options.width || '100%';
-        const height = options.height || '100%';
-
-        this.size = {width, height};
+        this.iframe = createIframe(options);
 
         eventify(this);
 
@@ -90,7 +88,6 @@ class EmbeddableDashboard {
 
         (this:any).getContainer = this.getContainer.bind(this);
         (this:any).getParameters = this.getParameters.bind(this);
-        (this:any).getSize = this.getSize.bind(this);
         (this:any).getUrl = this.getUrl.bind(this);
         (this:any).setParameters = this.setParameters.bind(this);
     }
@@ -107,16 +104,62 @@ class EmbeddableDashboard {
         return this.parameters;
     }
 
-    getSize(): ?Object {
-        return this.size;
-    }
-
     setParameters(parameters: Object): void {
         const eventName = OUT_GOING_POST_MESSAGE_EVENT_NAMES.UPDATE_PARAMETER_VALUES;
         const payload = {parameters};
         const event = constructEvent(eventName, payload);
         this.iframe.contentWindow.postMessage(event, this.url);
     }
+}
+
+function createIframe(options: EmbeddingOptions): HTMLIFrameElement {
+    const {width, height, url, scrolling} = options;
+    const iframe = document.createElement('iframe');
+    iframe.className = 'quicksight-embedding-iframe';
+    iframe.width = width || '100%';
+    iframe.height = height || '100%';
+    iframe.scrolling = scrolling || 'no';
+    iframe.onload = sendInitialPostMessage.bind(null, iframe, url);
+    iframe.src = getIframeSrc(options);
+    return iframe;
+}
+
+function getIframeSrc(options): string {
+    const {url, parameters} = options;
+    let src = url + '&punyCodeEmbedOrigin=' + punycode.encode(window.location.origin + '/');
+    if (parameters) {
+        return useParameterValuesInUrl(src, parameters);
+    }
+    return src;
+}
+
+/**
+ * Use parameter values in url.
+ * @function
+ * @name useParameterValuesInUrl
+ * @param {string} url - url of the dashboard to embed.
+ * @param {Object} parameters
+ */
+function useParameterValuesInUrl(url: string, parameters: Object): string {
+    const parameterNames = Object.keys(parameters);
+    const parameterStrings = parameterNames.map(name => {
+        const encodedName = encodeURIComponent(name);
+        const encodedValue = encodeURIComponent(parameters[name]);
+        return `p.${encodedName}=${encodedValue}`;
+    });
+
+    return `${url}#${parameterStrings.join('&')}`;
+}
+
+function sendInitialPostMessage(iframe: HTMLIFrameElement, domain: string): void {
+    if (iframe.contentWindow === null) {
+        setTimeout(sendInitialPostMessage.bind(null, iframe, domain), 100);
+    }
+
+    const eventName = OUT_GOING_POST_MESSAGE_EVENT_NAMES.ESTABLISH_MESSAGE_CHANNEL;
+    const event = constructEvent(eventName);
+    // wait until iframe.contentWindow exists and send message to iframe window
+    iframe.contentWindow.postMessage(event, domain);
 }
 
 export default EmbeddableDashboard;

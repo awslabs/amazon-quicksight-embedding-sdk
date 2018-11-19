@@ -9,5 +9,6 @@ export type EmbeddingOptions = {
     loadCallback: ?Function,
     parameters: ?Object,
     width: ?string,
-    height: ?string
+    height: ?string,
+    scrolling: ?string
 };
