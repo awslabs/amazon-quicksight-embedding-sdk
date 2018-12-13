@@ -2,7 +2,7 @@
 Thank you for using the Amazon QuickSight JavaScript SDK. You can use this SDK to embed Amazon QuickSight dashboards on HTML pages within your web applications.
 
 ## Usage
-Before you can embed an Amazon QuickSight dashboard, you need to publish it and ensure that users are granted necessary permissions. For more information, see  [Embedding Amazon QuickSight Dashboards](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding.html) in the Amazon QuickSight User Guide..
+Before you can embed an Amazon QuickSight dashboard, you need to publish it and ensure that users are granted necessary permissions. For more information, see  [Embedding Amazon QuickSight Dashboards](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-dashboards.html) in the Amazon QuickSight User Guide..
 
 After a dashboard is ready to be embedded, follow the steps below to embed an Amazon QuickSight dashboard in this [example](#example):
 
@@ -38,7 +38,7 @@ Set up the dashboard so you can embed it.
     };
 ```
 ####Url element (required)
-I you haven't done it yet, follow [Embedding Amazon QuickSight Dashboards](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding.html) in the Amazon QuickSight User Guide to generate the url.
+If you haven't done it yet, follow [Embedding Amazon QuickSight Dashboards](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-dashboards.html) in the Amazon QuickSight User Guide to generate the url.
 
 ####Container element (required)
 The `container` element is the parent HTMLElement where we're going to embed the dashboard. You can make it one of the following: 
@@ -161,8 +161,8 @@ can control the dashboard from your app page.
                     width: "1000px"
                 };
                 dashboard = QuickSightEmbedding.embedDashboard(options);
-                dashboard.on("error", onDashboardLoad);
-                dashboard.on("load", onError);
+                dashboard.on("error", onError);
+                dashboard.on("load", onDashboardLoad);
             }
 
             function onCountryChange(obj) {
