@@ -11,7 +11,7 @@ Do one of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
 ```
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.2/dist/quicksight-embedding-js-sdk.min.js" />
+    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js" />
 ```
 
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
@@ -41,10 +41,10 @@ Set up the dashboard so you can embed it.
         width: "1000px"
     };
 ```
-####Url element (required)
+#### Url element (required)
 If you haven't done it yet, follow [Embedding Amazon QuickSight Dashboards](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-dashboards.html) in the Amazon QuickSight User Guide to generate the url.
 
-####Container element (required)
+#### Container element (required)
 The `container` element is the parent HTMLElement where we're going to embed the dashboard. You can make it one of the following: 
 
 -  Option 1: It can be an HTMLElement:
@@ -61,12 +61,12 @@ The `parameters` element is an object that contains key:value pairs for paramete
 It allows you to set initial parameter values for your dashboard. Pass an array as value for multi-value parameters.
 For more information about parameters in Amazon QuickSight, see https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html
 
-####Scrolling element (optional)
-The `scrolling` element lets you set up a specific scrolling experience for your dashboard. Available values are `auto`, `yes`,
+#### Scrolling element (optional)
+The `scrolling` element lets you set up a specific scrolling experience for the iFrame that holds your dashboard. Available values are `auto`, `yes`,
 and `no`. The default value is `no`.
 
-####Width element and height element (optional)
-You can set `width` and `height` for the dashboard. Both of these default to 100%. You can set them to be fixed values:
+#### Width element and height element (optional)
+You can set `width` and `height` for the iFrame that holds your dashboard. Both of these default to 100%. You can set them to be fixed values:
 ```
     height: "700px",
     width: "1000px"
@@ -78,7 +78,14 @@ Or, relative values:
     width: "60%"
 ```
 
- To make your embedded dashboard responsive,  don't set `width` or `height` (leave them at the default: `100%`). Then make the container HTMLElement responsive to screen size change.
+To make your embedded dashboard responsive,  don't set `width` or `height` (leave them at the default: `100%`). Then make the container HTMLElement responsive to screen size change.
+
+
+You can also choose to set height to be `AutoFit` to make the iFrame fit your dashboard height. Use `loadingHeight` to specify the height you'd like to use before actual dashboard height is known:
+```
+    height: "AutoFit",
+    loadingHeight: '700px',
+```
 
 ### Step 3: Embed the dashboard
 
@@ -134,14 +141,20 @@ You can build your own UI to trigger this, so that viewers of the embedded dashb
     dashboard.setParameters({country: "China", states: ["Zhejiang", "Jiangsu"]});
 ```
 
-### Example
+
+## Troubleshooting
+1. Make sure the url you provide in options is not encoded. Don't encode the url as it changes the authcode in the url and breaks the url. Also check that the url responded from server side is not encoded.
+2. Some browsers (e.g. mobile safari) have default setting to "Always Block Cookies". Change the setting to either "Allow form Websites I Visit" or "Always Allow".
+
+
+## Example
 ```html
     <!DOCTYPE html>
     <html>
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.2/dist/quicksight-embedding-js-sdk.min.js" />
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js" />
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
@@ -189,6 +202,16 @@ You can build your own UI to trigger this, so that viewers of the embedded dashb
 
     </html>
 ```
+
+## Change Log
+**1.0.3:**
+* Added "AutoFit" as an new height option.
+
+**1.0.2:**
+* Added support for multi-value parameters.
+
+**1.0.1:**
+* Initial release.
 
 ## License
 Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.

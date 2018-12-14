@@ -10,5 +10,6 @@ export type EmbeddingOptions = {
     parameters: ?Object,
     width: ?string,
     height: ?string,
+    loadingHeight: ?string,
     scrolling: ?string
 };

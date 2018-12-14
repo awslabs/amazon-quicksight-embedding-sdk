@@ -5,7 +5,12 @@
 import eventify from './lib/eventify';
 import constructEvent from './lib/constructEvent';
 import type {EmbeddingOptions} from './lib/types';
-import {IN_GOING_POST_MESSAGE_EVENT_NAMES, OUT_GOING_POST_MESSAGE_EVENT_NAMES} from './lib/constants';
+import {
+    IN_COMING_POST_MESSAGE_EVENT_NAMES,
+    OUT_GOING_POST_MESSAGE_EVENT_NAMES,
+    CLIENT_FACING_EVENT_NAMES,
+    DASHBOARD_SIZE_OPTIONS
+} from './lib/constants';
 import punycode from 'punycode';
 
 /**
@@ -18,6 +23,8 @@ import punycode from 'punycode';
  * @property {Object} parameters
  * @property {string} width - width of the iframe
  * @property {string} height - height of the iframe
+ * @property {string} loadingHeight - when height is set to be "AutoFit",
+ *                                   loadingHeight is used before actual height is received
  * @property {string} scrolling
  */
 
@@ -73,16 +80,26 @@ class EmbeddableDashboard {
         eventify(this);
 
         if (typeof errorCallback === 'function') {
-            this.on(IN_GOING_POST_MESSAGE_EVENT_NAMES.ERROR, errorCallback);
+            this.on(CLIENT_FACING_EVENT_NAMES.error, errorCallback);
         }
 
         if (typeof loadCallback === 'function') {
-            this.on(IN_GOING_POST_MESSAGE_EVENT_NAMES.LOAD, loadCallback);
+            this.on(CLIENT_FACING_EVENT_NAMES.load, loadCallback);
         }
 
         window.addEventListener('message', (function(event) {
+            if (!event) {
+                return;
+            }
             if (event.source === (this.iframe && this.iframe.contentWindow)) {
-                this.trigger(event.data.eventName, event.data.payload);
+                const {eventName, payload} = event.data;
+                this.trigger(CLIENT_FACING_EVENT_NAMES[eventName], payload);
+                if (eventName === IN_COMING_POST_MESSAGE_EVENT_NAMES.RESIZE_EVENT) {
+                    const {height} = options;
+                    if (height === DASHBOARD_SIZE_OPTIONS.AUTO_FIT) {
+                        this.iframe.height = payload.height;
+                    }
+                }
             }
         }).bind(this), false);
 
@@ -113,7 +130,11 @@ class EmbeddableDashboard {
 }
 
 function createIframe(options: EmbeddingOptions): HTMLIFrameElement {
-    const {width, height, url, scrolling} = options;
+    let {width, height} = options;
+    const {loadingHeight, url, scrolling} = options;
+    if (height === DASHBOARD_SIZE_OPTIONS.AUTO_FIT) {
+        height = loadingHeight;
+    }
     const iframe = document.createElement('iframe');
     iframe.className = 'quicksight-embedding-iframe';
     iframe.width = width || '100%';

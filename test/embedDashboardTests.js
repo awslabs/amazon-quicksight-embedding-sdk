@@ -13,8 +13,9 @@ const mockContainer = document.createElement('div');
 const mockOptions = {
     url: mockUrl,
     container:  mockContainer,
-    width: '800px',
-    height: '600px'
+    width: '400px',
+    height: 'AutoFit',
+    loadingHeight: '200px'
 };
 
 describe('embedDashboard', function() {
@@ -29,5 +30,10 @@ describe('embedDashboard', function() {
         iFrame = dashboard.container.childNodes[0];
         expect(iFrame).to.not.be.undefined;
         expect(iFrame).to.be.an.instanceof(HTMLIFrameElement);
+    });
+
+    it ('when set as AutoFit, should use loadingHeight before actual dashboard height is known', () => {
+        expect(iFrame.width).to.be.equals('400px');
+        expect(iFrame.height).to.be.equals('200px');
     });
 });
