@@ -143,9 +143,12 @@ function getIframeSrc(options): string {
 function useParameterValuesInUrl(url: string, parameters: Object): string {
     const parameterNames = Object.keys(parameters);
     const parameterStrings = parameterNames.map(name => {
+        const value = parameters[name];
+        const values = [].concat(value);
         const encodedName = encodeURIComponent(name);
-        const encodedValue = encodeURIComponent(parameters[name]);
-        return `p.${encodedName}=${encodedValue}`;
+        return values.map(paramValue => encodeURIComponent(paramValue))
+            .map(encodedValue => `p.${encodedName}=${encodedValue}`)
+            .join('&');
     });
 
     return `${url}#${parameterStrings.join('&')}`;

@@ -16,7 +16,8 @@ const mockOptions = {
     height: '600px',
     scrolling: 'yes',
     parameters: {
-        country: 'United States'
+        country: 'United States',
+        state: ['California', 'Washington']
     }
 };
 
@@ -59,7 +60,7 @@ describe('EmbeddableDashboard', function() {
     it ('should update url with punycoded current url and encoded parameter values', () => {
         iFrame = dashboard.iframe;
         expect(iFrame.src).to.equal(
-            mockUrl + '&punyCodeEmbedOrigin=null/-#p.country=United%20States'
+            mockUrl + '&punyCodeEmbedOrigin=null/-#p.country=United%20States&p.state=California&p.state=Washington'
         );
     });
 

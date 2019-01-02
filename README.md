@@ -11,7 +11,7 @@ Do one of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
 ```
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.1/dist/quicksight-embedding-js-sdk.min.js />
+    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.2/dist/quicksight-embedding-js-sdk.min.js" />
 ```
 
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
@@ -31,6 +31,10 @@ Set up the dashboard so you can embed it.
         container: document.getElementById("dashboardContainer"),
         parameters: {
             country: "United States"
+            states: [
+                "California",
+                "Washington"
+            ]
         },
         scrolling: "no",
         height: "700px",
@@ -52,10 +56,10 @@ The `container` element is the parent HTMLElement where we're going to embed the
     container: "#dashboardContainer",
 ```
 
-####Parameters element (optional)
-The `parameters` element is an object that contains key:value pairs for parameters names:values. It allows you
-to set initial parameter values for your dashboard. For more information about parameters in Amazon QuickSight, see 
-https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html
+#### Parameters element (optional)
+The `parameters` element is an object that contains key:value pairs for parameters names:values.
+It allows you to set initial parameter values for your dashboard. Pass an array as value for multi-value parameters.
+For more information about parameters in Amazon QuickSight, see https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html
 
 ####Scrolling element (optional)
 The `scrolling` element lets you set up a specific scrolling experience for your dashboard. Available values are `auto`, `yes`,
@@ -124,10 +128,10 @@ If you follow the instructions to generate the correct URL, but you still receiv
 
 
 ### Step 6: Update parameter values (optional)
-Use `dashboard.setParameters()` to update parameter values. You can build your own UI to trigger this, so that viewers of the embedded dashboard
-can control the dashboard from your app page.
+Use `dashboard.setParameters()` to update parameter values. Pass an array as value for multi-value parameters.
+You can build your own UI to trigger this, so that viewers of the embedded dashboard can control the dashboard from your app page.
 ```
-    dashboard.setParameters({country: "Canada"});
+    dashboard.setParameters({country: "China", states: ["Zhejiang", "Jiangsu"]});
 ```
 
 ### Example
@@ -137,7 +141,7 @@ can control the dashboard from your app page.
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.1/dist/quicksight-embedding-js-sdk.min.js />
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.2/dist/quicksight-embedding-js-sdk.min.js" />
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
