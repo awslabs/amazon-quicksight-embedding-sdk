@@ -87,6 +87,15 @@ You can also choose to set height to be `AutoFit` to make the iFrame fit your da
     loadingHeight: '700px',
 ```
 
+Note: With AutoFit height enabled, the dashboard's modal (such as modal shown when selected "Export to CSV" for a Table visual) could be hidden
+if the dashboard content is larger than the screen. To solve the issue, you can add the following code to auto-scroll the focus to the modal.
+```
+dashboard.on("SHOW_MODAL_EVENT", () => {
+    window.scrollTo({
+        top: 0 // iFrame top position
+    });
+});
+```
 ### Step 3: Embed the dashboard
 
 Embed the dashboard by calling:
@@ -204,6 +213,9 @@ You can build your own UI to trigger this, so that viewers of the embedded dashb
 ```
 
 ## Change Log
+**1.0.4**
+* Add SHOW_MODAL_EVENT to notify modal is shown in Dashboard
+
 **1.0.3:**
 * Added "AutoFit" as an new height option.
 

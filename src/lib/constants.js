@@ -10,14 +10,16 @@ export const OUT_GOING_POST_MESSAGE_EVENT_NAMES = {
 export const IN_COMING_POST_MESSAGE_EVENT_NAMES = {
     LOAD: 'load',
     ERROR: 'error',
-    RESIZE_EVENT: 'RESIZE_EVENT'
+    RESIZE_EVENT: 'RESIZE_EVENT',
+    SHOW_MODAL_EVENT: 'SHOW_MODAL_EVENT'
 };
 
 // this is a mapping of event names we use internally to the event names we expose to clients
 export const CLIENT_FACING_EVENT_NAMES = {
     load: 'load',
     error: 'error',
-    RESIZE_EVENT: 'resize'
+    RESIZE_EVENT: 'resize',
+    SHOW_MODAL_EVENT: 'SHOW_MODAL_EVENT'
 };
 
 export const DASHBOARD_SIZE_OPTIONS = {
