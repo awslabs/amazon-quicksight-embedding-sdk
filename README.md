@@ -87,6 +87,9 @@ You can also choose to set height to be `AutoFit` to make the iFrame fit your da
     loadingHeight: '700px',
 ```
 
+#### ClassName element (optional)
+The `className` element lets you add additional class names to the iFrame that holds your dashboard.
+
 ### Step 3: Embed the dashboard
 
 Embed the dashboard by calling:
@@ -204,6 +207,9 @@ You can build your own UI to trigger this, so that viewers of the embedded dashb
 ```
 
 ## Change Log
+**1.0.4:**
+* Added "className" embed option.
+
 **1.0.3:**
 * Added "AutoFit" as an new height option.
 
