@@ -21,7 +21,18 @@ Do one of the following:
 ```
     var QuickSightEmbedding = require("amazon-quicksight-embedding-sdk");
 ```
+You can also use ES6 import syntax in place of require:
+```
+    import { embedDashboard } from 'amazon-quicksight-embedding-sdk';
+    
+    const dashboard = embedDashboard(options);
+```
+Alternatively, if you need to load the entire module:
+```
+    import * as QuicksightEmbedding from 'amazon-quicksight-embedding-sdk';
 
+    const dashboard = QuickSightEmbedding.embedDashboard(options);
+```
 
 ### Step 2: Configure the dashboard to embed
 Set up the dashboard so you can embed it.
