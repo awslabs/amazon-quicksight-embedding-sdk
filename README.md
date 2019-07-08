@@ -163,7 +163,7 @@ You can build your own UI to trigger this, so that viewers of the embedded dashb
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js" />
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js" ></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
