@@ -5,9 +5,11 @@
 import {OUT_GOING_POST_MESSAGE_EVENT_NAMES} from './constants';
 
 export default function constructEvent(eventName: string, payload?: Object): Object {
-    const validEventNames = new Set(Object.values(OUT_GOING_POST_MESSAGE_EVENT_NAMES));
+    const isValidEventName = Object
+        .keys(OUT_GOING_POST_MESSAGE_EVENT_NAMES)
+        .some(k => OUT_GOING_POST_MESSAGE_EVENT_NAMES[k] === eventName);
 
-    if (!validEventNames.has(eventName)) {
+    if (!isValidEventName) {
         throw new Error('Unexpected eventName');
     }
 
