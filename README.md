@@ -11,7 +11,7 @@ Do one of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js"></script>
+    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.5/dist/quicksight-embedding-js-sdk.min.js"></script>
 ```
 
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
@@ -183,7 +183,7 @@ To reset a parameter so that it includes all values, you can pass the string `"[
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.5/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
@@ -234,8 +234,12 @@ To reset a parameter so that it includes all values, you can pass the string `"[
 
 ## Change Log
 
+**1.0.5**
+* Fixed compatibility with IE 11 when updating parameter values.
+* Improved README.
+
 **1.0.4**
-* Add SHOW_MODAL_EVENT to notify modal is shown in Dashboard
+* Added SHOW_MODAL_EVENT to notify modal is shown in Dashboard.
 
 **1.0.3:**
 * Added "AutoFit" as an new height option.
