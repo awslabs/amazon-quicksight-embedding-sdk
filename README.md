@@ -10,22 +10,33 @@ After a dashboard is ready to be embedded, follow the steps below to embed an Am
 Do one of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
-```
+```html
     <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js" />
 ```
 
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
-```
+```shell
     npm install amazon-quicksight-embedding-sdk
 ```
-```
+```javascript
     var QuickSightEmbedding = require("amazon-quicksight-embedding-sdk");
 ```
+You can also use ES6 import syntax in place of require:
+```
+    import { embedDashboard } from 'amazon-quicksight-embedding-sdk';
+    
+    const dashboard = embedDashboard(options);
+```
+Alternatively, if you need to load the entire module:
+```
+    import * as QuicksightEmbedding from 'amazon-quicksight-embedding-sdk';
 
+    const dashboard = QuickSightEmbedding.embedDashboard(options);
+```
 
 ### Step 2: Configure the dashboard to embed
 Set up the dashboard so you can embed it.
-```
+```javascript
     var options = {
         url: "https://us-east-1.quicksight.aws.amazon.com/sn/dashboards/dashboardId?isauthcode=true&identityprovider=quicksight&code=authcode",
         container: document.getElementById("dashboardContainer"),
@@ -48,11 +59,11 @@ If you haven't done it yet, follow [Embedding Amazon QuickSight Dashboards](http
 The `container` element is the parent HTMLElement where we're going to embed the dashboard. You can make it one of the following: 
 
 -  Option 1: It can be an HTMLElement:
-```
+```javascript
     container: document.getElementById("dashboardContainer"),
 ```
 -  Option 2: Or, it can be a query selector string:
-```
+```javascript
     container: "#dashboardContainer",
 ```
 
@@ -67,13 +78,13 @@ and `no`. The default value is `no`.
 
 #### Width element and height element (optional)
 You can set `width` and `height` for the iFrame that holds your dashboard. Both of these default to 100%. You can set them to be fixed values:
-```
+```javascript
     height: "700px",
     width: "1000px"
 ```
 
 Or, relative values:
-```
+```javascript
     height: "80%",
     width: "60%"
 ```
@@ -82,9 +93,19 @@ To make your embedded dashboard responsive,  don't set `width` or `height` (leav
 
 
 You can also choose to set height to be `AutoFit` to make the iFrame fit your dashboard height. Use `loadingHeight` to specify the height you'd like to use before actual dashboard height is known:
-```
+```javascript
     height: "AutoFit",
     loadingHeight: '700px',
+```
+
+Note: With AutoFit height enabled, the dashboard's modal (such as modal shown when selected "Export to CSV" for a Table visual) could be hidden
+if the dashboard content is larger than the screen. To solve the issue, you can add the following code to auto-scroll the focus to the modal.
+```
+dashboard.on("SHOW_MODAL_EVENT", () => {
+    window.scrollTo({
+        top: 0 // iFrame top position
+    });
+});
 ```
 
 #### ClassName element (optional)
@@ -93,7 +114,7 @@ The `className` element lets you add additional class names to the iFrame that h
 ### Step 3: Embed the dashboard
 
 Embed the dashboard by calling:
-```
+```javascript
     var dashboard = QuickSightEmbedding.embedDashboard(options);
 ```
 This returns a dashboard object for further action.
@@ -104,12 +125,12 @@ This returns a dashboard object for further action.
 If you want your application to get notified and respond when the Amazon QuickSight dashboard is fully loaded, use a load callback. Choose one of the following:
 
 -  Use options:
-```
+```javascript
     loadCallback: yourLoadCallback,
 ```
 
 - Or, register the "load" event on the returned dashboard object:
-```
+```javascript
     dashboard.on("load", yourLoadCallback);
 ```
 
@@ -119,12 +140,12 @@ If you want your application to get notified and respond when the Amazon QuickSi
 If you want your application get notified and respond when QuickSight dashboard fails to load, use a error callback. Choose one of the following:
 
 - Use options:
-```
+```javascript
     errorCallback: yourErrorCallback,
 ```
 
 - Or, register the "error" event on the returned dashboard object:
-```
+```javascript
      dashboard.on("error", yourErrorCallback);
 ```
 
@@ -140,8 +161,13 @@ If you follow the instructions to generate the correct URL, but you still receiv
 ### Step 6: Update parameter values (optional)
 Use `dashboard.setParameters()` to update parameter values. Pass an array as value for multi-value parameters.
 You can build your own UI to trigger this, so that viewers of the embedded dashboard can control the dashboard from your app page.
-```
+```javascript
     dashboard.setParameters({country: "China", states: ["Zhejiang", "Jiangsu"]});
+```
+
+To reset a parameter so that it includes all values, you can pass the string `"[ALL]"`.
+```javascript
+    dashboard.setParameters({country: "China", states: "[ALL]" });
 ```
 
 
@@ -157,7 +183,7 @@ You can build your own UI to trigger this, so that viewers of the embedded dashb
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js" />
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js" ></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
@@ -207,8 +233,9 @@ You can build your own UI to trigger this, so that viewers of the embedded dashb
 ```
 
 ## Change Log
-**1.0.4:**
-* Added "className" embed option.
+
+**1.0.4**
+* Add SHOW_MODAL_EVENT to notify modal is shown in Dashboard
 
 **1.0.3:**
 * Added "AutoFit" as an new height option.
