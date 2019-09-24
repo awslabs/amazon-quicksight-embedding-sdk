@@ -11,7 +11,7 @@ Do one of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js" />
+    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js"></script>
 ```
 
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
@@ -22,13 +22,13 @@ Do one of the following:
     var QuickSightEmbedding = require("amazon-quicksight-embedding-sdk");
 ```
 You can also use ES6 import syntax in place of require:
-```
+```javascript
     import { embedDashboard } from 'amazon-quicksight-embedding-sdk';
     
     const dashboard = embedDashboard(options);
 ```
 Alternatively, if you need to load the entire module:
-```
+```javascript
     import * as QuicksightEmbedding from 'amazon-quicksight-embedding-sdk';
 
     const dashboard = QuickSightEmbedding.embedDashboard(options);
@@ -100,7 +100,7 @@ You can also choose to set height to be `AutoFit` to make the iFrame fit your da
 
 Note: With AutoFit height enabled, the dashboard's modal (such as modal shown when selected "Export to CSV" for a Table visual) could be hidden
 if the dashboard content is larger than the screen. To solve the issue, you can add the following code to auto-scroll the focus to the modal.
-```
+```javascript
 dashboard.on("SHOW_MODAL_EVENT", () => {
     window.scrollTo({
         top: 0 // iFrame top position
@@ -183,7 +183,7 @@ To reset a parameter so that it includes all values, you can pass the string `"[
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js" ></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.3/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {

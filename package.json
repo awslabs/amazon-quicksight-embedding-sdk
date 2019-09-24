@@ -21,12 +21,7 @@
     "email": "",
     "url": "https://aws.amazon.com/quicksight/"
   },
-  "licenses": [
-    {
-      "type": "Apache 2.0",
-      "url": "https://github.com/awslabs/amazon-quicksight-embedding-sdk/blob/master/LICENSE"
-    }
-  ],
+  "license": "Apache-2.0",
   "devDependencies": {
     "babel-cli": "^6.6.5",
     "babel-core": "^6.26.0",
