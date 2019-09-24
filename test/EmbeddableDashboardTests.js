@@ -18,7 +18,8 @@ const mockOptions = {
     parameters: {
         country: 'United States',
         state: ['California', 'Washington']
-    }
+    },
+    className: 'test-class',
 };
 
 describe('EmbeddableDashboard', function() {
@@ -71,5 +72,9 @@ describe('EmbeddableDashboard', function() {
 
     it ('should set correct scrolling attribute for the iframe', () => {
         expect(iFrame.scrolling).to.equal('yes');
+    });
+
+    it ('should set correct class attribute for the iframe', () => {
+        expect(iFrame.className).to.equal('quicksight-embedding-iframe test-class');
     });
 });

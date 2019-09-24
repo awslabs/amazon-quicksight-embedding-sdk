@@ -107,6 +107,10 @@ dashboard.on("SHOW_MODAL_EVENT", () => {
     });
 });
 ```
+
+#### ClassName element (optional)
+The `className` element lets you add additional class names to the iFrame that holds your dashboard.
+
 ### Step 3: Embed the dashboard
 
 Embed the dashboard by calling:
@@ -229,6 +233,7 @@ To reset a parameter so that it includes all values, you can pass the string `"[
 ```
 
 ## Change Log
+
 **1.0.4**
 * Add SHOW_MODAL_EVENT to notify modal is shown in Dashboard
 

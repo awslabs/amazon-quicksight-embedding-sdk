@@ -131,12 +131,12 @@ class EmbeddableDashboard {
 
 function createIframe(options: EmbeddingOptions): HTMLIFrameElement {
     let {width, height} = options;
-    const {loadingHeight, url, scrolling} = options;
+    const {loadingHeight, url, scrolling, className} = options;
     if (height === DASHBOARD_SIZE_OPTIONS.AUTO_FIT) {
         height = loadingHeight;
     }
     const iframe = document.createElement('iframe');
-    iframe.className = 'quicksight-embedding-iframe';
+    iframe.className = ['quicksight-embedding-iframe', className].join(' ').trim();
     iframe.width = width || '100%';
     iframe.height = height || '100%';
     iframe.scrolling = scrolling || 'no';
