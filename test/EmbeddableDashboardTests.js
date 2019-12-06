@@ -20,6 +20,7 @@ const mockOptions = {
         state: ['California', 'Washington']
     },
     className: 'test-class',
+    locale: 'test-locale'
 };
 
 describe('EmbeddableDashboard', function() {
@@ -61,7 +62,9 @@ describe('EmbeddableDashboard', function() {
     it ('should update url with punycoded current url and encoded parameter values', () => {
         iFrame = dashboard.iframe;
         expect(iFrame.src).to.equal(
-            mockUrl + '&punyCodeEmbedOrigin=null/-#p.country=United%20States&p.state=California&p.state=Washington'
+            mockUrl + 
+            '&punyCodeEmbedOrigin=null/-&locale=test-locale' + 
+            '#p.country=United%20States&p.state=California&p.state=Washington'
         );
     });
 

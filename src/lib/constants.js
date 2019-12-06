@@ -25,3 +25,4 @@ export const CLIENT_FACING_EVENT_NAMES = {
 export const DASHBOARD_SIZE_OPTIONS = {
     AUTO_FIT: 'AutoFit',
 };
+

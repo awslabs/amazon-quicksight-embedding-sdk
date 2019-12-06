@@ -26,6 +26,7 @@ import punycode from 'punycode';
  * @property {string} loadingHeight - when height is set to be "AutoFit",
  *                                   loadingHeight is used before actual height is received
  * @property {string} scrolling
+ * @property {string} locale
  */
 
 /**
@@ -142,15 +143,23 @@ function createIframe(options: EmbeddingOptions): HTMLIFrameElement {
     iframe.scrolling = scrolling || 'no';
     iframe.onload = sendInitialPostMessage.bind(null, iframe, url);
     iframe.src = getIframeSrc(options);
+    iframe.style.border = '0px';
+    iframe.style.padding = '0px';
     return iframe;
 }
 
 function getIframeSrc(options): string {
-    const {url, parameters} = options;
+    const {url, parameters, locale} = options;
     let src = url + '&punyCodeEmbedOrigin=' + punycode.encode(window.location.origin + '/');
+
+    if (locale) {
+        src = src + '&locale=' + locale;
+    }
+
     if (parameters) {
         return useParameterValuesInUrl(src, parameters);
     }
+
     return src;
 }
 

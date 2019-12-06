@@ -11,7 +11,7 @@ Do one of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.5/dist/quicksight-embedding-js-sdk.min.js"></script>
+    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.6/dist/quicksight-embedding-js-sdk.min.js"></script>
 ```
 
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
@@ -49,7 +49,8 @@ Set up the dashboard so you can embed it.
         },
         scrolling: "no",
         height: "700px",
-        width: "1000px"
+        width: "1000px",
+        locale: "en-US"
     };
 ```
 #### Url element (required)
@@ -95,7 +96,7 @@ To make your embedded dashboard responsive,  don't set `width` or `height` (leav
 You can also choose to set height to be `AutoFit` to make the iFrame fit your dashboard height. Use `loadingHeight` to specify the height you'd like to use before actual dashboard height is known:
 ```javascript
     height: "AutoFit",
-    loadingHeight: '700px',
+    loadingHeight: "700px",
 ```
 
 Note: With AutoFit height enabled, the dashboard's modal (such as modal shown when selected "Export to CSV" for a Table visual) could be hidden
@@ -109,7 +110,45 @@ dashboard.on("SHOW_MODAL_EVENT", () => {
 ```
 
 #### ClassName element (optional)
-The `className` element lets you add additional class names to the iFrame that holds your dashboard.
+You can customize style of the iFrame that holds your dashboard by one of the followings:
+
+-  Option 1: Use the "quicksight-embedding-iframe" class we predefined for you:
+```
+quicksight-embedding-iframe {
+    margin: 5px;
+}
+```
+-  Option 2: Or, create your own class and pass in through `className` element:
+```
+your-own-class {
+    margin: 5px;
+}
+```
+```javascript
+    className: "your-own-class",
+```
+
+We've overridden border and padding of the iFrame to be 0px, as setting border and padding on the iFrame might cause unexpected issues.
+If you have to set border and padding on the embedded dashboard, set it on the container div that contains the iFrame.
+
+#### Locale element (optional)
+You can set locale for the embedded dashboard:
+```javascript
+    locale: "en-US",
+```
+Available locale options are:
+```
+en-US (English), 
+de-DE (Deutsch), 
+ja-JP (日本語), 
+es-ES (Español), 
+fr-FR (Français), 
+it-IT (Italiano), 
+pt-BR (Português), 
+ko-KR (한국어), 
+zh-CN (中文 (简体)),
+zh-TW (中文 (繁體))
+```
 
 ### Step 3: Embed the dashboard
 
@@ -162,12 +201,12 @@ If you follow the instructions to generate the correct URL, but you still receiv
 Use `dashboard.setParameters()` to update parameter values. Pass an array as value for multi-value parameters.
 You can build your own UI to trigger this, so that viewers of the embedded dashboard can control the dashboard from your app page.
 ```javascript
-    dashboard.setParameters({country: "China", states: ["Zhejiang", "Jiangsu"]});
+    dashboard.setParameters({country: "United States", states: ["California", "Washington"]});
 ```
 
 To reset a parameter so that it includes all values, you can pass the string `"[ALL]"`.
 ```javascript
-    dashboard.setParameters({country: "China", states: "[ALL]" });
+    dashboard.setParameters({country: "United States", states: "[ALL]" });
 ```
 
 
@@ -183,7 +222,7 @@ To reset a parameter so that it includes all values, you can pass the string `"[
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.5/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.6/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
@@ -204,7 +243,8 @@ To reset a parameter so that it includes all values, you can pass the string `"[
                     },
                     scrolling: "no",
                     height: "700px",
-                    width: "1000px"
+                    width: "1000px",
+                    locale: "en-US"
                 };
                 dashboard = QuickSightEmbedding.embedDashboard(options);
                 dashboard.on("error", onError);
@@ -234,6 +274,9 @@ To reset a parameter so that it includes all values, you can pass the string `"[
 
 ## Change Log
 
+**1.0.6**
+* Supported setting locale.
+
 **1.0.5**
 * Fixed compatibility with IE 11 when updating parameter values.
 * Improved README.
@@ -242,7 +285,7 @@ To reset a parameter so that it includes all values, you can pass the string `"[
 * Added SHOW_MODAL_EVENT to notify modal is shown in Dashboard.
 
 **1.0.3:**
-* Added "AutoFit" as an new height option.
+* Added "AutoFit" as a new height option.
 
 **1.0.2:**
 * Added support for multi-value parameters.
