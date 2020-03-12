@@ -20,7 +20,8 @@ const mockOptions = {
         state: ['California', 'Washington']
     },
     className: 'test-class',
-    locale: 'test-locale'
+    locale: 'test-locale',
+    footerPaddingEnabled: true
 };
 
 describe('EmbeddableDashboard', function() {
@@ -64,6 +65,7 @@ describe('EmbeddableDashboard', function() {
         expect(iFrame.src).to.equal(
             mockUrl + 
             '&punyCodeEmbedOrigin=null/-&locale=test-locale' + 
+            '&footerPaddingEnabled=true' +
             '#p.country=United%20States&p.state=California&p.state=Washington'
         );
     });

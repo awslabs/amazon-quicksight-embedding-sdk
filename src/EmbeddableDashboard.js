@@ -149,11 +149,15 @@ function createIframe(options: EmbeddingOptions): HTMLIFrameElement {
 }
 
 function getIframeSrc(options): string {
-    const {url, parameters, locale} = options;
+    const {url, parameters, locale, footerPaddingEnabled} = options;
     let src = url + '&punyCodeEmbedOrigin=' + punycode.encode(window.location.origin + '/');
 
     if (locale) {
         src = src + '&locale=' + locale;
+    }
+
+    if (footerPaddingEnabled) {
+        src = src + '&footerPaddingEnabled=' + String(footerPaddingEnabled);
     }
 
     if (parameters) {

@@ -150,6 +150,9 @@ zh-CN (中文 (简体)),
 zh-TW (中文 (繁體))
 ```
 
+#### FooterPaddingEnabled element (optional)
+The `footerPaddingEnabled` element adds 22 pixels of space at the bottom of the layout. For example, you can set this to `true` if the "Powered by QuickSight" footer blocks part of your visual. The default value is `false`.
+
 ### Step 3: Embed the dashboard
 
 Embed the dashboard by calling:
