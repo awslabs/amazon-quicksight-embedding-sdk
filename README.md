@@ -11,7 +11,7 @@ Do one of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.6/dist/quicksight-embedding-js-sdk.min.js"></script>
+    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.7/dist/quicksight-embedding-js-sdk.min.js"></script>
 ```
 
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
@@ -50,7 +50,8 @@ Set up the dashboard so you can embed it.
         scrolling: "no",
         height: "700px",
         width: "1000px",
-        locale: "en-US"
+        locale: "en-US",
+        footerPaddingEnabled: true
     };
 ```
 #### Url element (required)
@@ -225,7 +226,7 @@ To reset a parameter so that it includes all values, you can pass the string `"[
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.6/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.7/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
@@ -247,7 +248,8 @@ To reset a parameter so that it includes all values, you can pass the string `"[
                     scrolling: "no",
                     height: "700px",
                     width: "1000px",
-                    locale: "en-US"
+                    locale: "en-US",
+                    footerPaddingEnabled: true
                 };
                 dashboard = QuickSightEmbedding.embedDashboard(options);
                 dashboard.on("error", onError);
@@ -276,6 +278,8 @@ To reset a parameter so that it includes all values, you can pass the string `"[
 ```
 
 ## Change Log
+**1.0.7**
+* Added option to enable footer padding.
 
 **1.0.6**
 * Supported setting locale.
@@ -297,5 +301,5 @@ To reset a parameter so that it includes all values, you can pass the string `"[
 * Initial release.
 
 ## License
-Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: Apache-2.0
