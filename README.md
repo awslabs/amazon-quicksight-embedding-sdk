@@ -41,7 +41,7 @@ Set up the dashboard so you can embed it.
         url: "https://us-east-1.quicksight.aws.amazon.com/sn/dashboards/dashboardId?isauthcode=true&identityprovider=quicksight&code=authcode",
         container: document.getElementById("dashboardContainer"),
         parameters: {
-            country: "United States"
+            country: "United States",
             states: [
                 "California",
                 "Washington"
