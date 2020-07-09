@@ -1,19 +1,36 @@
 # Amazon QuickSight Embedding SDK
-Thank you for using the Amazon QuickSight JavaScript SDK. You can use this SDK to embed Amazon QuickSight dashboards on HTML pages within your web applications.
+Thank you for using the Amazon QuickSight JavaScript SDK. You can use this SDK to embed Amazon QuickSight in your HTML.
 
 ## Usage
-Before you can embed an Amazon QuickSight dashboard, you need to publish it and ensure that users are granted necessary permissions. For more information, see  [Embedding Amazon QuickSight Dashboards](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-dashboards.html) in the Amazon QuickSight User Guide..
+Amazon QuickSight offers two different embedded experiences with options for branding, user isolation with namespaces, and custom UI permissions:
 
-After a dashboard is ready to be embedded, follow the steps below to embed an Amazon QuickSight dashboard in this [example](#example):
+* Embedded authoring portals provide the QuickSight authoring experience
+
+To get started with an embedded authoring portal, you need to make sure that the users are granted the necessary permissions. For more information, see [Embedding the Amazon QuickSight Console](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-quicksight-console.html)
+
+* Embedded dashboards provide an interactive read-only experience
+
+To get started with an embedded dashboard, you need to publish it and also make sure that the users have the necessary permissions. For more information, see  [Embedding Amazon QuickSight Dashboards](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-dashboards.html) in the Amazon QuickSight User Guide. After a dashboard is ready, follow the procedure to embed your Amazon QuickSight dashboard in this [example](#example):
+
+### Setup differences between embedded QuickSight experiences: dashboards and portals
+The process to set up QuickSight embedding is similar in both cases. The differences between setting up the two embedded experiences are as follows:
+
+ 1. You use a different SDK object for each embedded QuickSight experience. You use `embedDashboard` to embed a dashboard, and you use `embedSession` to embed an authoring portal.
+ 2. You use a different API for each embedded experience. For more information, see [QuickSight Embedding APIs](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html)
+ 3. Different options are supported for each embedded experience.
+ * Embedded dashboards are always read-only. The level of interactivity is set when the dashboard is published.
+ * Embedded authoring ports allow the user to create QuickSight assets, just like they can in the AWS console for QuickSight. Exactly what the user can do in the console is controlled by a custom permission profile. The profile can remove abilities such as creating or updating data sources and datasets. You can set also the default visual type. Embedded consoles currently don't support screen scaling in formatting options.
+
+ Details for each option are provided below in [step 2](#Step-2:-Configure-embedding)
 
 ### Step 1: Download and include QuickSight Embedding SDK
-Do one of the following:
+Do ONE of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
     <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.7/dist/quicksight-embedding-js-sdk.min.js"></script>
 ```
-
+*OR*
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
 ```shell
     npm install amazon-quicksight-embedding-sdk
@@ -22,26 +39,41 @@ Do one of the following:
     var QuickSightEmbedding = require("amazon-quicksight-embedding-sdk");
 ```
 You can also use ES6 import syntax in place of require:
+
+#### For the embedded dashboard experience
 ```javascript
     import { embedDashboard } from 'amazon-quicksight-embedding-sdk';
-    
+
     const dashboard = embedDashboard(options);
 ```
 Alternatively, if you need to load the entire module:
 ```javascript
-    import * as QuicksightEmbedding from 'amazon-quicksight-embedding-sdk';
+    import * as QuickSightEmbedding from 'amazon-quicksight-embedding-sdk';
 
     const dashboard = QuickSightEmbedding.embedDashboard(options);
 ```
+#### For the embedded console experience (authoring portals)
+You can also use ES6 import syntax in place of require:
+```javascript
+    import { embedSession } from 'amazon-quicksight-embedding-sdk';
 
-### Step 2: Configure the dashboard to embed
-Set up the dashboard so you can embed it.
+    const session = embedSession(options);
+```
+Alternatively, if you need to load the entire module:
+```javascript
+    import * as QuickSightEmbedding from 'amazon-quicksight-embedding-sdk';
+
+    const session = QuickSightEmbedding.embedSession(options);
+```
+
+### Step 2: Configure embedding
+Set up the embedded QuickSight console options.
 ```javascript
     var options = {
         url: "https://us-east-1.quicksight.aws.amazon.com/sn/dashboards/dashboardId?isauthcode=true&identityprovider=quicksight&code=authcode",
-        container: document.getElementById("dashboardContainer"),
+        container: document.getElementById("embeddingContainer"),
         parameters: {
-            country: "United States"
+            country: "United States",
             states: [
                 "California",
                 "Washington"
@@ -51,35 +83,38 @@ Set up the dashboard so you can embed it.
         height: "700px",
         width: "1000px",
         locale: "en-US",
-        footerPaddingEnabled: true
+        footerPaddingEnabled: true,
+        defaultEmbeddingVisualType: TABLE // this option only applies to experience embedding and will not be used for dashboard embedding
     };
 ```
-#### Url element (required)
-If you haven't done it yet, follow [Embedding Amazon QuickSight Dashboards](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-dashboards.html) in the Amazon QuickSight User Guide to generate the url.
+#### URL element (required)
+If you haven't done it yet, to generate the embedding URL for dashboard embedding, follow [Embedding Amazon QuickSight Dashboards](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-dashboards.html) in the Amazon QuickSight User Guide to generate the url.
+
+To generate the embedding URL for console embedding, follow [Embedding the Amazon QuickSight Console](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-the-quicksight-console.html) in the Amazon QuickSight User Guide to generate the URL.
 
 #### Container element (required)
-The `container` element is the parent HTMLElement where we're going to embed the dashboard. You can make it one of the following: 
+The `container` element is the parent HTMLElement where we're going to embed QuickSight. You can make it one of the following:
 
 -  Option 1: It can be an HTMLElement:
 ```javascript
-    container: document.getElementById("dashboardContainer"),
+    container: document.getElementById("embeddingContainer")
 ```
 -  Option 2: Or, it can be a query selector string:
 ```javascript
-    container: "#dashboardContainer",
+    container: "#embeddingContainer"
 ```
 
 #### Parameters element (optional)
 The `parameters` element is an object that contains key:value pairs for parameters names:values.
-It allows you to set initial parameter values for your dashboard. Pass an array as value for multi-value parameters.
+It allows you to set initial parameter values for your embedded QuickSight session. Pass an array as value for multi-value parameters.
 For more information about parameters in Amazon QuickSight, see https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html
 
 #### Scrolling element (optional)
-The `scrolling` element lets you set up a specific scrolling experience for the iFrame that holds your dashboard. Available values are `auto`, `yes`,
+The `scrolling` element lets you set up a specific scrolling experience for the iFrame that holds your embedded QuickSight session. Available values are `auto`, `yes`,
 and `no`. The default value is `no`.
 
 #### Width element and height element (optional)
-You can set `width` and `height` for the iFrame that holds your dashboard. Both of these default to 100%. You can set them to be fixed values:
+You can set `width` and `height` for the iFrame that holds your embedded QuickSight session. Both of these default to 100%. You can set them to be fixed values:
 ```javascript
     height: "700px",
     width: "1000px"
@@ -91,17 +126,17 @@ Or, relative values:
     width: "60%"
 ```
 
-To make your embedded dashboard responsive,  don't set `width` or `height` (leave them at the default: `100%`). Then make the container HTMLElement responsive to screen size change.
+To make your embedded QuickSight session responsive, don't set `width` or `height` (leave them at the default: `100%`). Then you can make the container HTMLElement responsive to screen size change.
 
 
-You can also choose to set height to be `AutoFit` to make the iFrame fit your dashboard height. Use `loadingHeight` to specify the height you'd like to use before actual dashboard height is known:
+You can also choose to set height to be `AutoFit` to make the iFrame fit your dashboard height. Use `loadingHeight` to specify the height you'd like to use before actual dashboard height is known. **This is currently only supported for dashboard embedding**:
 ```javascript
     height: "AutoFit",
-    loadingHeight: "700px",
+    loadingHeight: "700px"
 ```
 
-Note: With AutoFit height enabled, the dashboard's modal (such as modal shown when selected "Export to CSV" for a Table visual) could be hidden
-if the dashboard content is larger than the screen. To solve the issue, you can add the following code to auto-scroll the focus to the modal.
+Note: With AutoFit height enabled, modals generated by the dashboard can be hidden
+if the content is larger than the screen. An example of this type of modal is the one that displays when you select "Export to CSV" on a Table visual. To solve this issue, you can add the following code to autoscroll the focus to the modal.
 ```javascript
 dashboard.on("SHOW_MODAL_EVENT", () => {
     window.scrollTo({
@@ -129,41 +164,58 @@ your-own-class {
     className: "your-own-class",
 ```
 
-We've overridden border and padding of the iFrame to be 0px, as setting border and padding on the iFrame might cause unexpected issues.
-If you have to set border and padding on the embedded dashboard, set it on the container div that contains the iFrame.
+We've overridden the border and padding of the iFrame to be 0px, because setting border and padding on the iFrame might cause unexpected issues. If you have to set border and padding on the embedded QuickSight session, set it on the container div that contains the iFrame.
 
 #### Locale element (optional)
-You can set locale for the embedded dashboard:
+You can set locale for the embedded QuickSight session:
 ```javascript
     locale: "en-US",
 ```
 Available locale options are:
 ```
-en-US (English), 
-de-DE (Deutsch), 
-ja-JP (日本語), 
-es-ES (Español), 
-fr-FR (Français), 
-it-IT (Italiano), 
-pt-BR (Português), 
-ko-KR (한국어), 
+en-US (English),
+de-DE (Deutsch),
+ja-JP (日本語),
+es-ES (Español),
+fr-FR (Français),
+it-IT (Italiano),
+pt-BR (Português),
+ko-KR (한국어),
 zh-CN (中文 (简体)),
 zh-TW (中文 (繁體))
+```
+
+#### DefaultEmbeddingVisualType for QuickSight console embedding (optional)
+You can set the embedding visual type for embedded sessions. The default visual type provided in the options will be used during visual creating. By default, when you add a new visual in an embedded session, `AutoGraph` is selected by default. This setting can be overridden to `Table` by setting the following option:
+```
+    defaultEmbeddingVisualType: "TABLE"
+```
+
+Available options for default visual types in embedding are:
+```
+AUTO_GRAPH,
+TABLE
 ```
 
 #### FooterPaddingEnabled element (optional)
 The `footerPaddingEnabled` element adds 22 pixels of space at the bottom of the layout. For example, you can set this to `true` if the "Powered by QuickSight" footer blocks part of your visual. The default value is `false`.
 
-### Step 3: Embed the dashboard
+### Step 3: Create the QuickSight session object
 
-Embed the dashboard by calling:
+#### Dashboard embedding
 ```javascript
     var dashboard = QuickSightEmbedding.embedDashboard(options);
 ```
 This returns a dashboard object for further action.
 
+#### Console embedding
+```javascript
+    var session = QuickSightEmbedding.embedSession(options);
+```
+This returns an console session object for further action.
 
 ### Step 4: Setup load callback (optional)
+**This is currently only supported for dashboard embedding.**
 
 If you want your application to get notified and respond when the Amazon QuickSight dashboard is fully loaded, use a load callback. Choose one of the following:
 
@@ -180,7 +232,7 @@ If you want your application to get notified and respond when the Amazon QuickSi
 
 ### Step 5: Setup error callback (optional)
 
-If you want your application get notified and respond when QuickSight dashboard fails to load, use a error callback. Choose one of the following:
+If you want your application get notified and respond when the embedded QuickSight session fails to load, use a error callback. Choose one of the following:
 
 - Use options:
 ```javascript
@@ -192,9 +244,14 @@ If you want your application get notified and respond when QuickSight dashboard 
      dashboard.on("error", yourErrorCallback);
 ```
 
+- To register the "error" event on the returned console session object:
+```javascript
+     session.on("error", yourErrorCallback);
+```
+
 We pass a payload object to your callback function with a specific `payload.errorCode`. Currently, the error codes are:
 
-- `Forbidden` -- the URL's authentication code expired 
+- `Forbidden` -- the URL's authentication code expired
 
 - `Unauthorized` -- the session obtained from the authentication code expired
 
@@ -202,8 +259,11 @@ If you follow the instructions to generate the correct URL, but you still receiv
 
 
 ### Step 6: Update parameter values (optional)
-Use `dashboard.setParameters()` to update parameter values. Pass an array as value for multi-value parameters.
-You can build your own UI to trigger this, so that viewers of the embedded dashboard can control the dashboard from your app page.
+Use `setParameters()` to update parameter values. Pass an array as value for multi-value parameters.
+You can build your own UI to trigger this, so that viewers of the embedded QuickSight session can control it from your app page.
+
+#### Dashboard embedding
+Parameters in an embedded dashboard session can be set by using the following call:
 ```javascript
     dashboard.setParameters({country: "United States", states: ["California", "Washington"]});
 ```
@@ -213,20 +273,34 @@ To reset a parameter so that it includes all values, you can pass the string `"[
     dashboard.setParameters({country: "United States", states: "[ALL]" });
 ```
 
+#### Console embedding
+Parameters in an embedded console session can be set by using the following call:
+```javascript
+    session.setParameters({country: "United States", states: ["California", "Washington"]});
+```
+
+To reset a parameter so that it includes all values, you can pass the string `"[ALL]"`.
+```javascript
+    session.setParameters({country: "United States", states: "[ALL]" });
+```
+
+
 
 ## Troubleshooting
-1. Make sure the url you provide in options is not encoded. Don't encode the url as it changes the authcode in the url and breaks the url. Also check that the url responded from server side is not encoded.
+1. Make sure the URL you provide in options is not encoded. You should avoid using an encoded URL because it breaks the authcode in the URL by changing it. Also, check that the URL sent in the response from the server side is not encoded.
+2. The URL only works if it used with the authcode it came with. The URL and authcode need to be used together. They expire after five minutes, so it's worth checking that you're not troubleshooting an expired combination of URL and authcode.
 2. Some browsers (e.g. mobile safari) have default setting to "Always Block Cookies". Change the setting to either "Allow form Websites I Visit" or "Always Allow".
 
 
 ## Example
+### Dashboard embedding
 ```html
     <!DOCTYPE html>
     <html>
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.7/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.8/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
@@ -238,7 +312,7 @@ To reset a parameter so that it includes all values, you can pass the string `"[
             }
 
             function embedDashboard() {
-                var containerDiv = document.getElementById("dashboardContainer");
+                var containerDiv = document.getElementById("embeddingContainer");
                 var options = {
                     url: "https://us-east-1.quicksight.aws.amazon.com/sn/dashboards/dashboardId?isauthcode=true&identityprovider=quicksight&code=authcode",
                     container: containerDiv,
@@ -271,13 +345,72 @@ To reset a parameter so that it includes all values, you can pass the string `"[
                 <option value="Canada">Canada</option>
             </select>
         </span>
-        <div id="dashboardContainer"></div>
+        <div id="embeddingContainer"></div>
     </body>
 
     </html>
 ```
 
+### QuickSight console embedding
+```html
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <title>QuickSight Console Embedding</title>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.8/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script type="text/javascript">
+            var session
+
+            function onError(payload) {
+                console.log("Do something when the session fails loading");
+            }
+
+            function embedSession() {
+                var containerDiv = document.getElementById("embeddingContainer");
+                var options = {
+                    url: "https://us-east-1.quicksight.aws.amazon.com/sn/dashboards/dashboardId?isauthcode=true&identityprovider=quicksight&code=authcode", // replace this dummy url with the one generated via embedding API
+                    container: containerDiv,
+                    parameters: {
+                        country: "United States"
+                    },
+                    scrolling: "no",
+                    height: "700px",
+                    width: "1000px",
+                    locale: "en-US",
+                    footerPaddingEnabled: true,
+                    defaultEmbeddingVisualType: TABLE, // this option only applies to QuickSight console embedding and is not used for dashboard embedding
+                };
+                session = QuickSightEmbedding.embedSession(options);
+                session.on("error", onError);
+            }
+
+            function onCountryChange(obj) {
+                session.setParameters({country: obj.value});
+            }
+        </script>
+    </head>
+
+    <body onload="embedSession()">
+        <span>
+            <label for="country">Country</label>
+            <select id="country" name="country" onchange="onCountryChange(this)">
+                <option value="United States">United States</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Canada">Canada</option>
+            </select>
+        </span>
+        <div id="embeddingContainer"></div>
+    </body>
+
+    </html>
+```
 ## Change Log
+**1.0.8**
+* Added support for session embedding
+* Added option for default visual type for session embedding
+* Updated Babel to the latest version
+
 **1.0.7**
 * Added option to enable footer padding.
 
