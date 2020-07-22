@@ -4,7 +4,8 @@
 
 export const OUT_GOING_POST_MESSAGE_EVENT_NAMES = {
     ESTABLISH_MESSAGE_CHANNEL: 'establishMessageChannel',
-    UPDATE_PARAMETER_VALUES: 'updateParameterValues'
+    UPDATE_PARAMETER_VALUES: 'updateParameterValues',
+    DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS: 'updateDefaultEmbeddingVisualType',
 };
 
 export const IN_COMING_POST_MESSAGE_EVENT_NAMES = {
@@ -26,3 +27,7 @@ export const DASHBOARD_SIZE_OPTIONS = {
     AUTO_FIT: 'AutoFit',
 };
 
+export const DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS = {
+    AUTO_GRAPH: 'AUTO_GRAPH',
+    TABLE: 'TABLE',
+};

@@ -1,7 +1,7 @@
 // Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import embedDashboard from '../src/embedDashboard';
+import {embedDashboard, embedSession}  from '../src/embed';
 
 import {expect} from 'chai';
 import mockGlobal from 'jsdom-global';
@@ -33,6 +33,26 @@ describe('embedDashboard', function() {
     });
 
     it ('when set as AutoFit, should use loadingHeight before actual dashboard height is known', () => {
+        expect(iFrame.width).to.be.equals('400px');
+        expect(iFrame.height).to.be.equals('200px');
+    });
+});
+
+describe('embedSession', function() {
+    const embeddedSession = new embedSession(mockOptions);
+    let iFrame;
+
+    it ('should return embedded session object after embedding', () => {
+        expect(embeddedSession).to.not.be.undefined;
+    });
+
+    it ('should attach iframe element to container', () => {
+        iFrame = embeddedSession.container.childNodes[0];
+        expect(iFrame).to.not.be.undefined;
+        expect(iFrame).to.be.an.instanceof(HTMLIFrameElement);
+    });
+
+    it ('when set as AutoFit, should use loadingHeight before actual resource height is known', () => {
         expect(iFrame.width).to.be.equals('400px');
         expect(iFrame.height).to.be.equals('200px');
     });

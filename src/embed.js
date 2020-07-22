@@ -2,7 +2,7 @@
 // Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import EmbeddableDashboard from './EmbeddableDashboard';
+import EmbeddableObject from './EmbeddableObject';
 import type {EmbeddingOptions} from './lib/types';
 
 /**
@@ -11,11 +11,24 @@ import type {EmbeddingOptions} from './lib/types';
  * @name embedDashboard
  * @param {EmbeddingOptions} options - options set by customers to embed the dashboard.
  */
-function embedDashboard(options: EmbeddingOptions): EmbeddableDashboard {
-    const dashboard = new EmbeddableDashboard(options);
+function embedDashboard(options: EmbeddingOptions): EmbeddableObject {
+    const dashboard = new EmbeddableObject(options);
     const container = dashboard.getContainer();
     setTimeout(attachToDom.bind(null, dashboard.iframe, container), 0);
     return dashboard;
+}
+
+/**
+ * Embed a session.
+ * @function
+ * @name embedSession
+ * @param {EmbeddingOptions} options - options set by customers to embed the session.
+ */
+function embedSession(options: EmbeddingOptions): EmbeddableObject {
+    const embeddedSession = new EmbeddableObject(options);
+    const container = embeddedSession.getContainer();
+    setTimeout(attachToDom.bind(null, embeddedSession.iframe, container), 0);
+    return embeddedSession;
 }
 
 /**
@@ -39,4 +52,6 @@ function attachToDom(iframe: ?HTMLIFrameElement, container: ?HTMLElement) {
 }
 
 
-export default embedDashboard;
+export {
+    embedDashboard, embedSession
+};

@@ -6,17 +6,18 @@ import eventify from './lib/eventify';
 import constructEvent from './lib/constructEvent';
 import type {EmbeddingOptions} from './lib/types';
 import {
+    CLIENT_FACING_EVENT_NAMES,
+    DASHBOARD_SIZE_OPTIONS,
+    DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS,
     IN_COMING_POST_MESSAGE_EVENT_NAMES,
     OUT_GOING_POST_MESSAGE_EVENT_NAMES,
-    CLIENT_FACING_EVENT_NAMES,
-    DASHBOARD_SIZE_OPTIONS
 } from './lib/constants';
 import punycode from 'punycode';
 
 /**
  * Embedding options.
  * @typedef {Object} EmbeddingOptions
- * @property {string} url - url of the dashboard to embed
+ * @property {string} url - url of the session or dashboard to embed
  * @property {HTMLElement | string} container - parent html element or query selector string
  * @property {Function} errorCallback - callback when error occurs
  * @property {Function} loadCallback - callback when visualization data load complete
@@ -30,15 +31,16 @@ import punycode from 'punycode';
  */
 
 /**
- * Embeddable dashboard class.
+ * Embeddable Object (session or dashboard) class.
  * @class
- * @name EmbeddableDashboard
- * @param {EmbeddingOptions} options - options set by customers to embed the dashboard.
+ * @name EmbeddableObject
+ * @param {EmbeddingOptions} options - options set by customers to embed the session or dashboard.
  */
-class EmbeddableDashboard {
+class EmbeddableObject {
     url: string;
     container: ?HTMLElement;
     parameters: ?Object;
+    defaultEmbeddingVisualType: ?string;
     on: Function;
     off: Function;
     trigger: Function;
@@ -58,6 +60,7 @@ class EmbeddableDashboard {
             url,
             container,
             parameters,
+            defaultEmbeddingVisualType,
             errorCallback,
             loadCallback
         } = options;
@@ -75,6 +78,7 @@ class EmbeddableDashboard {
         }
 
         this.parameters = parameters;
+        this.defaultEmbeddingVisualType = defaultEmbeddingVisualType;
 
         this.iframe = createIframe(options);
 
@@ -93,21 +97,17 @@ class EmbeddableDashboard {
                 return;
             }
             if (event.source === (this.iframe && this.iframe.contentWindow)) {
-                const {eventName, payload} = event.data;
-                this.trigger(CLIENT_FACING_EVENT_NAMES[eventName], payload);
-                if (eventName === IN_COMING_POST_MESSAGE_EVENT_NAMES.RESIZE_EVENT) {
-                    const {height} = options;
-                    if (height === DASHBOARD_SIZE_OPTIONS.AUTO_FIT) {
-                        this.iframe.height = payload.height;
-                    }
-                }
+                this.handleMessageEvent(event, options);
             }
         }).bind(this), false);
 
-        (this:any).getContainer = this.getContainer.bind(this);
-        (this:any).getParameters = this.getParameters.bind(this);
-        (this:any).getUrl = this.getUrl.bind(this);
-        (this:any).setParameters = this.setParameters.bind(this);
+        (this: any).getContainer = this.getContainer.bind(this);
+        (this: any).getParameters = this.getParameters.bind(this);
+        (this: any).getDefaultEmbeddingVisualType = this.getDefaultEmbeddingVisualType.bind(this);
+        (this: any).getUrl = this.getUrl.bind(this);
+        (this: any).handleMessageEvent = this.handleMessageEvent.bind(this);
+        (this: any).setParameters = this.setParameters.bind(this);
+        (this: any).setDefaultEmbeddingVisualType = this.setDefaultEmbeddingVisualType.bind(this);
     }
 
     getUrl(): string {
@@ -122,11 +122,42 @@ class EmbeddableDashboard {
         return this.parameters;
     }
 
+    handleMessageEvent(event: Object, options: EmbeddingOptions): void {
+        const {eventName, payload} = event.data;
+        this.trigger(CLIENT_FACING_EVENT_NAMES[eventName], payload);
+        if (eventName === IN_COMING_POST_MESSAGE_EVENT_NAMES.RESIZE_EVENT) {
+            const {height} = options;
+            if (height === DASHBOARD_SIZE_OPTIONS.AUTO_FIT) {
+                this.iframe.height = payload.height;
+            }
+        }
+    }
+
+    getDefaultEmbeddingVisualType(): ?string {
+        return this.defaultEmbeddingVisualType;
+    }
+
     setParameters(parameters: Object): void {
         const eventName = OUT_GOING_POST_MESSAGE_EVENT_NAMES.UPDATE_PARAMETER_VALUES;
         const payload = {parameters};
         const event = constructEvent(eventName, payload);
         this.iframe.contentWindow.postMessage(event, this.url);
+    }
+
+    setDefaultEmbeddingVisualType(defaultEmbeddingVisualType: string): void {
+        const event = this.generateDefaultEmbeddingVisualTypeEvent(defaultEmbeddingVisualType);
+        this.iframe.contentWindow.postMessage(event, this.url);
+    }
+
+    generateDefaultEmbeddingVisualTypeEvent(defaultEmbeddingVisualType: string): ?Object {
+        const eventName = OUT_GOING_POST_MESSAGE_EVENT_NAMES.DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS;
+        if (defaultEmbeddingVisualType == null ||
+            !(defaultEmbeddingVisualType in DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS)) {
+            defaultEmbeddingVisualType = DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS.AUTO_GRAPH;
+        }
+
+        const payload = {defaultEmbeddingVisualType};
+        return constructEvent(eventName, payload);
     }
 }
 
@@ -171,7 +202,7 @@ function getIframeSrc(options): string {
  * Use parameter values in url.
  * @function
  * @name useParameterValuesInUrl
- * @param {string} url - url of the dashboard to embed.
+ * @param {string} url - url of the session or dashboard to embed.
  * @param {Object} parameters
  */
 function useParameterValuesInUrl(url: string, parameters: Object): string {
@@ -199,4 +230,4 @@ function sendInitialPostMessage(iframe: HTMLIFrameElement, domain: string): void
     iframe.contentWindow.postMessage(event, domain);
 }
 
-export default EmbeddableDashboard;
+export default EmbeddableObject;
