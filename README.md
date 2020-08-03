@@ -379,7 +379,7 @@ To reset a parameter so that it includes all values, you can pass the string `"[
                     width: "1000px",
                     locale: "en-US",
                     footerPaddingEnabled: true,
-                    defaultEmbeddingVisualType: TABLE, // this option only applies to QuickSight console embedding and is not used for dashboard embedding
+                    defaultEmbeddingVisualType: "TABLE", // this option only applies to QuickSight console embedding and is not used for dashboard embedding
                 };
                 session = QuickSightEmbedding.embedSession(options);
                 session.on("error", onError);
