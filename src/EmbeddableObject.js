@@ -31,7 +31,7 @@ import punycode from 'punycode';
  */
 
 /**
- * Embeddable Object (session or dashboard) class.
+ * Embeddable Object class.
  * @class
  * @name EmbeddableObject
  * @param {EmbeddingOptions} options - options set by customers to embed the session or dashboard.

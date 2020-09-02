@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import EmbeddableObject from './EmbeddableObject';
+import EmbeddableDashboard from './EmbeddableDashboard';
 import type {EmbeddingOptions} from './lib/types';
 
 /**
@@ -12,10 +13,8 @@ import type {EmbeddingOptions} from './lib/types';
  * @param {EmbeddingOptions} options - options set by customers to embed the dashboard.
  */
 function embedDashboard(options: EmbeddingOptions): EmbeddableObject {
-    const dashboard = new EmbeddableObject(options);
-    const container = dashboard.getContainer();
-    setTimeout(attachToDom.bind(null, dashboard.iframe, container), 0);
-    return dashboard;
+    const dashboard = new EmbeddableDashboard(options);
+    return embedObject(dashboard);
 }
 
 /**
@@ -26,9 +25,13 @@ function embedDashboard(options: EmbeddingOptions): EmbeddableObject {
  */
 function embedSession(options: EmbeddingOptions): EmbeddableObject {
     const embeddedSession = new EmbeddableObject(options);
-    const container = embeddedSession.getContainer();
-    setTimeout(attachToDom.bind(null, embeddedSession.iframe, container), 0);
-    return embeddedSession;
+    return embedObject(embeddedSession);
+}
+
+function embedObject(embeddableObject: EmbeddableObject) {
+    const container = embeddableObject.getContainer();
+    setTimeout(attachToDom.bind(null, embeddableObject.iframe, container), 0);
+    return embeddableObject;
 }
 
 /**

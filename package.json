@@ -37,6 +37,7 @@
     "jsdom": "^11.11.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^7.1.2",
+    "sinon": "^9.0.2",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.3.6"
   },

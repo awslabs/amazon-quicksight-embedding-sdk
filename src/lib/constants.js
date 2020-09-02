@@ -6,6 +6,7 @@ export const OUT_GOING_POST_MESSAGE_EVENT_NAMES = {
     ESTABLISH_MESSAGE_CHANNEL: 'establishMessageChannel',
     UPDATE_PARAMETER_VALUES: 'updateParameterValues',
     DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS: 'updateDefaultEmbeddingVisualType',
+    NAVIGATE_TO_DASHBOARD: 'navigateToDashboard'
 };
 
 export const IN_COMING_POST_MESSAGE_EVENT_NAMES = {

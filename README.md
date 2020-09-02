@@ -218,6 +218,8 @@ This returns a dashboard object for further action.
 ```
 This returns an console session object for further action.
 
+
+
 ### Step 4: Setup load callback (optional)
 **This is currently only supported for dashboard embedding.**
 
@@ -288,6 +290,23 @@ To reset a parameter so that it includes all values, you can pass the string `"[
     session.setParameters({country: "United States", states: "[ALL]" });
 ```
 
+
+### Step 7: Navigate to different dashboard (optional)
+#### Dashboard embedding
+
+To navigate to a different dashboard, use dashboard.navigateToDashboard(options). The input parameter options should contain the dashboardId that you want to navigate to, and also the parameters for that dashboard, for example:
+```javascript
+    var options = {
+        dashboardId: "37a99f75-8230-4409-ac52-e45c652cc21e",
+        parameters: {
+            country: [
+                "United States"
+            ]
+        }
+    };
+    dashboard.navigateToDashboard(options);
+```
+This function is only supported for embedded dashboards.
 
 
 ## Troubleshooting
