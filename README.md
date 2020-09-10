@@ -84,6 +84,7 @@ Set up the embedded QuickSight console options.
         width: "1000px",
         locale: "en-US",
         footerPaddingEnabled: true,
+        printDisabled: false, // use this option to enable or disable print option for dashboard embedding
         defaultEmbeddingVisualType: TABLE // this option only applies to experience embedding and will not be used for dashboard embedding
     };
 ```
@@ -199,6 +200,9 @@ TABLE
 
 #### FooterPaddingEnabled element (optional)
 The `footerPaddingEnabled` element adds 22 pixels of space at the bottom of the layout. For example, you can set this to `true` if the "Powered by QuickSight" footer blocks part of your visual. The default value is `false`.
+
+#### PrintDisabled element (optional)
+The `printDisabled` element can be used to enable or disable print option for dashboard embedding. The default value is `false`. However, the navbar and print option wont be shown anyways, if both undoRedo and reset options are disabled.
 
 ### Step 3: Create the QuickSight session object
 
