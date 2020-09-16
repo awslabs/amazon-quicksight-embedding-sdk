@@ -1,6 +1,6 @@
 //@flow
 import constructEvent from './lib/constructEvent';
-import EmbeddableObject from "./EmbeddableObject";
+import EmbeddableObject from './EmbeddableObject';
 import type {EmbeddingOptions} from './lib/types';
 import {
     OUT_GOING_POST_MESSAGE_EVENT_NAMES,
@@ -15,7 +15,7 @@ class EmbeddableDashboard extends EmbeddableObject {
     navigateToDashboard: Function;
     navigateToSheet: Function;
 
-    constructor(options) {
+    constructor(options: EmbeddingOptions) {
         super(options);
     }
 
