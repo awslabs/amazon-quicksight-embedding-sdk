@@ -6,7 +6,10 @@ export const OUT_GOING_POST_MESSAGE_EVENT_NAMES = {
     ESTABLISH_MESSAGE_CHANNEL: 'establishMessageChannel',
     UPDATE_PARAMETER_VALUES: 'updateParameterValues',
     DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS: 'updateDefaultEmbeddingVisualType',
-    NAVIGATE_TO_DASHBOARD: 'navigateToDashboard'
+    NAVIGATE_TO_DASHBOARD: 'navigateToDashboard',
+    GET_ACTIVE_PARAMETER_VALUES: 'getActiveParameterValues',
+    NAVIGATE_TO_SHEET: 'navigateToSheet',
+    GET_SHEETS: 'getSheets'
 };
 
 export const IN_COMING_POST_MESSAGE_EVENT_NAMES = {
@@ -20,8 +23,12 @@ export const IN_COMING_POST_MESSAGE_EVENT_NAMES = {
 export const CLIENT_FACING_EVENT_NAMES = {
     load: 'load',
     error: 'error',
+    parametersChange: 'parametersChange',
+    selectedSheetChange: 'selectedSheetChange',
     RESIZE_EVENT: 'resize',
-    SHOW_MODAL_EVENT: 'SHOW_MODAL_EVENT'
+    SHOW_MODAL_EVENT: 'SHOW_MODAL_EVENT',
+    GET_ACTIVE_PARAMETER_VALUES: 'GET_ACTIVE_PARAMETER_VALUES',
+    GET_SHEETS: 'GET_SHEETS'
 };
 
 export const DASHBOARD_SIZE_OPTIONS = {

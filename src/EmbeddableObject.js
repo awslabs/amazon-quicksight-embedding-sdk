@@ -21,6 +21,10 @@ import punycode from 'punycode';
  * @property {HTMLElement | string} container - parent html element or query selector string
  * @property {Function} errorCallback - callback when error occurs
  * @property {Function} loadCallback - callback when visualization data load complete
+ * @property {Function} parametersChangeCallback - callback when parameters change occurs
+ * @property {Function} getActiveParametersCallback - callback to get active parameter values
+ * @property {Function} getSheetsCallback - callback to get sheet details
+ * @property {Function} selectedSheetChangeCallback - callback when current sheet is changed
  * @property {Object} parameters
  * @property {string} width - width of the iframe
  * @property {string} height - height of the iframe
@@ -41,6 +45,8 @@ class EmbeddableObject {
     container: ?HTMLElement;
     parameters: ?Object;
     defaultEmbeddingVisualType: ?string;
+    getActiveParametersCallback: ?Function;
+    getSheetsCallback: ?Function;
     on: Function;
     off: Function;
     trigger: Function;
@@ -62,7 +68,9 @@ class EmbeddableObject {
             parameters,
             defaultEmbeddingVisualType,
             errorCallback,
-            loadCallback
+            loadCallback,
+            parametersChangeCallback,
+            selectedSheetChangeCallback
         } = options;
 
         this.url = url;
@@ -92,6 +100,14 @@ class EmbeddableObject {
             this.on(CLIENT_FACING_EVENT_NAMES.load, loadCallback);
         }
 
+        if (typeof parametersChangeCallback === 'function') {
+            this.on(CLIENT_FACING_EVENT_NAMES.parametersChange, parametersChangeCallback);
+        }
+
+        if (typeof selectedSheetChangeCallback === 'function') {
+            this.on(CLIENT_FACING_EVENT_NAMES.selectedSheetChange, selectedSheetChangeCallback);
+        }
+
         window.addEventListener('message', (function(event) {
             if (!event) {
                 return;
@@ -103,6 +119,8 @@ class EmbeddableObject {
 
         (this: any).getContainer = this.getContainer.bind(this);
         (this: any).getParameters = this.getParameters.bind(this);
+        (this: any).getActiveParameterValues = this.getActiveParameterValues.bind(this);
+        (this: any).getSheets = this.getSheets.bind(this);
         (this: any).getDefaultEmbeddingVisualType = this.getDefaultEmbeddingVisualType.bind(this);
         (this: any).getUrl = this.getUrl.bind(this);
         (this: any).handleMessageEvent = this.handleMessageEvent.bind(this);
@@ -120,6 +138,34 @@ class EmbeddableObject {
 
     getParameters(): ?Object {
         return this.parameters;
+    }
+
+    getActiveParameterValues(callback: Function) {
+        if (typeof callback !== 'function') {
+            return;
+        }
+
+        if (this.getActiveParametersCallback) {
+            this.off(CLIENT_FACING_EVENT_NAMES.GET_ACTIVE_PARAMETER_VALUES, this.getActiveParametersCallback);
+        }
+        this.getActiveParametersCallback = callback;
+        this.on(CLIENT_FACING_EVENT_NAMES.GET_ACTIVE_PARAMETER_VALUES, callback);
+        const event = constructEvent(OUT_GOING_POST_MESSAGE_EVENT_NAMES.GET_ACTIVE_PARAMETER_VALUES, {});
+        this.iframe.contentWindow.postMessage(event, this.url);
+    }
+
+    getSheets(callback: Function) {
+        if (typeof callback !== 'function') {
+            return;
+        }
+
+        if (this.getSheetsCallback) {
+            this.off(CLIENT_FACING_EVENT_NAMES.GET_SHEETS, this.getSheetsCallback);
+        }
+        this.getSheetsCallback = callback;
+        this.on(CLIENT_FACING_EVENT_NAMES.GET_SHEETS, callback);
+        const event = constructEvent(OUT_GOING_POST_MESSAGE_EVENT_NAMES.GET_SHEETS, {});
+        this.iframe.contentWindow.postMessage(event, this.url);
     }
 
     handleMessageEvent(event: Object, options: EmbeddingOptions): void {
@@ -180,7 +226,14 @@ function createIframe(options: EmbeddingOptions): HTMLIFrameElement {
 }
 
 function getIframeSrc(options): string {
-    const {url, parameters, locale, footerPaddingEnabled, printEnabled} = options;
+    const {
+        url,
+        parameters,
+        locale,
+        footerPaddingEnabled,
+        printEnabled,
+        sheetTabsDisabled,
+    } = options;
     let src = url + '&punyCodeEmbedOrigin=' + punycode.encode(window.location.origin + '/');
 
     if (locale) {
@@ -189,6 +242,10 @@ function getIframeSrc(options): string {
 
     if (printEnabled) {
         src = src + "&printEnabled=" + String(printEnabled);
+    }
+    
+    if (sheetTabsDisabled) {
+        src = src + "&sheetTabsDisabled=" + String(sheetTabsDisabled);
     }
 
     if (footerPaddingEnabled) {

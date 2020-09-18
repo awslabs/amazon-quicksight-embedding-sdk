@@ -84,6 +84,7 @@ Set up the embedded QuickSight console options.
         width: "1000px",
         locale: "en-US",
         footerPaddingEnabled: true,
+        sheetTabsDisabled: false, // use this option to enable or disable sheet tab controls in dashboard embedding
         printEnabled: false, // use this option to enable or disable print option for dashboard embedding
         defaultEmbeddingVisualType: TABLE // this option only applies to experience embedding and will not be used for dashboard embedding
     };
@@ -204,6 +205,10 @@ The `footerPaddingEnabled` element adds 22 pixels of space at the bottom of the 
 #### PrintEnabled element (optional)
 The `printEnabled` element can be used to enable or disable print option for dashboard embedding. The default value is `false`. And, if both undoRedo and reset options are disabled, the navbar and print option wont be shown anyways, even if printEnabled is true.
 
+#### SheetTabsDisabled element (optional)
+**This is currently only supported for dashboard embedding.**
+The `sheetTabsDisabled` element can be used to enable or disable sheet tab controls in dashboard embedding. The default value is `false`.
+
 ### Step 3: Create the QuickSight session object
 
 #### Dashboard embedding
@@ -308,6 +313,66 @@ To navigate to a different dashboard, use dashboard.navigateToDashboard(options)
 ```
 This function is only supported for embedded dashboards.
 
+### Step 8: Navigate to sheet (optional)
+**This is currently only supported for dashboard embedding.**
+
+If you want to navigate from one sheet to another programmatically, with the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    dashboard.navigateToSheet(sheetId);
+```
+
+### Step 9: Setup parameters change callback (optional)
+**This is currently only supported for dashboard embedding.**
+
+If you want your application to get notified and respond when the parameters in Amazon QuickSight dashboard changes, use the parameter change callback. Choose one of the following:
+
+-  Use options:
+```javascript
+    parametersChangeCallback: yourParametersChangeCallback,
+```
+
+- Or, register the "parametersChange" event on the returned dashboard object:
+```javascript
+    dashboard.on("parametersChange", yourParametersChangeCallback);
+```
+
+### Step 10: Setup selected sheet change callback (optional)
+**This is currently only supported for dashboard embedding.**
+
+If you want your application to get notified and respond when the selected sheet in Amazon QuickSight dashboard changes, use the selected sheet change callback. Choose one of the following:
+
+-  Use options:
+```javascript
+    selectedSheetChangeCallback: yourSelectedSheetChangeCallback,
+```
+
+- Or, register the "selectedSheetChange" event on the returned dashboard object:
+```javascript
+    dashboard.on("selectedSheetChange", yourSelectedSheetChangeCallback);
+```
+
+### Step 11: Get active parameter values (optional)
+**This is currently only supported for dashboard embedding.**
+
+If you want to get the active parameter values, from Amazon Quicksight dashboard in ad-hoc manner, use the below method with a callback:
+
+```javascript
+    dashboard.getActiveParameterValues(yourCallback);
+```
+
+The callback is needed since the process of getting active parameter values is asynchronous, even for ad-hoc fetches.
+
+### Step 12: Get sheets (optional)
+**This is currently only supported for dashboard embedding.**
+
+If you want to get the current set of sheets, from Amazon Quicksight dashboard in ad-hoc manner, use the below method with a callback:
+
+```javascript
+    dashboard.getSheets(yourCallback);
+```
+
+The callback is needed since the process of getting sheets is asynchronous, even for ad-hoc fetches.
 
 ## Troubleshooting
 1. Make sure the URL you provide in options is not encoded. You should avoid using an encoded URL because it breaks the authcode in the URL by changing it. Also, check that the URL sent in the response from the server side is not encoded.

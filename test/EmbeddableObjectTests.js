@@ -30,6 +30,7 @@ const mockOptions = {
     locale: 'test-locale',
     printEnabled: true,
     footerPaddingEnabled: true,
+    sheetTabsDisabled: true,
     trigger: mockFunction,
     defaultEmbeddingVisualType: VALID_DEFAULT_EMBEDDING_VISUAL_TYPE,
 };
@@ -81,7 +82,7 @@ describe('EmbeddableObject', function() {
         expect(iFrame.src).to.equal(
             mockUrl +
             '&punyCodeEmbedOrigin=null/-&locale=test-locale' +
-            '&printEnabled=true&footerPaddingEnabled=true' +
+            '&printEnabled=true&sheetTabsDisabled=true&footerPaddingEnabled=true' +
             '#p.country=United%20States&p.state=California&p.state=Washington'
         );
     });
