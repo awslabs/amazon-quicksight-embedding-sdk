@@ -28,7 +28,7 @@ Do ONE of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.9/dist/quicksight-embedding-js-sdk.min.js"></script>
+    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.10/dist/quicksight-embedding-js-sdk.min.js"></script>
 ```
 *OR*
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
@@ -300,7 +300,7 @@ To reset a parameter so that it includes all values, you can pass the string `"[
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.9/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.10/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
@@ -358,7 +358,7 @@ To reset a parameter so that it includes all values, you can pass the string `"[
 
     <head>
         <title>QuickSight Console Embedding</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.9/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.10/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var session
 
@@ -406,6 +406,11 @@ To reset a parameter so that it includes all values, you can pass the string `"[
     </html>
 ```
 ## Change Log
+**1.0.10**
+* Fixed dashboard embedding issue in IE11
+* Updated elliptic to 6.5.3 to resolve security issues
+* Fixed serialize-javascript vulnerability
+
 **1.0.9**
 * Added support for session embedding
 * Added option for default visual type for session embedding
