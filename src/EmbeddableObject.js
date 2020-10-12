@@ -180,15 +180,15 @@ function createIframe(options: EmbeddingOptions): HTMLIFrameElement {
 }
 
 function getIframeSrc(options): string {
-    const {url, parameters, locale, footerPaddingEnabled, printDisabled} = options;
+    const {url, parameters, locale, footerPaddingEnabled, printEnabled} = options;
     let src = url + '&punyCodeEmbedOrigin=' + punycode.encode(window.location.origin + '/');
 
     if (locale) {
         src = src + '&locale=' + locale;
     }
 
-    if (printDisabled) {
-        src = src + "&printDisabled=" + String(printDisabled);
+    if (printEnabled) {
+        src = src + "&printEnabled=" + String(printEnabled);
     }
 
     if (footerPaddingEnabled) {

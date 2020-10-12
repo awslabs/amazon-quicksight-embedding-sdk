@@ -8,7 +8,7 @@ export type EmbeddingOptions = {
     errorCallback: ?Function,
     loadCallback: ?Function,
     parameters: ?Object,
-    printDisabled: ?boolean,
+    printEnabled: ?boolean,
     defaultEmbeddingVisualType: ?string,
     width: ?string,
     height: ?string,
