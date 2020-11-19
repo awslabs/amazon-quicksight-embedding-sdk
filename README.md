@@ -497,8 +497,8 @@ The callback is needed since the process of getting sheets is asynchronous, even
 **1.0.12**
 * `navigateToDashboard` function for switching to another authorized dashboard without submitting a new URL
 * `navigateToSheet` function for switching to another sheet on an already embedded dashboard
-* `parametersChangeCallback` option to receive a callback after successfully sending parameters to dashboard
-* `selectedSheetChangeCallback` option to receive a callback after successfully navigating to requested sheet
+* `parametersChangeCallback` option to receive a callback when changing parameters in dashboard
+* `selectedSheetChangeCallback` option to receive a callback when sheet is successfully changed on the embedded dashboard
 * `getSheets` function to get list of sheets on currently rendered dashboard in ad-hoc manner
 * `getActiveParameterValues` function to get currently applied parameters in ad-hoc manner
 * `printEnabled` option to add a Print button for embedded dashboard
