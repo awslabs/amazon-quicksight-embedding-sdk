@@ -28,7 +28,7 @@ Do ONE of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.11/dist/quicksight-embedding-js-sdk.min.js"></script>
+    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.12/dist/quicksight-embedding-js-sdk.min.js"></script>
 ```
 *OR*
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
@@ -388,7 +388,7 @@ The callback is needed since the process of getting sheets is asynchronous, even
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.11/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.12/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
@@ -446,7 +446,7 @@ The callback is needed since the process of getting sheets is asynchronous, even
 
     <head>
         <title>QuickSight Console Embedding</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.11/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.12/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var session
 
