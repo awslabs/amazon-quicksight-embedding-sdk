@@ -494,6 +494,16 @@ The callback is needed since the process of getting sheets is asynchronous, even
     </html>
 ```
 ## Change Log
+**1.0.12**
+* `navigateToDashboard` function for switching to another authorized dashboard without submitting a new URL
+* `navigateToSheet` function for switching to another sheet on an already embedded dashboard
+* `parametersChangeCallback` option to receive a callback after successfully sending parameters to dashboard
+* `selectedSheetChangeCallback` option to receive a callback after successfully navigating to requested sheet
+* `getSheets` function to get list of sheets on currently rendered dashboard in ad-hoc manner
+* `getActiveParameterValues` function to get currently applied parameters in ad-hoc manner
+* `printEnabled` option to add a Print button for embedded dashboard
+* `sheetTabsDisabled` option to disable tabs display on a multi-sheet embedded dashboard
+
 **1.0.11**
 * Fixed dashboard embedding issue in IE11
 * Updated elliptic to 6.5.3 to resolve security issues
