@@ -10,6 +10,8 @@ export type EmbeddingOptions = {
     parametersChangeCallback: ?Function,
     selectedSheetChangeCallback: ?Function,
     parameters: ?Object,
+    undoRedoDisabled: ?boolean,
+    resetDisabled: ?boolean,
     printEnabled: ?boolean,
     sheetTabsDisabled: ?boolean,
     defaultEmbeddingVisualType: ?string,
