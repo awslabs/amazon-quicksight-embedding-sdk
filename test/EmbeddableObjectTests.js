@@ -28,6 +28,8 @@ const mockOptions = {
     },
     className: 'test-class',
     locale: 'test-locale',
+    undoRedoDisabled: true,
+    resetDisabled: true,
     printEnabled: true,
     footerPaddingEnabled: true,
     sheetTabsDisabled: true,
@@ -82,6 +84,7 @@ describe('EmbeddableObject', function() {
         expect(iFrame.src).to.equal(
             mockUrl +
             '&punyCodeEmbedOrigin=null/-&locale=test-locale' +
+            '&undoRedoDisabled=true&resetDisabled=true' +
             '&printEnabled=true&sheetTabsDisabled=true&footerPaddingEnabled=true' +
             '#p.country=United%20States&p.state=California&p.state=Washington'
         );

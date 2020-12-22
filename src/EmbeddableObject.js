@@ -231,6 +231,8 @@ function getIframeSrc(options): string {
         parameters,
         locale,
         footerPaddingEnabled,
+        undoRedoDisabled,
+        resetDisabled,
         printEnabled,
         sheetTabsDisabled,
     } = options;
@@ -238,6 +240,14 @@ function getIframeSrc(options): string {
 
     if (locale) {
         src = src + '&locale=' + locale;
+    }
+
+    if (undoRedoDisabled) {
+        src = src + '&undoRedoDisabled=' + String(undoRedoDisabled);
+    }
+
+    if (resetDisabled) {
+        src = src + '&resetDisabled=' + String(resetDisabled);
     }
 
     if (printEnabled) {
