@@ -85,6 +85,8 @@ Set up the embedded QuickSight console options.
         locale: "en-US",
         footerPaddingEnabled: true,
         sheetTabsDisabled: false, // use this option to enable or disable sheet tab controls in dashboard embedding
+        undoRedoDisabled: false, // use this option to enable or disable undo and redo option for dashboard embedding
+        resetDisabled: false, // use this option to enable or disable reset option for dashboard embedding
         printEnabled: false, // use this option to enable or disable print option for dashboard embedding
         defaultEmbeddingVisualType: TABLE // this option only applies to experience embedding and will not be used for dashboard embedding
     };
@@ -201,6 +203,12 @@ TABLE
 
 #### FooterPaddingEnabled element (optional)
 The `footerPaddingEnabled` element adds 22 pixels of space at the bottom of the layout. For example, you can set this to `true` if the "Powered by QuickSight" footer blocks part of your visual. The default value is `false`.
+
+### UndoRedoDisabled element (optional)
+The `undoRedoDisabled` element can be used to enable or disable undo and redo option for dashboard embedding. The default value is `false`.
+
+### ResetDisabled element (optional)
+The `resetDisabled` element can be used to enabled or disable reset option for dashboard embedding. The default value is `false`.
 
 #### PrintEnabled element (optional)
 The `printEnabled` element can be used to enable or disable print option for dashboard embedding. The default value is `false`. And, if both undoRedo and reset options are disabled, the navbar and print option wont be shown anyways, even if printEnabled is true.
