@@ -245,7 +245,7 @@ function getIframeSrc(options): string {
     }
     
     if (sheetTabsDisabled) {
-        src = src + "&sheetTabsDisabled=" + String(sheetTabsDisabled);
+        src = src + '&sheetTabsDisabled=' + String(sheetTabsDisabled);
     }
 
     if (footerPaddingEnabled) {
