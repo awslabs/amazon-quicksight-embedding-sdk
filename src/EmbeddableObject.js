@@ -240,12 +240,12 @@ function getIframeSrc(options): string {
         src = src + '&locale=' + locale;
     }
 
-    if (printEnabled) {
-        src = src + "&printEnabled=" + String(printEnabled);
+    if (!printEnabled) {
+        src = src + '&printEnabled=' + String(printEnabled);
     }
     
     if (sheetTabsDisabled) {
-        src = src + "&sheetTabsDisabled=" + String(sheetTabsDisabled);
+        src = src + '&sheetTabsDisabled=' + String(sheetTabsDisabled);
     }
 
     if (footerPaddingEnabled) {
