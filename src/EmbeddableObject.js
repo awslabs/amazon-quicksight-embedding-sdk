@@ -240,17 +240,18 @@ function getIframeSrc(options): string {
         src = src + '&locale=' + locale;
     }
 
-    if (printEnabled) {
+    if (typeof printEnabled === "boolean" || printEnabled) {
         src = src + "&printEnabled=" + String(printEnabled);
     }
-    
-    if (sheetTabsDisabled) {
+
+    if (typeof sheetTabsDisabled === "boolean" || sheetTabsDisabled) {
         src = src + "&sheetTabsDisabled=" + String(sheetTabsDisabled);
     }
 
-    if (footerPaddingEnabled) {
-        src = src + '&footerPaddingEnabled=' + String(footerPaddingEnabled);
+    if (typeof footerPaddingEnabled === "boolean" || footerPaddingEnabled) {
+        src = src + "&footerPaddingEnabled=" + String(footerPaddingEnabled);
     }
+
 
     if (parameters) {
         return useParameterValuesInUrl(src, parameters);
