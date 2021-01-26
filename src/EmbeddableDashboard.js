@@ -14,6 +14,7 @@ import {
 class EmbeddableDashboard extends EmbeddableObject {
     navigateToDashboard: Function;
     navigateToSheet: Function;
+    initiatePrint: Function;
 
     constructor(options: EmbeddingOptions) {
         super(options);
@@ -42,6 +43,12 @@ class EmbeddableDashboard extends EmbeddableObject {
         const eventName = OUT_GOING_POST_MESSAGE_EVENT_NAMES.NAVIGATE_TO_SHEET;
         const payload = {sheetId};
         const event = constructEvent(eventName, payload);
+        this.iframe.contentWindow.postMessage(event, this.url);
+    }
+
+    initiatePrint() : void {
+        const eventName = OUT_GOING_POST_MESSAGE_EVENT_NAMES.PRINT;
+        const event = constructEvent(eventName, {});
         this.iframe.contentWindow.postMessage(event, this.url);
     }
 }

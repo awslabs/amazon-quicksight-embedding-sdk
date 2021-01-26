@@ -67,4 +67,19 @@ describe('EmbeddableDashboard', () => {
             }
         });
     });
+
+    describe('initiate print', () => {
+        it('should initiate print post message with correct arguments', () => {
+            const {window} = new JSDOM();
+            
+            const postMessageSpy = spy(window.postMessage);
+            sandbox.stub(session.iframe, 'contentWindow').value(window);
+
+            const eventName = OUT_GOING_POST_MESSAGE_EVENT_NAMES.PRINT;
+            const event = constructEvent(eventName, {});
+
+            session.initiatePrint();
+            postMessageSpy.calledWith(event, mockUrl);
+        });
+    });
 });

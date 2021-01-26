@@ -236,16 +236,14 @@ function getIframeSrc(options): string {
     } = options;
     let src = url + '&punyCodeEmbedOrigin=' + punycode.encode(window.location.origin + '/');
 
+    src = src + '&printEnabled=' + String(!!printEnabled);
+
     if (locale) {
         src = src + '&locale=' + locale;
     }
-
-    if (printEnabled) {
-        src = src + "&printEnabled=" + String(printEnabled);
-    }
     
     if (sheetTabsDisabled) {
-        src = src + "&sheetTabsDisabled=" + String(sheetTabsDisabled);
+        src = src + '&sheetTabsDisabled=' + String(sheetTabsDisabled);
     }
 
     if (footerPaddingEnabled) {

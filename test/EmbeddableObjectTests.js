@@ -81,8 +81,8 @@ describe('EmbeddableObject', function() {
 
         expect(iFrame.src).to.equal(
             mockUrl +
-            '&punyCodeEmbedOrigin=null/-&locale=test-locale' +
-            '&printEnabled=true&sheetTabsDisabled=true&footerPaddingEnabled=true' +
+            '&punyCodeEmbedOrigin=null/-&printEnabled=true' +
+            '&locale=test-locale&sheetTabsDisabled=true&footerPaddingEnabled=true' +
             '#p.country=United%20States&p.state=California&p.state=Washington'
         );
     });

@@ -9,7 +9,8 @@ export const OUT_GOING_POST_MESSAGE_EVENT_NAMES = {
     NAVIGATE_TO_DASHBOARD: 'navigateToDashboard',
     GET_ACTIVE_PARAMETER_VALUES: 'getActiveParameterValues',
     NAVIGATE_TO_SHEET: 'navigateToSheet',
-    GET_SHEETS: 'getSheets'
+    GET_SHEETS: 'getSheets',
+    PRINT: 'initiatePrint'
 };
 
 export const IN_COMING_POST_MESSAGE_EVENT_NAMES = {
