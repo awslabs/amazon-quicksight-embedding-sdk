@@ -231,7 +231,9 @@ function getIframeSrc(options): string {
         parameters,
         locale,
         footerPaddingEnabled,
+        iframeResizeOnSheetChange,
         printEnabled,
+        sheetId,
         sheetTabsDisabled,
     } = options;
     let src = url + '&punyCodeEmbedOrigin=' + punycode.encode(window.location.origin + '/');
@@ -246,8 +248,16 @@ function getIframeSrc(options): string {
         src = src + '&sheetTabsDisabled=' + String(sheetTabsDisabled);
     }
 
+    if (sheetId) {
+        src = src + '&sheetId=' + sheetId;
+    }
+
     if (footerPaddingEnabled) {
         src = src + '&footerPaddingEnabled=' + String(footerPaddingEnabled);
+    }
+
+    if (iframeResizeOnSheetChange) {
+        src = src + '&resizeOnSheetChange=' + String(iframeResizeOnSheetChange);
     }
 
     if (parameters) {
