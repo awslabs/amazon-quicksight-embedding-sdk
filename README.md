@@ -374,6 +374,14 @@ If you want to get the current set of sheets, from Amazon Quicksight dashboard i
 
 The callback is needed since the process of getting sheets is asynchronous, even for ad-hoc fetches.
 
+### Step 13: Initiate print from JS SDK method
+**This is currently only supported for dashboard embedding.**
+
+This feature allows you to initiate dashboard print, from parent website, without a navbar print icon, in the dashboard. To initiate a dashboard print from parent website, use dashboard.initiatePrint(), for example:
+```javascript
+    dashboard.initiatePrint();
+```
+
 ## Troubleshooting
 1. Make sure the URL you provide in options is not encoded. You should avoid using an encoded URL because it breaks the authcode in the URL by changing it. Also, check that the URL sent in the response from the server side is not encoded.
 2. The URL only works if it used with the authcode it came with. The URL and authcode need to be used together. They expire after five minutes, so it's worth checking that you're not troubleshooting an expired combination of URL and authcode.
@@ -494,6 +502,11 @@ The callback is needed since the process of getting sheets is asynchronous, even
     </html>
 ```
 ## Change Log
+**1.0.13**
+* `initiatePrint` function for printing a dashboard from parent website, without need for navbar print icon.
+* Bugfix: when `printEnabled` is false, will not show print icon in dashboard navbar.
+* Updated ini from 1.3.5 to 1.3.8 for a security fix.
+
 **1.0.12**
 * `navigateToDashboard` function for switching to another authorized dashboard without submitting a new URL
 * `navigateToSheet` function for switching to another sheet on an already embedded dashboard
