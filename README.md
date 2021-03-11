@@ -28,7 +28,7 @@ Do ONE of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.12/dist/quicksight-embedding-js-sdk.min.js"></script>
+    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.13/dist/quicksight-embedding-js-sdk.min.js"></script>
 ```
 *OR*
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
@@ -396,7 +396,7 @@ This feature allows you to initiate dashboard print, from parent website, withou
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.12/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.13/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
@@ -454,7 +454,7 @@ This feature allows you to initiate dashboard print, from parent website, withou
 
     <head>
         <title>QuickSight Console Embedding</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.12/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.13/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var session
 
