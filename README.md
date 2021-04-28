@@ -176,16 +176,22 @@ You can set locale for the embedded QuickSight session:
 Available locale options are:
 ```
 en-US (English),
+da-DK (Dansk)
 de-DE (Deutsch),
 ja-JP (日本語),
 es-ES (Español),
 fr-FR (Français),
 it-IT (Italiano),
+nl-NL (Nederlands),
+nb-NO (Norsk),
 pt-BR (Português),
+fi-FI (Suomi),
+sv-SE (Svenska),
 ko-KR (한국어),
 zh-CN (中文 (简体)),
 zh-TW (中文 (繁體))
 ```
+Note: The above list might be out of date, as we continue adding more locales to QuickSight. For a more updated list of locales, please refer to https://docs.aws.amazon.com/quicksight/latest/user/choosing-a-language-in-quicksight.html. Any unsupported locale value will fallback to using en-US.
 
 #### DefaultEmbeddingVisualType for QuickSight console embedding (optional)
 You can set the embedding visual type for embedded sessions. The default visual type provided in the options will be used during visual creating. By default, when you add a new visual in an embedded session, `AutoGraph` is selected by default. This setting can be overridden to `Table` by setting the following option:
