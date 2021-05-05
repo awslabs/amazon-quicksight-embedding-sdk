@@ -511,3 +511,7 @@ This feature allows you to initiate dashboard print, from parent website, withou
 ## License
 Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: Apache-2.0
+
+---
+
+💭  [Give us feedback on your QuickSight embedding experience!](https://amazonmr.au1.qualtrics.com/jfe/form/SV_82jpzFSMLDBH1K6)
