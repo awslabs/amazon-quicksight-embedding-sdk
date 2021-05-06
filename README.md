@@ -81,9 +81,11 @@ Set up the embedded QuickSight console options.
         },
         scrolling: "no",
         height: "700px",
+        iframeResizeOnSheetChange: false, // use this option in combination with height: AutoFit, to allow iframe height to resize dynamically, based on sheet height, on changing sheets.
         width: "1000px",
         locale: "en-US",
         footerPaddingEnabled: true,
+        sheetId: 'YOUR_SHEETID' // use this option to specify initial sheet id to load for the embedded dashboard
         sheetTabsDisabled: false, // use this option to enable or disable sheet tab controls in dashboard embedding
         printEnabled: false, // use this option to enable or disable print option for dashboard embedding
         defaultEmbeddingVisualType: TABLE // this option only applies to experience embedding and will not be used for dashboard embedding
@@ -146,6 +148,12 @@ dashboard.on("SHOW_MODAL_EVENT", () => {
     });
 });
 ```
+
+#### IframeResizeOnSheetChange element (optional)
+You can use `iframeResizeOnSheetChange` option in combination with `height: "AutoFit"` option, when you want the embedded dashboard height to auto resize based on sheet height, on every sheet change event. The default value is `false`.
+
+#### SheetId element (optional)
+You can use the `sheetId` option, when you want to specify the initial sheet of the dashboard, instead of loading the first sheet of the embedded dashboard. You can provide the target sheet id of the dashboard as the value. In case the sheet id value is invalid, the first sheet of the dashboard will be loaded.
 
 #### ClassName element (optional)
 You can customize style of the iFrame that holds your dashboard by one of the followings:

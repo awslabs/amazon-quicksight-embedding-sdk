@@ -1,3 +1,13 @@
+**1.0.14**
+* Adding more locales list supported by QuickSight to README
+* Github security fix for y18n package
+* Moving changelog to separate file
+* Adding embedding experience feedback link to README
+* Passing initial sheetId, to load in embedded dashboard
+* Option to resize iframe based on sheet size
+* Error callbacks for URL expiry, Dashboard not found, Dashboard access restricted cases
+* Passing info on which parameter changed, for parametersChangeCallback
+
 **1.0.13**
 * `initiatePrint` function for printing a dashboard from parent website, without need for navbar print icon.
 * Bugfix: when `printEnabled` is false, will not show print icon in dashboard navbar.
