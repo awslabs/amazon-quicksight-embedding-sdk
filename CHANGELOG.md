@@ -1,4 +1,4 @@
-**1.0.14**
+**1.0.15**
 * Adding more locales list supported by QuickSight to README
 * Github security fix for y18n package
 * Moving changelog to separate file

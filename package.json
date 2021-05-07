@@ -1,7 +1,7 @@
 {
   "name": "amazon-quicksight-embedding-sdk",
   "description": "JS SDK for embedding Amazon QuickSight",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "main": "dist/index.js",
   "homepage": "https://github.com/awslabs/amazon-quicksight-embedding-sdk",
   "directories": {
