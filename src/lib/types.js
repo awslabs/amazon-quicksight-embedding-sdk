@@ -21,5 +21,7 @@ export type EmbeddingOptions = {
     scrolling: ?string,
     className: ?string,
     locale: ?string,
-    footerPaddingEnabled: ?boolean
+    footerPaddingEnabled: ?boolean,
+    undoRedoDisabled: ?boolean,
+    resetDisabled: ?boolean
 };
