@@ -1,3 +1,6 @@
+**1.0.16**
+* Adding undoRedoDisabled and resetDisabled flags to JS SDK
+
 **1.0.15**
 * Adding more locales list supported by QuickSight to README
 * Github security fix for y18n package
