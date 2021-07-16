@@ -88,8 +88,8 @@ Set up the embedded QuickSight console options.
         sheetId: 'YOUR_SHEETID' // use this option to specify initial sheet id to load for the embedded dashboard
         sheetTabsDisabled: false, // use this option to enable or disable sheet tab controls in dashboard embedding
         printEnabled: false, // use this option to enable or disable print option for dashboard embedding
-        undoRedoDisabled: false, // use this option to disable undo and redo buttons for dashboard embedding
-        resetDisabled: false, // use this option to disable reset button for dashboard embedding
+        undoRedoDisabled: false, // set this option to true to disable undo and redo buttons for dashboard embedding
+        resetDisabled: false, // set this option to true to disable reset button for dashboard embedding
         defaultEmbeddingVisualType: TABLE // this option only applies to experience embedding and will not be used for dashboard embedding
     };
 ```
@@ -222,10 +222,10 @@ The `footerPaddingEnabled` element adds 22 pixels of space at the bottom of the 
 The `printEnabled` element can be used to enable or disable print option for dashboard embedding. The default value is `false`. And, if both undoRedo and reset options are disabled, the navbar and print option wont be shown anyways, even if printEnabled is true.
 
 #### UndoRedoDisabled element (optional)
-The `undoRedoDisabled` element can be used to disable undo and redo buttons for dashboard embedding. If no value is passed, or this option is set to `false`, the undo redo buttons will be shown, by default.
+The `undoRedoDisabled` element can be used to disable undo and redo buttons for dashboard embedding. If this option is set to `true`, the undo redo buttons will not be shown. The default value is `false`.
 
 #### ResetDisabled element (optional)
-The `resetDisabled` element can be used to disable reset button for dashboard embedding. If no value is passed, or this option is set to `false`, the reset button will be shown, by default.
+The `resetDisabled` element can be used to disable reset button for dashboard embedding. If this option is set to `true`, the reset button will not be shown. The default value is `false`.
 
 #### SheetTabsDisabled element (optional)
 **This is currently only supported for dashboard embedding.**
