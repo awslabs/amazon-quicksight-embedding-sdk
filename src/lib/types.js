@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export type EmbeddingOptions = {
+    dashboardId: ?string,
     url: string,
     container: HTMLElement | string,
     errorCallback: ?Function,

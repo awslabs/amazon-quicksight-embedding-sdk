@@ -1,7 +1,7 @@
 {
   "name": "amazon-quicksight-embedding-sdk",
   "description": "JS SDK for embedding Amazon QuickSight",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "main": "dist/index.js",
   "homepage": "https://github.com/awslabs/amazon-quicksight-embedding-sdk",
   "directories": {
@@ -24,22 +24,23 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@babel/cli": "^7.14.5",
-    "@babel/core": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
-    "@babel/preset-flow": "^7.9.0",
-    "@babel/register": "^7.9.0",
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-flow": "^7.14.5",
+    "@babel/register": "^7.14.5",
     "babel-eslint": "^10.1.0",
-    "chai": "^3.5.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-flowtype": "2.39.1",
-    "expose-loader": "^0.7.3",
-    "flow-bin": "0.57.3",
-    "jsdom": "^11.11.0",
+    "chai": "^4.3.4",
+    "eslint": "^7.30.0",
+    "eslint-plugin-flowtype": "5.8.0",
+    "expose-loader": "^3.0.0",
+    "flow-bin": "0.145.0",
+    "jsdom": "^15.2.1",
     "jsdom-global": "^3.0.2",
-    "mocha": "^7.1.2",
-    "sinon": "^9.0.2",
-    "webpack": "^4.25.1",
-    "webpack-cli": "^3.3.6"
+    "mocha": "^9.0.2",
+    "sinon": "^11.1.1",
+    "webpack": "^5.37.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-merge": "^5.8.0"
   },
   "scripts": {
     "build": "babel src/ -d dist/",
@@ -47,8 +48,8 @@
     "lint": "eslint --ignore-path .gitignore .",
     "test": "mocha --recursive --require @babel/register",
     "flow": "flow",
-    "dev": "webpack --mode development ./dist/index.js --output ./dist/quicksight-embedding-js-sdk.js",
-    "prod": "webpack --mode production ./dist/index.js --output ./dist/quicksight-embedding-js-sdk.min.js",
+    "dev": "webpack --config webpack.dev.js",
+    "prod": "webpack --config webpack.prod.js",
     "release": "npm run lint && npm run flow && npm run test && npm run build && npm run dev && npm run prod"
   }
 }

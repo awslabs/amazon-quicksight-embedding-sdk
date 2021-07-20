@@ -301,6 +301,7 @@ function useParameterValuesInUrl(url: string, parameters: Object): string {
 function sendInitialPostMessage(iframe: HTMLIFrameElement, domain: string): void {
     if (iframe.contentWindow === null) {
         setTimeout(sendInitialPostMessage.bind(null, iframe, domain), 100);
+        return;
     }
 
     const eventName = OUT_GOING_POST_MESSAGE_EVENT_NAMES.ESTABLISH_MESSAGE_CHANNEL;

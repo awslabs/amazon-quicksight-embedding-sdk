@@ -1,3 +1,9 @@
+**1.0.17**
+* Upgrading dependency packages
+* Minor bug fixes
+  * Add dashboardId into EmbeddingOptions type
+  * Return after setting timer when contentWindow is not ready
+
 **1.0.16**
 * Adding undoRedoDisabled and resetDisabled flags to JS SDK
 
