@@ -1,3 +1,8 @@
+**1.17.1** 
+* Minor bug fixes
+  * Eliminate usage of eval in non-minified js file
+  * Change version numbering to match semantic versioning convention
+
 **1.0.17**
 * Upgrading dependency packages
 * Minor bug fixes

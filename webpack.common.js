@@ -8,6 +8,7 @@ module.exports = {
     output: {
         path: distPath,
     },
+    devtool: 'source-map',
     module: {
         rules: [{
             test: /index.js/,
