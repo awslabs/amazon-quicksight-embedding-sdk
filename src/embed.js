@@ -28,6 +28,20 @@ function embedSession(options: EmbeddingOptions): EmbeddableObject {
     return embedObject(embeddedSession);
 }
 
+/**
+ * Embed Q search bar.
+ * @function
+ * @name embedQSearchBar
+ * @param {EmbeddingOptions} options - options set by customers to embed the Q search bar.
+ */
+function embedQSearchBar(options: EmbeddingOptions): EmbeddableObject {
+    const embeddedQSearchBar = new EmbeddableObject({
+        ...(options || {}),
+        isQEmbedded: true
+    });
+    return embedObject(embeddedQSearchBar);
+}
+
 function embedObject(embeddableObject: EmbeddableObject) {
     const container = embeddableObject.getContainer();
     setTimeout(attachToDom.bind(null, embeddableObject.iframe, container), 0);
@@ -56,5 +70,5 @@ function attachToDom(iframe: ?HTMLIFrameElement, container: ?HTMLElement) {
 
 
 export {
-    embedDashboard, embedSession
+    embedDashboard, embedSession, embedQSearchBar
 };

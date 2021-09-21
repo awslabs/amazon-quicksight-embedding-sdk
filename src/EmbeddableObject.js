@@ -4,13 +4,13 @@
 
 import eventify from './lib/eventify';
 import constructEvent from './lib/constructEvent';
-import type {EmbeddingOptions} from './lib/types';
+import type {EmbeddingOptions, QSearchBarOptions} from './lib/types';
 import {
     CLIENT_FACING_EVENT_NAMES,
     DASHBOARD_SIZE_OPTIONS,
     DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS,
     IN_COMING_POST_MESSAGE_EVENT_NAMES,
-    OUT_GOING_POST_MESSAGE_EVENT_NAMES,
+    OUT_GOING_POST_MESSAGE_EVENT_NAMES
 } from './lib/constants';
 import punycode from 'punycode';
 
@@ -35,6 +35,18 @@ import punycode from 'punycode';
  */
 
 /**
+ * Q SearchBar embedding options. 
+ * @typedef {Object} QSearchBarOptions
+ * @property {Function} openCallback - callback when Q search bar is opened
+ * @property {Function} closeCallback - callback when Q search bar is closed
+ * @property {boolean} iconDisabled - disable Q icon in search bar (only for single topic set)
+ * @property {boolean} topicNameDisabled - disable topic name in search bar (only for single topic set)
+ * @property {string} themeId - themeId to apply to search bar (theme must be shared with user)
+ * @property {boolean} disablePersonalization - disable per-user personalization features
+ * @property {boolean} allowTopicSelection - allow user to change selected topic (only when initialTopicId is set from API)
+ */
+
+/**
  * Embeddable Object class.
  * @class
  * @name EmbeddableObject
@@ -51,6 +63,11 @@ class EmbeddableObject {
     off: Function;
     trigger: Function;
     iframe: HTMLIFrameElement;
+
+    // Q specific members
+    qBarOpen: ?boolean;
+    isQEmbedded: ?boolean;
+    qOptions: ?QSearchBarOptions;
 
     /* eslint-disable complexity */
     constructor(options: EmbeddingOptions) {
@@ -70,7 +87,8 @@ class EmbeddableObject {
             errorCallback,
             loadCallback,
             parametersChangeCallback,
-            selectedSheetChangeCallback
+            selectedSheetChangeCallback,
+            isQEmbedded
         } = options;
 
         this.url = url;
@@ -116,6 +134,20 @@ class EmbeddableObject {
                 this.handleMessageEvent(event, options);
             }
         }).bind(this), false);
+
+        if (isQEmbedded) {
+            this.qBarOpen = false;
+            this.isQEmbedded = isQEmbedded;
+            this.qOptions = options.qSearchBarOptions;
+
+            window.addEventListener('click', (function(event) {
+                const isClickInside = this.container ? this.container.contains(event.target) : true;
+                if (!isClickInside) {
+                    const hideQBarEvent = constructEvent(OUT_GOING_POST_MESSAGE_EVENT_NAMES.HIDE_Q_BAR, {});
+                    this.iframe.contentWindow.postMessage(hideQBarEvent, this.url); 
+                }
+            }).bind(this), false);
+        }
 
         (this: any).getContainer = this.getContainer.bind(this);
         (this: any).getParameters = this.getParameters.bind(this);
@@ -168,6 +200,36 @@ class EmbeddableObject {
         this.iframe.contentWindow.postMessage(event, this.url);
     }
 
+    handleShowQ(payload: Object) {
+        if (this.qOptions && this.qOptions.openCallback && typeof this.qOptions.openCallback === 'function') {
+            this.qOptions.openCallback();
+        }
+
+        if (payload && payload.height) {
+            this.iframe.height = payload.height;
+        }
+
+        this.qBarOpen = true;
+    }
+
+    handleHideQ(payload: Object) {
+        if (this.qOptions && this.qOptions.closeCallback && typeof this.qOptions.closeCallback === 'function') {
+            this.qOptions.closeCallback();
+        }
+
+        if (payload && payload.height) {
+            this.iframe.height = payload.height;
+        }
+        
+        this.qBarOpen = false;
+    }
+
+    handleResizeQ(payload: Object) {
+        if (payload && payload.height) {
+            this.iframe.height = payload.height;
+        }
+    }
+
     handleMessageEvent(event: Object, options: EmbeddingOptions): void {
         const {eventName, payload} = event.data;
         this.trigger(CLIENT_FACING_EVENT_NAMES[eventName], payload);
@@ -176,6 +238,12 @@ class EmbeddableObject {
             if (height === DASHBOARD_SIZE_OPTIONS.AUTO_FIT) {
                 this.iframe.height = payload.height;
             }
+        } else if (eventName === CLIENT_FACING_EVENT_NAMES.SHOW_Q_BAR) {
+            this.handleShowQ(payload);
+        } else if (eventName === CLIENT_FACING_EVENT_NAMES.HIDE_Q_BAR) {
+            this.handleHideQ(payload);
+        } else if (eventName === CLIENT_FACING_EVENT_NAMES.RESIZE_Q_BAR) {
+            this.handleResizeQ(payload);
         }
     }
 
@@ -208,7 +276,7 @@ class EmbeddableObject {
 }
 
 function createIframe(options: EmbeddingOptions): HTMLIFrameElement {
-    let {width, height} = options;
+    let {width, height, isQEmbedded} = options;
     const {loadingHeight, url, scrolling, className} = options;
     if (height === DASHBOARD_SIZE_OPTIONS.AUTO_FIT) {
         height = loadingHeight;
@@ -222,6 +290,9 @@ function createIframe(options: EmbeddingOptions): HTMLIFrameElement {
     iframe.src = getIframeSrc(options);
     iframe.style.border = '0px';
     iframe.style.padding = '0px';
+    if (isQEmbedded) {
+        iframe.setAttribute('allowtransparency', 'true');
+    }
     return iframe;
 }
 
@@ -237,6 +308,8 @@ function getIframeSrc(options): string {
         sheetId,
         sheetTabsDisabled,
         undoRedoDisabled,
+        isQEmbedded,
+        qSearchBarOptions
     } = options;
     let src = url + '&punyCodeEmbedOrigin=' + punycode.encode(window.location.origin + '/');
 
@@ -272,6 +345,28 @@ function getIframeSrc(options): string {
 
     if (parameters) {
         return useParameterValuesInUrl(src, parameters);
+    }
+
+    if (isQEmbedded && qSearchBarOptions) {
+        if (qSearchBarOptions.iconDisabled !== undefined) {
+            src = src + '&qBarIconDisabled=' + String(qSearchBarOptions.iconDisabled);
+        }
+
+        if (qSearchBarOptions.topicNameDisabled !== undefined) {
+            src = src + '&qBarTopicNameDisabled=' + String(qSearchBarOptions.topicNameDisabled);
+        }
+
+        if (qSearchBarOptions.themeId) {
+            src = src + '&themeId=' + qSearchBarOptions.themeId;
+        }
+
+        if (qSearchBarOptions.disablePersonalization !== undefined) {
+            src = src + '&qDisablePersonalization=' + String(qSearchBarOptions.disablePersonalization);
+        }
+
+        if (qSearchBarOptions.allowTopicSelection !== undefined) {
+            src = src + '&allowTopicSelection=' + String(qSearchBarOptions.allowTopicSelection);
+        }
     }
 
     return src;

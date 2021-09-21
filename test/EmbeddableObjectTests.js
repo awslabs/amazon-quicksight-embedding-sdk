@@ -5,10 +5,11 @@ import EmbeddableObject from '../src/EmbeddableObject';
 import {expect} from 'chai';
 import mockGlobal from 'jsdom-global';
 import {
+    CLIENT_FACING_EVENT_NAMES,
     DASHBOARD_SIZE_OPTIONS,
     DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS,
     IN_COMING_POST_MESSAGE_EVENT_NAMES,
-    OUT_GOING_POST_MESSAGE_EVENT_NAMES
+    OUT_GOING_POST_MESSAGE_EVENT_NAMES,
 } from '../src/lib/constants';
 
 mockGlobal();
@@ -135,5 +136,105 @@ describe('EmbeddableObject', function() {
         const event = session.generateDefaultEmbeddingVisualTypeEvent(null);
         expect(event.eventName).to.equal(OUT_GOING_POST_MESSAGE_EVENT_NAMES.DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS);
         expect(event.payload.defaultEmbeddingVisualType).to.equal(DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS.AUTO_GRAPH);
+    });
+
+    describe('Q SearchBar', () => {
+
+        const mockQOptions = {
+            url: mockUrl,
+            container: mockContainer
+        };
+        let mockQBarOptions = {};
+
+        it('should set iFrame attributes properly', () => {
+            session = new EmbeddableObject({
+                ...mockQOptions,
+                isQEmbedded: true,
+                qSearchBarOptions: mockQBarOptions
+            });
+            const iframe = session.iframe;
+            expect(iframe.width).to.equal('100%');
+            expect(iframe.height).to.equal('100%');
+            expect(iframe.getAttribute('allowtransparency')).to.equal('true');
+        });
+
+        it('should set iFrame src URL query parameters properly', () => {
+            mockQBarOptions = {
+                iconDisabled: true,
+                topicNameDisabled: true,
+                disablePersonalization: true,
+                allowTopicSelection: false
+            };
+            session = new EmbeddableObject({
+                ...mockQOptions,
+                isQEmbedded: true,
+                qSearchBarOptions: mockQBarOptions
+            });
+            expect(session.iframe.src).to.equal(
+                mockUrl +
+                '&punyCodeEmbedOrigin=null/-&printEnabled=false&qBarIconDisabled=true' +
+                '&qBarTopicNameDisabled=true&qDisablePersonalization=true&allowTopicSelection=false'
+            );
+        });
+
+        it('should resize the iframe on open Q event', () => {
+            session = new EmbeddableObject({
+                ...mockQOptions,
+                container: document.createElement('div'),
+                isQEmbedded: true,
+                qSearchBarOptions: {}
+            });
+            const mockHeight = '600px';
+            const event = {
+                data: {
+                    eventName: CLIENT_FACING_EVENT_NAMES.SHOW_Q_BAR,
+                    payload: {
+                        height: mockHeight,
+                    },
+                }
+            };
+            session.handleMessageEvent(event, mockQOptions);
+            expect(session.iframe.height).to.equal(mockHeight);
+        });
+
+        it('should resize the iframe on close Q event', () => {
+            session = new EmbeddableObject({
+                ...mockQOptions,
+                container: document.createElement('div'),
+                isQEmbedded: true,
+                qSearchBarOptions: {}
+            });
+            const mockHeight = '50px';
+            const event = {
+                data: {
+                    eventName: CLIENT_FACING_EVENT_NAMES.HIDE_Q_BAR,
+                    payload: {
+                        height: mockHeight,
+                    },
+                }
+            };
+            session.handleMessageEvent(event, mockQOptions);
+            expect(session.iframe.height).to.equal(mockHeight);
+        });
+
+        it('should resize the iframe on resize Q event', () => {
+            session = new EmbeddableObject({
+                ...mockQOptions,
+                container: document.createElement('div'),
+                isQEmbedded: true,
+                qSearchBarOptions: {}
+            });
+            const mockHeight = '50px';
+            const event = {
+                data: {
+                    eventName: CLIENT_FACING_EVENT_NAMES.RESIZE_Q_BAR,
+                    payload: {
+                        height: mockHeight,
+                    },
+                }
+            };
+            session.handleMessageEvent(event, mockQOptions);
+            expect(session.iframe.height).to.equal(mockHeight);
+        });
     });
 });

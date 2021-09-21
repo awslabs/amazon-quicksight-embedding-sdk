@@ -10,7 +10,8 @@ export const OUT_GOING_POST_MESSAGE_EVENT_NAMES = {
     GET_ACTIVE_PARAMETER_VALUES: 'getActiveParameterValues',
     NAVIGATE_TO_SHEET: 'navigateToSheet',
     GET_SHEETS: 'getSheets',
-    PRINT: 'initiatePrint'
+    PRINT: 'initiatePrint',
+    HIDE_Q_BAR: 'hideQSearchBar'
 };
 
 export const IN_COMING_POST_MESSAGE_EVENT_NAMES = {
@@ -29,7 +30,10 @@ export const CLIENT_FACING_EVENT_NAMES = {
     RESIZE_EVENT: 'resize',
     SHOW_MODAL_EVENT: 'SHOW_MODAL_EVENT',
     GET_ACTIVE_PARAMETER_VALUES: 'GET_ACTIVE_PARAMETER_VALUES',
-    GET_SHEETS: 'GET_SHEETS'
+    GET_SHEETS: 'GET_SHEETS',
+    SHOW_Q_BAR: 'showQSearchBar',
+    HIDE_Q_BAR: 'hideQSearchBar',
+    RESIZE_Q_BAR: 'resizeQSearchBar'
 };
 
 export const DASHBOARD_SIZE_OPTIONS = {

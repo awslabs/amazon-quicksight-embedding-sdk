@@ -24,5 +24,17 @@ export type EmbeddingOptions = {
     locale: ?string,
     footerPaddingEnabled: ?boolean,
     undoRedoDisabled: ?boolean,
-    resetDisabled: ?boolean
+    resetDisabled: ?boolean,
+    isQEmbedded: ?boolean,
+    qSearchBarOptions: ?QSearchBarOptions
 };
+
+export type QSearchBarOptions = {
+    openCallback: ?Function,
+    closeCallback: ?Function,
+    iconDisabled: ?boolean,
+    topicNameDisabled: ?boolean, 
+    themeId: ?string,
+    disablePersonalization: ?boolean,
+    allowTopicSelection: ?boolean
+}
