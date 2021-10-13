@@ -2,7 +2,7 @@
 Thank you for using the Amazon QuickSight JavaScript SDK. You can use this SDK to embed Amazon QuickSight in your HTML.
 
 ## Usage
-Amazon QuickSight offers two different embedded experiences with options for branding, user isolation with namespaces, and custom UI permissions:
+Amazon QuickSight offers three different embedded experiences with options for branding, user isolation with namespaces, and custom UI permissions:
 
 * Embedded authoring portals provide the QuickSight authoring experience
 
@@ -12,10 +12,14 @@ To get started with an embedded authoring portal, you need to make sure that the
 
 To get started with an embedded dashboard, you need to publish it and also make sure that the users have the necessary permissions. For more information, see  [Embedding Amazon QuickSight Dashboards](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-dashboards.html) in the Amazon QuickSight User Guide. After a dashboard is ready, follow the procedure to embed your Amazon QuickSight dashboard in this [example](#example):
 
+* Embedded Q Search Bar provides the [QuickSight Q](https://aws.amazon.com/quicksight/q/) search bar experience
+
+To get started with an embedded Q search bar, you need to create topics and also make sure that the users have the necessary permissions. For more information, see  [Embedding Amazon QuickSight Q Search Bar](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-q-search-bar.html) in the Amazon QuickSight User Guide. After Q is ready, follow the procedure to embed your Amazon QuickSight Q search bar in this [example](#example):
+
 ### Setup differences between embedded QuickSight experiences: dashboards and portals
 The process to set up QuickSight embedding is similar in both cases. The differences between setting up the two embedded experiences are as follows:
 
- 1. You use a different SDK object for each embedded QuickSight experience. You use `embedDashboard` to embed a dashboard, and you use `embedSession` to embed an authoring portal.
+ 1. You use a different SDK object for each embedded QuickSight experience. You use `embedDashboard` to embed a dashboard, `embedQSearchBar` to embed the Q search bar, and you use `embedSession` to embed an authoring portal.
  2. You use a different API for each embedded experience. For more information, see [QuickSight Embedding APIs](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html)
  3. Different options are supported for each embedded experience.
  * Embedded dashboards are always read-only. The level of interactivity is set when the dashboard is published.
@@ -64,6 +68,20 @@ Alternatively, if you need to load the entire module:
     import * as QuickSightEmbedding from 'amazon-quicksight-embedding-sdk';
 
     const session = QuickSightEmbedding.embedSession(options);
+```
+
+#### For the embedded Q search bar experience 
+You can also use ES6 import syntax in place of require:
+```javascript
+    import { embedQSearchBar } from 'amazon-quicksight-embedding-sdk';
+
+    const session = embedQSearchBar(options);
+```
+Alternatively, if you need to load the entire module:
+```javascript
+    import * as QuickSightEmbedding from 'amazon-quicksight-embedding-sdk';
+
+    const session = QuickSightEmbedding.embedQSearchBar(options);
 ```
 
 ### Step 2: Configure embedding
@@ -178,6 +196,8 @@ your-own-class {
 
 We've overridden the border and padding of the iFrame to be 0px, because setting border and padding on the iFrame might cause unexpected issues. If you have to set border and padding on the embedded QuickSight session, set it on the container div that contains the iFrame.
 
+Note for Q search bar embedding, you'll likely want to use this to give the iframe a `position: absolute` so that when expanded it does not shift the contents of your application. If elements in your application are appearing in front of the Q search bar, you can provide the iframe with a higher z-index as well. 
+
 #### Locale element (optional)
 You can set locale for the embedded QuickSight session:
 ```javascript
@@ -231,6 +251,36 @@ The `resetDisabled` element can be used to disable reset button for dashboard em
 **This is currently only supported for dashboard embedding.**
 The `sheetTabsDisabled` element can be used to enable or disable sheet tab controls in dashboard embedding. The default value is `false`.
 
+### Q Search Bar options
+The `qSearchBarOptions` object is to specify Q specific options when embedding:
+```javascript
+    var qSearchBarOptions = {
+        expandCallback: () => {},
+        collapseCallback: () => {},
+        iconDisabled: false,
+        topicNameDisabled: false, 
+        themeId: 'theme12345',
+        allowTopicSelection: true
+    };
+```
+
+#### ExpandCallback (optional)
+The `expandCallback` in `qSearchBarOptions` can be used to specify behavior for your application when the Q search bar is expanded (clicked into).
+
+#### CollapseCallback (optional)
+The `collapseCallback` in `qSearchBarOptions` can be used to specify behavior for your application when the Q search bar is collapsed (clicked out of).
+
+#### IconDisabled (optional)
+The `iconDisabled` element in `qSearchBarOptions` can be used to customize whether or not the QuickSight Q icon appears in the embedded search bar. The default value is `false`.
+
+#### TopicNameDisabled (optional)
+The `topicNameDisabled` element in `qSearchBarOptions` can be used to customize whether or not the QuickSight Q Topic name appears in the embedded search bar. The default value is `false`.
+
+#### ThemeId (optional)
+The `themeId` element in `qSearchBarOptions` can be used to set a content theme for the embedded search bar. Note that the embedded QuickSight user, or the group or namespace they belong to, must have permissions on this theme. The default theme is the default QuickSight theme seen in the console application. 
+
+#### AllowTopicSelection (optional)
+The `allowTopicSelection` element in `qSearchBarOptions` can be used to customize whether or not the embedded user can change the selected topic for the Q search bar. Note that this can only be set to false if the `initialTopicId` was specified in the embedding API; for more information, see [QuickSight Embedding APIs](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html). The default value is `true`.
 ### Step 3: Create the QuickSight session object
 
 #### Dashboard embedding
@@ -408,6 +458,9 @@ This feature allows you to initiate dashboard print, from parent website, withou
 1. Make sure the URL you provide in options is not encoded. You should avoid using an encoded URL because it breaks the authcode in the URL by changing it. Also, check that the URL sent in the response from the server side is not encoded.
 2. The URL only works if it used with the authcode it came with. The URL and authcode need to be used together. They expire after five minutes, so it's worth checking that you're not troubleshooting an expired combination of URL and authcode.
 2. Some browsers (e.g. mobile safari) have default setting to "Always Block Cookies". Change the setting to either "Allow form Websites I Visit" or "Always Allow".
+3. Q search bar troubleshooting:
+    * Shifting page contents in unwanted way - try giving the embedding container and the iframe class a style with position absolute.
+    * Clicking on some parts of your application does not close the Q search bar - use the `expandCallback` and `collapseCallback` to create a backdrop/element on the page that's always clickable so that the document listener can properly close the search bar. 
 
 
 ## Example
@@ -418,7 +471,7 @@ This feature allows you to initiate dashboard print, from parent website, withou
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.17.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.18.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
@@ -476,7 +529,7 @@ This feature allows you to initiate dashboard print, from parent website, withou
 
     <head>
         <title>QuickSight Console Embedding</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.17.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.18.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var session
 
@@ -518,6 +571,62 @@ This feature allows you to initiate dashboard print, from parent website, withou
                 <option value="Canada">Canada</option>
             </select>
         </span>
+        <div id="embeddingContainer"></div>
+    </body>
+
+    </html>
+```
+
+### QuickSight Q search bar embedding
+```html
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <title>QuickSight Q Search Bar Embedding</title>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.18.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script type="text/javascript">
+            var session
+
+            function onError(payload) {
+                console.log("Do something when the session fails loading");
+            }
+
+            function onExpand() {
+                console.log("Do something when the Q search bar opens");
+            }
+
+            function onCollapse() {
+                console.log("Do something when the Q search bar closes");
+            }
+
+            function embedQSearchBar() {
+                var containerDiv = document.getElementById("embeddingContainer");
+                var options = {
+                    url: "https://us-east-1.quicksight.aws.amazon.com/sn/dashboards/dashboardId?isauthcode=true&identityprovider=quicksight&code=authcode", // replace this dummy url with the one generated via embedding API
+                    container: containerDiv,
+                    width: "1000px",
+                    locale: "en-US",
+                    qSearchBarOptions: {
+                        expandCallback: onExpand,
+                        collapseCallback: onCollapse,
+                        iconDisabled: false,
+                        topicNameDisabled: false, 
+                        themeId: 'theme12345',
+                        allowTopicSelection: true
+                    }
+                };
+                session = QuickSightEmbedding.embedQSearchBar(options);
+                session.on("error", onError);
+            }
+
+            function onCountryChange(obj) {
+                session.setParameters({country: obj.value});
+            }
+        </script>
+    </head>
+
+    <body onload="embedQSearchBar()">
         <div id="embeddingContainer"></div>
     </body>
 

@@ -37,8 +37,8 @@ import punycode from 'punycode';
 /**
  * Q SearchBar embedding options. 
  * @typedef {Object} QSearchBarOptions
- * @property {Function} openCallback - callback when Q search bar is opened
- * @property {Function} closeCallback - callback when Q search bar is closed
+ * @property {Function} expandCallback - callback when Q search bar is expanded
+ * @property {Function} collapseCallback - callback when Q search bar is collapsed
  * @property {boolean} iconDisabled - disable Q icon in search bar (only for single topic set)
  * @property {boolean} topicNameDisabled - disable topic name in search bar (only for single topic set)
  * @property {string} themeId - themeId to apply to search bar (theme must be shared with user)
@@ -200,11 +200,11 @@ class EmbeddableObject {
     }
 
     handleShowQ(payload: Object) {
-        if (this.qOptions && this.qOptions.openCallback 
-            && typeof this.qOptions.openCallback === 'function'
+        if (this.qOptions && this.qOptions.expandCallback 
+            && typeof this.qOptions.expandCallback === 'function'
             && !this.qBarOpen
         ) {
-            this.qOptions.openCallback();
+            this.qOptions.expandCallback();
         }
 
         if (payload && payload.height) {
@@ -215,11 +215,11 @@ class EmbeddableObject {
     }
 
     handleHideQ(payload: Object) {
-        if (this.qOptions && this.qOptions.closeCallback 
-            && typeof this.qOptions.closeCallback === 'function' 
+        if (this.qOptions && this.qOptions.collapseCallback 
+            && typeof this.qOptions.collapseCallback === 'function' 
             && this.qBarOpen
         ) {
-            this.qOptions.closeCallback();
+            this.qOptions.collapseCallback();
         }
 
         if (payload && payload.height) {

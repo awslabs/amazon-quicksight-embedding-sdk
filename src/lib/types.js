@@ -30,8 +30,8 @@ export type EmbeddingOptions = {
 };
 
 export type QSearchBarOptions = {
-    openCallback: ?Function,
-    closeCallback: ?Function,
+    expandCallback: ?Function,
+    collapseCallback: ?Function,
     iconDisabled: ?boolean,
     topicNameDisabled: ?boolean, 
     themeId: ?string,
