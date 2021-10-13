@@ -201,7 +201,10 @@ class EmbeddableObject {
     }
 
     handleShowQ(payload: Object) {
-        if (this.qOptions && this.qOptions.openCallback && typeof this.qOptions.openCallback === 'function') {
+        if (this.qOptions && this.qOptions.openCallback 
+            && typeof this.qOptions.openCallback === 'function'
+            && !this.qBarOpen
+        ) {
             this.qOptions.openCallback();
         }
 
@@ -213,7 +216,10 @@ class EmbeddableObject {
     }
 
     handleHideQ(payload: Object) {
-        if (this.qOptions && this.qOptions.closeCallback && typeof this.qOptions.closeCallback === 'function') {
+        if (this.qOptions && this.qOptions.closeCallback 
+            && typeof this.qOptions.closeCallback === 'function' 
+            && this.qBarOpen
+        ) {
             this.qOptions.closeCallback();
         }
 
