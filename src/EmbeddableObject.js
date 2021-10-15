@@ -42,7 +42,6 @@ import punycode from 'punycode';
  * @property {boolean} iconDisabled - disable Q icon in search bar (only for single topic set)
  * @property {boolean} topicNameDisabled - disable topic name in search bar (only for single topic set)
  * @property {string} themeId - themeId to apply to search bar (theme must be shared with user)
- * @property {boolean} disablePersonalization - disable per-user personalization features
  * @property {boolean} allowTopicSelection - allow user to change selected topic (only when initialTopicId is set from API)
  */
 
@@ -364,10 +363,6 @@ function getIframeSrc(options): string {
 
         if (qSearchBarOptions.themeId) {
             src = src + '&themeId=' + qSearchBarOptions.themeId;
-        }
-
-        if (qSearchBarOptions.disablePersonalization !== undefined) {
-            src = src + '&qDisablePersonalization=' + String(qSearchBarOptions.disablePersonalization);
         }
 
         if (qSearchBarOptions.allowTopicSelection !== undefined) {

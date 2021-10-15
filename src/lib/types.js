@@ -35,6 +35,5 @@ export type QSearchBarOptions = {
     iconDisabled: ?boolean,
     topicNameDisabled: ?boolean, 
     themeId: ?string,
-    disablePersonalization: ?boolean,
     allowTopicSelection: ?boolean
 }

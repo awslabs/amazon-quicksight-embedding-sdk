@@ -162,7 +162,6 @@ describe('EmbeddableObject', function() {
             mockQBarOptions = {
                 iconDisabled: true,
                 topicNameDisabled: true,
-                disablePersonalization: true,
                 allowTopicSelection: false
             };
             session = new EmbeddableObject({
@@ -173,7 +172,7 @@ describe('EmbeddableObject', function() {
             expect(session.iframe.src).to.equal(
                 mockUrl +
                 '&punyCodeEmbedOrigin=null/-&printEnabled=false&qBarIconDisabled=true' +
-                '&qBarTopicNameDisabled=true&qDisablePersonalization=true&allowTopicSelection=false'
+                '&qBarTopicNameDisabled=true&allowTopicSelection=false'
             );
         });
 
