@@ -2,6 +2,9 @@
 * Initial release of Q search bar embedding support
   * Added new set of options for QSearchBar
 
+**1.17.2**
+* Upgrading dependency packages
+
 **1.17.1** 
 * Minor bug fixes
   * Eliminate usage of eval in non-minified js file
