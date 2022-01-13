@@ -138,6 +138,18 @@ describe('EmbeddableObject', function() {
         expect(event.payload.defaultEmbeddingVisualType).to.equal(DEFAULT_EMBEDDING_VISUAL_TYPE_OPTIONS.AUTO_GRAPH);
     });
 
+    it('should set correct parameters when invoked through setParameters function', () => {
+        const parameters = {
+            parameterOne: 'Value With Spaces & And',
+            parameterTwo: ['MultiValueParameter', 'With special chars =']
+        };
+        const event = session.getParameterEvent(parameters);
+        expect(event.eventName).to.equal(OUT_GOING_POST_MESSAGE_EVENT_NAMES.UPDATE_PARAMETER_VALUES);
+        expect(event.payload.parameters.parameterOne[0]).to.equal('Value%20With%20Spaces%20%26%20And');
+        expect(event.payload.parameters.parameterTwo[0]).to.equal('MultiValueParameter');
+        expect(event.payload.parameters.parameterTwo[1]).to.equal('With%20special%20chars%20%3D');
+    });
+
     describe('Q SearchBar', () => {
 
         const mockQOptions = {

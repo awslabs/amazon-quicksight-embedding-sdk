@@ -1,3 +1,7 @@
+**1.18.1**
+* Minor bug fixes
+ * Allow special character usage in setParameter
+
 **1.18.0** 
 * Initial release of Q search bar embedding support
   * Added new set of options for QSearchBar

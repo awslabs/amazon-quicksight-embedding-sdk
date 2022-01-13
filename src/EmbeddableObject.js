@@ -257,10 +257,22 @@ class EmbeddableObject {
     }
 
     setParameters(parameters: Object): void {
-        const eventName = OUT_GOING_POST_MESSAGE_EVENT_NAMES.UPDATE_PARAMETER_VALUES;
-        const payload = {parameters};
-        const event = constructEvent(eventName, payload);
+        const event = this.getParameterEvent(parameters);
         this.iframe.contentWindow.postMessage(event, this.url);
+    }
+
+    getParameterEvent(parameters: Object): ?Object {
+        const eventName = OUT_GOING_POST_MESSAGE_EVENT_NAMES.UPDATE_PARAMETER_VALUES;
+        const payload = {};
+        const parameterNames = Object.keys(parameters);
+        parameterNames.map(name => {
+            const value = parameters[name];
+            const values = [].concat(value);
+            const encodedName = encodeURIComponent(name);
+            payload[encodedName] = values.map(paramValue => encodeURIComponent(paramValue));
+        });
+
+        return constructEvent(eventName, {parameters: payload});
     }
 
     setDefaultEmbeddingVisualType(defaultEmbeddingVisualType: string): void {
