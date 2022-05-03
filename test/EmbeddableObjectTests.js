@@ -4,6 +4,8 @@
 import EmbeddableObject from '../src/EmbeddableObject';
 import {expect} from 'chai';
 import mockGlobal from 'jsdom-global';
+import sinon from 'sinon';
+import {JSDOM} from 'jsdom';
 import {
     CLIENT_FACING_EVENT_NAMES,
     DASHBOARD_SIZE_OPTIONS,
@@ -157,6 +159,15 @@ describe('EmbeddableObject', function() {
             container: mockContainer
         };
         let mockQBarOptions = {};
+        let sandbox;
+
+        beforeEach(() => {
+            sandbox = sinon.createSandbox();
+        });
+
+        afterEach(() => {
+            sandbox.restore();
+        });
 
         it('should set iFrame attributes properly', () => {
             session = new EmbeddableObject({
@@ -246,6 +257,48 @@ describe('EmbeddableObject', function() {
             };
             session.handleMessageEvent(event, mockQOptions);
             expect(session.iframe.height).to.equal(mockHeight);
+        });
+
+        it('should send setQBarQuestion event when session.setQBarQuestion() is called', () => {
+            const {window} = new JSDOM();
+            const postMessageStub = sandbox.stub(window, 'postMessage');
+            session = new EmbeddableObject({
+                ...mockQOptions,
+                container: document.createElement('div'),
+                isQEmbedded: true,
+                qSearchBarOptions: {}
+            });
+            sandbox.stub(session.iframe, 'contentWindow').value(window);
+
+            const mockQuestion = 'monthly revenue of amazon';
+            session.setQBarQuestion(mockQuestion);
+
+            sinon.assert.calledWith(postMessageStub, {
+                eventName: OUT_GOING_POST_MESSAGE_EVENT_NAMES.SET_Q_BAR_QUESTION,
+                clientType: 'EMBEDDING',
+                payload: {
+                    question: mockQuestion
+                },
+            });
+        });
+
+        it('should send hideQSearchBar event when session.hideQBar() is called', () => {
+            const {window} = new JSDOM();
+            const postMessageStub = sandbox.stub(window, 'postMessage');
+            session = new EmbeddableObject({
+                ...mockQOptions,
+                container: document.createElement('div'),
+                isQEmbedded: true,
+                qSearchBarOptions: {}
+            });
+            sandbox.stub(session.iframe, 'contentWindow').value(window);
+
+            session.hideQBar();
+            sinon.assert.calledWith(postMessageStub, {
+                eventName: OUT_GOING_POST_MESSAGE_EVENT_NAMES.HIDE_Q_BAR,
+                clientType: 'EMBEDDING',
+                payload: {},
+            });
         });
     });
 });

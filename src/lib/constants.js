@@ -11,7 +11,8 @@ export const OUT_GOING_POST_MESSAGE_EVENT_NAMES = {
     NAVIGATE_TO_SHEET: 'navigateToSheet',
     GET_SHEETS: 'getSheets',
     PRINT: 'initiatePrint',
-    HIDE_Q_BAR: 'hideQSearchBar'
+    HIDE_Q_BAR: 'hideQSearchBar',
+    SET_Q_BAR_QUESTION: 'setQBarQuestion'
 };
 
 export const IN_COMING_POST_MESSAGE_EVENT_NAMES = {
