@@ -32,7 +32,7 @@ Do ONE of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.18.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.18.2/dist/quicksight-embedding-js-sdk.min.js"></script>
 ```
 *OR*
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
@@ -281,6 +281,7 @@ The `themeId` element in `qSearchBarOptions` can be used to set a content theme 
 
 #### AllowTopicSelection (optional)
 The `allowTopicSelection` element in `qSearchBarOptions` can be used to customize whether or not the embedded user can change the selected topic for the Q search bar. Note that this can only be set to false if the `initialTopicId` was specified in the embedding API; for more information, see [QuickSight Embedding APIs](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html). The default value is `true`.
+
 ### Step 3: Create the QuickSight session object
 
 #### Dashboard embedding
@@ -295,7 +296,11 @@ This returns a dashboard object for further action.
 ```
 This returns an console session object for further action.
 
-
+#### QSearchBar embedding
+```javascript
+    var qBar = QuickSightEmbedding.embedQSearchBar(options);
+```
+This returns a Q search bar object for further action.
 
 ### Step 4: Setup load callback (optional)
 **This is currently only supported for dashboard embedding.**
@@ -454,6 +459,27 @@ This feature allows you to initiate dashboard print, from parent website, withou
     dashboard.initiatePrint();
 ```
 
+### Step 14: Invoke Q search bar actions (optional)
+**These are only supported for Q search bar embedding.**
+
+#### Set Q search bar question
+
+This feature sends a question to the Q search bar and immediately queries the question. It also automatically opens the Q popover.
+
+```javascript
+    qBar.setQBarQuestion('show me monthly revenue');
+```
+
+
+#### Close Q popover
+
+This feature closes the Q popover, returns the iframe to the original Q search bar size.
+
+```javascript
+    qBar.closeQPopover();
+```
+
+
 ## Troubleshooting
 1. Make sure the URL you provide in options is not encoded. You should avoid using an encoded URL because it breaks the authcode in the URL by changing it. Also, check that the URL sent in the response from the server side is not encoded.
 2. The URL only works if it used with the authcode it came with. The URL and authcode need to be used together. They expire after five minutes, so it's worth checking that you're not troubleshooting an expired combination of URL and authcode.
@@ -471,7 +497,7 @@ This feature allows you to initiate dashboard print, from parent website, withou
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.18.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.18.2/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
@@ -529,7 +555,7 @@ This feature allows you to initiate dashboard print, from parent website, withou
 
     <head>
         <title>QuickSight Console Embedding</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.18.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.18.2/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var session
 
@@ -584,7 +610,7 @@ This feature allows you to initiate dashboard print, from parent website, withou
 
     <head>
         <title>QuickSight Q Search Bar Embedding</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.18.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.18.2/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var session
 

@@ -142,7 +142,7 @@ class EmbeddableObject {
             window.addEventListener('click', (function(event) {
                 const isClickInside = this.container ? this.container.contains(event.target) : true;
                 if (!isClickInside) {
-                    this.hideQBar();
+                    this.closeQPopover();
                 }
             }).bind(this), false);
         }
@@ -157,7 +157,7 @@ class EmbeddableObject {
         (this: any).setParameters = this.setParameters.bind(this);
         (this: any).setDefaultEmbeddingVisualType = this.setDefaultEmbeddingVisualType.bind(this);
         (this: any).setQBarQuestion = this.setQBarQuestion.bind(this);
-        (this: any).hideQBar = this.hideQBar.bind(this);
+        (this: any).closeQPopover = this.closeQPopover.bind(this);
     }
 
     getUrl(): string {
@@ -302,9 +302,9 @@ class EmbeddableObject {
         this.iframe.contentWindow.postMessage(event, this.url);
     }
 
-    hideQBar() {
-        const hideQBarEvent = constructEvent(OUT_GOING_POST_MESSAGE_EVENT_NAMES.HIDE_Q_BAR, {});
-        this.iframe.contentWindow?.postMessage(hideQBarEvent, this.url); 
+    closeQPopover() {
+        const closeQPopoverEvent = constructEvent(OUT_GOING_POST_MESSAGE_EVENT_NAMES.HIDE_Q_BAR, {});
+        this.iframe.contentWindow?.postMessage(closeQPopoverEvent, this.url); 
     }
 }
 

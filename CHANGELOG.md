@@ -1,3 +1,7 @@
+**1.18.2**
+* Add `closeQPopover` function to close the Q popover
+* Add `setQBarQuestion` function to send and query a question in Q search bar
+
 **1.18.1**
 * Minor bug fixes
  * Allow special character usage in setParameter

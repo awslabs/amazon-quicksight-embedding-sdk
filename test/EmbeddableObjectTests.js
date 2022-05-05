@@ -282,7 +282,7 @@ describe('EmbeddableObject', function() {
             });
         });
 
-        it('should send hideQSearchBar event when session.hideQBar() is called', () => {
+        it('should send hideQSearchBar event when session.closeQPopover() is called', () => {
             const {window} = new JSDOM();
             const postMessageStub = sandbox.stub(window, 'postMessage');
             session = new EmbeddableObject({
@@ -293,7 +293,7 @@ describe('EmbeddableObject', function() {
             });
             sandbox.stub(session.iframe, 'contentWindow').value(window);
 
-            session.hideQBar();
+            session.closeQPopover();
             sinon.assert.calledWith(postMessageStub, {
                 eventName: OUT_GOING_POST_MESSAGE_EVENT_NAMES.HIDE_Q_BAR,
                 clientType: 'EMBEDDING',
