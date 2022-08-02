@@ -29,6 +29,23 @@ export type EmbeddingOptions = {
     qSearchBarOptions: ?QSearchBarOptions
 };
 
+export type VisualEmbeddingOptions = {
+    url: string,
+    container: HTMLElement | string,
+    errorCallback: ?Function,
+    loadCallback: ?Function,
+    parametersChangeCallback: ?Function,
+    parameters: ?Object,
+    width: ?string,
+    height: ?string,
+    fitToIframeWidth: ?boolean,
+    loadingHeight: ?string,
+    scrolling: ?string,
+    className: ?string,
+    locale: ?string,
+    footerPaddingEnabled: ?boolean
+};
+
 export type QSearchBarOptions = {
     expandCallback: ?Function,
     collapseCallback: ?Function,

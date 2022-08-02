@@ -1,3 +1,6 @@
+**1.20.0**
+* Add visual embedding support with new `embedVisual` function
+
 **1.19.1**
 * Upgrade dependency packages
 

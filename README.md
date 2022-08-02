@@ -32,7 +32,7 @@ Do ONE of the following:
 
 -  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.19.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
 ```
 *OR*
 -  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
@@ -290,6 +290,12 @@ The `allowTopicSelection` element in `qSearchBarOptions` can be used to customiz
 ```
 This returns a dashboard object for further action.
 
+#### Visual embedding
+```javascript
+    var visual = QuickSightEmbedding.embedVisual(options);
+```
+This returns a visual object for further action.
+
 #### Console embedding
 ```javascript
     var session = QuickSightEmbedding.embedSession(options);
@@ -497,7 +503,7 @@ This feature closes the Q popover, returns the iframe to the original Q search b
 
     <head>
         <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.19.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var dashboard
             function onDashboardLoad(payload) {
@@ -555,7 +561,7 @@ This feature closes the Q popover, returns the iframe to the original Q search b
 
     <head>
         <title>QuickSight Console Embedding</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.19.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var session
 
@@ -610,7 +616,7 @@ This feature closes the Q popover, returns the iframe to the original Q search b
 
     <head>
         <title>QuickSight Q Search Bar Embedding</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.19.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             var session
 

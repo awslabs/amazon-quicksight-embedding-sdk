@@ -4,7 +4,21 @@
 
 import EmbeddableObject from './EmbeddableObject';
 import EmbeddableDashboard from './EmbeddableDashboard';
-import type {EmbeddingOptions} from './lib/types';
+import EmbeddableVisual from './EmbeddableVisual';
+import type {EmbeddingOptions, VisualEmbeddingOptions} from './lib/types';
+
+/**
+ * Embed a visual.
+ * @function
+ * @name embedVisual
+ * @param {VisualEmbeddingOptions} options - options set by customers to embed the visual.
+ */
+function embedVisual(options: VisualEmbeddingOptions): EmbeddableVisual {
+    const visual = new EmbeddableVisual(options);
+    const container = visual.getContainer();
+    setTimeout(attachToDom.bind(null, visual.iframe, container), 0);
+    return visual;
+}
 
 /**
  * Embed a dashboard.
@@ -70,5 +84,5 @@ function attachToDom(iframe: ?HTMLIFrameElement, container: ?HTMLElement) {
 
 
 export {
-    embedDashboard, embedSession, embedQSearchBar
+    embedVisual, embedDashboard, embedSession, embedQSearchBar
 };
