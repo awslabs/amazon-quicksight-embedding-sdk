@@ -1,3 +1,6 @@
+**1.19.1**
+* Upgrade dependency packages
+
 **1.19.0**
 * Add `closeQPopover` function to close the Q popover
 * Add `setQBarQuestion` function to send and query a question in Q search bar
