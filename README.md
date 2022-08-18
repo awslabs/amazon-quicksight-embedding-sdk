@@ -1,144 +1,88 @@
 # Amazon QuickSight Embedding SDK
+&nbsp;  
 Thank you for using the Amazon QuickSight JavaScript SDK. You can use this SDK to embed Amazon QuickSight in your HTML.
 
-## Usage
-Amazon QuickSight offers three different embedded experiences with options for branding, user isolation with namespaces, and custom UI permissions:
+For more information and to learn how to use QuickSight Embedding, please visit [QuickSight Developer Portal Website](https://developer.quicksight.aws/)
 
-* Embedded authoring portals provide the QuickSight authoring experience
+Amazon QuickSight offers four different embedding experiences with options for branding, user isolation with namespaces, and custom UI permissions.
 
-To get started with an embedded authoring portal, you need to make sure that the users are granted the necessary permissions. For more information, see [Embedding the Amazon QuickSight Console](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-quicksight-console.html)
+* [Dashboard Embedding](#dashboard-embedding)
+* [Visual Embedding](#visual-embedding)
+* [Console Embedding](#console-embedding)
+* [QSearchBar Embedding](#qsearchbar-embedding)
 
-* Embedded dashboards provide an interactive read-only experience
+&nbsp;  
+## Installation
+&nbsp;  
 
-To get started with an embedded dashboard, you need to publish it and also make sure that the users have the necessary permissions. For more information, see  [Embedding Amazon QuickSight Dashboards](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-dashboards.html) in the Amazon QuickSight User Guide. After a dashboard is ready, follow the procedure to embed your Amazon QuickSight dashboard in this [example](#example):
-
-* Embedded Q Search Bar provides the [QuickSight Q](https://aws.amazon.com/quicksight/q/) search bar experience
-
-To get started with an embedded Q search bar, you need to create topics and also make sure that the users have the necessary permissions. For more information, see  [Embedding Amazon QuickSight Q Search Bar](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-q-search-bar.html) in the Amazon QuickSight User Guide. After Q is ready, follow the procedure to embed your Amazon QuickSight Q search bar in this [example](#example):
-
-### Setup differences between embedded QuickSight experiences: dashboards and portals
-The process to set up QuickSight embedding is similar in both cases. The differences between setting up the two embedded experiences are as follows:
-
- 1. You use a different SDK object for each embedded QuickSight experience. You use `embedDashboard` to embed a dashboard, `embedQSearchBar` to embed the Q search bar, and you use `embedSession` to embed an authoring portal.
- 2. You use a different API for each embedded experience. For more information, see [QuickSight Embedding APIs](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html)
- 3. Different options are supported for each embedded experience.
- * Embedded dashboards are always read-only. The level of interactivity is set when the dashboard is published.
- * Embedded authoring ports allow the user to create QuickSight assets, just like they can in the AWS console for QuickSight. Exactly what the user can do in the console is controlled by a custom permission profile. The profile can remove abilities such as creating or updating data sources and datasets. You can set also the default visual type. Embedded consoles currently don't support screen scaling in formatting options.
-
- Details for each option are provided below in [step 2](#Step-2:-Configure-embedding)
-
-### Step 1: Download and include QuickSight Embedding SDK
-Do ONE of the following:
-
--  Option 1: Use the Amazon QuickSight Embedding SDK in the browser:
-```html
+-  **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
+   ```html
     <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
-```
-*OR*
--  Option 2: Install and use the QuickSight Embedding SDK in Node.js:
-```shell
+   ```
+-  **Option 2:** Install the QuickSight Embedding SDK in NodeJs:
+   ```shell
     npm install amazon-quicksight-embedding-sdk
-```
-```javascript
-    var QuickSightEmbedding = require("amazon-quicksight-embedding-sdk");
-```
-You can also use ES6 import syntax in place of require:
+   ```
+   and then use it in your code using `require` syntax
+   ```javascript
+    const QuickSightEmbedding = require("amazon-quicksight-embedding-sdk");
 
-#### For the embedded dashboard experience
-```javascript
-    import { embedDashboard } from 'amazon-quicksight-embedding-sdk';
+    const embeddedDashboardExperience = QuickSightEmbedding.embedDashboard(options);
+   ```
 
-    const dashboard = embedDashboard(options);
-```
-Alternatively, if you need to load the entire module:
-```javascript
+   or, using named `import` syntax:
+
+   ```javascript
+    import {
+        embedDashboard,
+        embedVisual,
+        embedSession,
+        embedQSearchBar,
+    } from 'amazon-quicksight-embedding-sdk';
+
+    const embeddedDashboardExperience = embedDashboard(options);
+   ```
+
+   or, using wildcard `import` syntax:
+
+   ```javascript
     import * as QuickSightEmbedding from 'amazon-quicksight-embedding-sdk';
 
-    const dashboard = QuickSightEmbedding.embedDashboard(options);
-```
-#### For the embedded console experience (authoring portals)
-You can also use ES6 import syntax in place of require:
-```javascript
-    import { embedSession } from 'amazon-quicksight-embedding-sdk';
+    const embeddedQSearchBarExperience = QuickSightEmbedding.embedQSearchBar(options);
+   ```
 
-    const session = embedSession(options);
-```
-Alternatively, if you need to load the entire module:
-```javascript
-    import * as QuickSightEmbedding from 'amazon-quicksight-embedding-sdk';
+&nbsp;  
+### Common Options for All Embedding Experiences
+&nbsp;  
 
-    const session = QuickSightEmbedding.embedSession(options);
-```
+#### 🔹 url: *string* *(required)*
 
-#### For the embedded Q search bar experience 
-You can also use ES6 import syntax in place of require:
-```javascript
-    import { embedQSearchBar } from 'amazon-quicksight-embedding-sdk';
+This is the embed URL you have generated using the [QuickSight API Operations for Embedding](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html).
 
-    const session = embedQSearchBar(options);
-```
-Alternatively, if you need to load the entire module:
-```javascript
-    import * as QuickSightEmbedding from 'amazon-quicksight-embedding-sdk';
+Follow [Embedding with the QuickSight API](https://docs.aws.amazon.com/quicksight/latest/user/embedded-analytics-api.html) in the Amazon QuickSight User Guide to generate the url.
 
-    const session = QuickSightEmbedding.embedQSearchBar(options);
-```
+For each experience, you need to make sure that the users are granted the necessary permissions to view the embedded experience.
 
-### Step 2: Configure embedding
-Set up the embedded QuickSight console options.
-```javascript
-    var options = {
-        url: "https://us-east-1.quicksight.aws.amazon.com/sn/dashboards/dashboardId?isauthcode=true&identityprovider=quicksight&code=authcode",
-        container: document.getElementById("embeddingContainer"),
-        parameters: {
-            country: "United States",
-            states: [
-                "California",
-                "Washington"
-            ]
-        },
-        scrolling: "no",
-        height: "700px",
-        iframeResizeOnSheetChange: false, // use this option in combination with height: AutoFit, to allow iframe height to resize dynamically, based on sheet height, on changing sheets.
-        width: "1000px",
-        locale: "en-US",
-        footerPaddingEnabled: true,
-        sheetId: 'YOUR_SHEETID' // use this option to specify initial sheet id to load for the embedded dashboard
-        sheetTabsDisabled: false, // use this option to enable or disable sheet tab controls in dashboard embedding
-        printEnabled: false, // use this option to enable or disable print option for dashboard embedding
-        undoRedoDisabled: false, // set this option to true to disable undo and redo buttons for dashboard embedding
-        resetDisabled: false, // set this option to true to disable reset button for dashboard embedding
-        defaultEmbeddingVisualType: TABLE // this option only applies to experience embedding and will not be used for dashboard embedding
-    };
-```
-#### URL element (required)
-If you haven't done it yet, to generate the embedding URL for dashboard embedding, follow [Embedding Amazon QuickSight Dashboards](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-dashboards.html) in the Amazon QuickSight User Guide to generate the url.
+#### 🔹 container: *string | HTMLElement* *(required)*
 
-To generate the embedding URL for console embedding, follow [Embedding the Amazon QuickSight Console](https://docs.aws.amazon.com/en_us/quicksight/latest/user/embedding-the-quicksight-console.html) in the Amazon QuickSight User Guide to generate the URL.
+This is the parent HTMLElement where we're going to embed QuickSight.
 
-#### Container element (required)
-The `container` element is the parent HTMLElement where we're going to embed QuickSight. You can make it one of the following:
-
--  Option 1: It can be an HTMLElement:
+It can be an HTMLElement:
 ```javascript
     container: document.getElementById("embeddingContainer")
 ```
--  Option 2: Or, it can be a query selector string:
+Or, it can be a query selector string:
 ```javascript
     container: "#embeddingContainer"
 ```
 
-#### Parameters element (optional)
-The `parameters` element is an object that contains key:value pairs for parameters names:values.
-It allows you to set initial parameter values for your embedded QuickSight session. Pass an array as value for multi-value parameters.
-For more information about parameters in Amazon QuickSight, see https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html
+#### 🔹 scrolling: *'auto' | 'yes' | 'no'* *(optional, default='no')*
 
-#### Scrolling element (optional)
-The `scrolling` element lets you set up a specific scrolling experience for the iFrame that holds your embedded QuickSight session. Available values are `auto`, `yes`,
-and `no`. The default value is `no`.
+This lets you set up a specific scrolling experience for the iframe that holds your embedded QuickSight session.
 
-#### Width element and height element (optional)
-You can set `width` and `height` for the iFrame that holds your embedded QuickSight session. Both of these default to 100%. You can set them to be fixed values:
+#### 🔹 width: *string* *(optional, default='100%')*, 🔹 height: *string* *(optional, default='100%')*
+
+You can set `width` and `height` for the iframe that holds your embedded QuickSight session. Both of these default to 100%. You can set them to be fixed values:
 ```javascript
     height: "700px",
     width: "1000px"
@@ -152,31 +96,9 @@ Or, relative values:
 
 To make your embedded QuickSight session responsive, don't set `width` or `height` (leave them at the default: `100%`). Then you can make the container HTMLElement responsive to screen size change.
 
+#### 🔹 className: *string* *(optional)*
 
-You can also choose to set height to be `AutoFit` to make the iFrame fit your dashboard height. Use `loadingHeight` to specify the height you'd like to use before actual dashboard height is known. **This is currently only supported for dashboard embedding**:
-```javascript
-    height: "AutoFit",
-    loadingHeight: "700px"
-```
-
-Note: With AutoFit height enabled, modals generated by the dashboard can be hidden
-if the content is larger than the screen. An example of this type of modal is the one that displays when you select "Export to CSV" on a Table visual. To solve this issue, you can add the following code to autoscroll the focus to the modal.
-```javascript
-dashboard.on("SHOW_MODAL_EVENT", () => {
-    window.scrollTo({
-        top: 0 // iFrame top position
-    });
-});
-```
-
-#### IframeResizeOnSheetChange element (optional)
-You can use `iframeResizeOnSheetChange` option in combination with `height: "AutoFit"` option, when you want the embedded dashboard height to auto resize based on sheet height, on every sheet change event. The default value is `false`.
-
-#### SheetId element (optional)
-You can use the `sheetId` option, when you want to specify the initial sheet of the dashboard, instead of loading the first sheet of the embedded dashboard. You can provide the target sheet id of the dashboard as the value. In case the sheet id value is invalid, the first sheet of the dashboard will be loaded.
-
-#### ClassName element (optional)
-You can customize style of the iFrame that holds your dashboard by one of the followings:
+You can customize style of the iframe that holds your dashboard by one of the followings:
 
 -  Option 1: Use the "quicksight-embedding-iframe" class we predefined for you:
 ```
@@ -194,11 +116,11 @@ your-own-class {
     className: "your-own-class",
 ```
 
-We've overridden the border and padding of the iFrame to be 0px, because setting border and padding on the iFrame might cause unexpected issues. If you have to set border and padding on the embedded QuickSight session, set it on the container div that contains the iFrame.
+We've overridden the border and padding of the iframe to be 0px, because setting border and padding on the iframe might cause unexpected issues. If you have to set border and padding on the embedded QuickSight session, set it on the container div that contains the iframe.
 
-Note for Q search bar embedding, you'll likely want to use this to give the iframe a `position: absolute` so that when expanded it does not shift the contents of your application. If elements in your application are appearing in front of the Q search bar, you can provide the iframe with a higher z-index as well. 
 
-#### Locale element (optional)
+#### 🔹 locale: *string* *(optional)*
+
 You can set locale for the embedded QuickSight session:
 ```javascript
     locale: "en-US",
@@ -217,130 +139,32 @@ nb-NO (Norsk),
 pt-BR (Português),
 fi-FI (Suomi),
 sv-SE (Svenska),
+ja-JP (日本語),
 ko-KR (한국어),
 zh-CN (中文 (简体)),
 zh-TW (中文 (繁體))
 ```
-Note: The above list might be out of date, as we continue adding more locales to QuickSight. For a more updated list of locales, please refer to https://docs.aws.amazon.com/quicksight/latest/user/choosing-a-language-in-quicksight.html. Any unsupported locale value will fallback to using en-US.
 
-#### DefaultEmbeddingVisualType for QuickSight console embedding (optional)
-You can set the embedding visual type for embedded sessions. The default visual type provided in the options will be used during visual creating. By default, when you add a new visual in an embedded session, `AutoGraph` is selected by default. This setting can be overridden to `Table` by setting the following option:
-```
-    defaultEmbeddingVisualType: "TABLE"
-```
+For a more updated list of locales, please refer to https://docs.aws.amazon.com/quicksight/latest/user/choosing-a-language-in-quicksight.html. Any unsupported locale value will fallback to using `en-US`.
 
-Available options for default visual types in embedding are:
-```
-AUTO_GRAPH,
-TABLE
-```
+#### 🔹 parameters: *Object* *(optional)*
 
-#### FooterPaddingEnabled element (optional)
-The `footerPaddingEnabled` element adds 22 pixels of space at the bottom of the layout. For example, you can set this to `true` if the "Powered by QuickSight" footer blocks part of your visual. The default value is `false`.
+This is an object that contains `key:value` pairs for parameters names:values.
+It allows you to set initial parameter values for your embedded QuickSight session. Pass an array as value for multi-value parameters.
+For more information about parameters in Amazon QuickSight, see https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html
 
-#### PrintEnabled element (optional)
-The `printEnabled` element can be used to enable or disable print option for dashboard embedding. The default value is `false`. And, if both undoRedo and reset options are disabled, the navbar and print option wont be shown anyways, even if printEnabled is true.
+#### 🔹 errorCallback: *Function* *(optional)*
 
-#### UndoRedoDisabled element (optional)
-The `undoRedoDisabled` element can be used to disable undo and redo buttons for dashboard embedding. If this option is set to `true`, the undo redo buttons will not be shown. The default value is `false`.
+If you want your application get notified and respond when the embedded QuickSight session fails to load, use a error callback.
 
-#### ResetDisabled element (optional)
-The `resetDisabled` element can be used to disable reset button for dashboard embedding. If this option is set to `true`, the reset button will not be shown. The default value is `false`.
-
-#### SheetTabsDisabled element (optional)
-**This is currently only supported for dashboard embedding.**
-The `sheetTabsDisabled` element can be used to enable or disable sheet tab controls in dashboard embedding. The default value is `false`.
-
-### Q Search Bar options
-The `qSearchBarOptions` object is to specify Q specific options when embedding:
-```javascript
-    var qSearchBarOptions = {
-        expandCallback: () => {},
-        collapseCallback: () => {},
-        iconDisabled: false,
-        topicNameDisabled: false, 
-        themeId: 'theme12345',
-        allowTopicSelection: true
-    };
-```
-
-#### ExpandCallback (optional)
-The `expandCallback` in `qSearchBarOptions` can be used to specify behavior for your application when the Q search bar is expanded (clicked into).
-
-#### CollapseCallback (optional)
-The `collapseCallback` in `qSearchBarOptions` can be used to specify behavior for your application when the Q search bar is collapsed (clicked out of).
-
-#### IconDisabled (optional)
-The `iconDisabled` element in `qSearchBarOptions` can be used to customize whether or not the QuickSight Q icon appears in the embedded search bar. The default value is `false`.
-
-#### TopicNameDisabled (optional)
-The `topicNameDisabled` element in `qSearchBarOptions` can be used to customize whether or not the QuickSight Q Topic name appears in the embedded search bar. The default value is `false`.
-
-#### ThemeId (optional)
-The `themeId` element in `qSearchBarOptions` can be used to set a content theme for the embedded search bar. Note that the embedded QuickSight user, or the group or namespace they belong to, must have permissions on this theme. The default theme is the default QuickSight theme seen in the console application. 
-
-#### AllowTopicSelection (optional)
-The `allowTopicSelection` element in `qSearchBarOptions` can be used to customize whether or not the embedded user can change the selected topic for the Q search bar. Note that this can only be set to false if the `initialTopicId` was specified in the embedding API; for more information, see [QuickSight Embedding APIs](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html). The default value is `true`.
-
-### Step 3: Create the QuickSight session object
-
-#### Dashboard embedding
-```javascript
-    var dashboard = QuickSightEmbedding.embedDashboard(options);
-```
-This returns a dashboard object for further action.
-
-#### Visual embedding
-```javascript
-    var visual = QuickSightEmbedding.embedVisual(options);
-```
-This returns a visual object for further action.
-
-#### Console embedding
-```javascript
-    var session = QuickSightEmbedding.embedSession(options);
-```
-This returns an console session object for further action.
-
-#### QSearchBar embedding
-```javascript
-    var qBar = QuickSightEmbedding.embedQSearchBar(options);
-```
-This returns a Q search bar object for further action.
-
-### Step 4: Setup load callback (optional)
-**This is currently only supported for dashboard embedding.**
-
-If you want your application to get notified and respond when the Amazon QuickSight dashboard is fully loaded, use a load callback. Choose one of the following:
-
--  Use options:
-```javascript
-    loadCallback: yourLoadCallback,
-```
-
-- Or, register the "load" event on the returned dashboard object:
-```javascript
-    dashboard.on("load", yourLoadCallback);
-```
-
-
-### Step 5: Setup error callback (optional)
-
-If you want your application get notified and respond when the embedded QuickSight session fails to load, use a error callback. Choose one of the following:
-
-- Use options:
 ```javascript
     errorCallback: yourErrorCallback,
 ```
 
-- Or, register the "error" event on the returned dashboard object:
-```javascript
-     dashboard.on("error", yourErrorCallback);
-```
+Alternatively, you can register the "error" event on the returned experience object.
 
-- To register the "error" event on the returned console session object:
 ```javascript
-     session.on("error", yourErrorCallback);
+     embeddedExperience.on("error", yourErrorCallback);
 ```
 
 We pass a payload object to your callback function with a specific `payload.errorCode`. Currently, the error codes are:
@@ -351,40 +175,136 @@ We pass a payload object to your callback function with a specific `payload.erro
 
 If you follow the instructions to generate the correct URL, but you still receive these error codes, you need to generate a new URL.
 
+&nbsp;  
+### Common Actions for All Embedding Experiences
+&nbsp;  
 
-### Step 6: Update parameter values (optional)
-Use `setParameters()` to update parameter values. Pass an array as value for multi-value parameters.
+#### 🔹 setParameters: *Function* *(optional)*
+
+Use this function to update parameter values. Pass an array as value for multi-value parameters.
 You can build your own UI to trigger this, so that viewers of the embedded QuickSight session can control it from your app page.
 
-#### Dashboard embedding
-Parameters in an embedded dashboard session can be set by using the following call:
+Parameters in an embedded experience session can be set by using the following call:
 ```javascript
-    dashboard.setParameters({country: "United States", states: ["California", "Washington"]});
+    embeddedExperience.setParameters({country: "United States", states: ["California", "Washington"]});
 ```
 
 To reset a parameter so that it includes all values, you can pass the string `"[ALL]"`.
 ```javascript
-    dashboard.setParameters({country: "United States", states: "[ALL]" });
+    embeddedExperience.setParameters({country: "United States", states: "[ALL]" });
 ```
 
-#### Console embedding
-Parameters in an embedded console session can be set by using the following call:
+&nbsp;  
+## Dashboard Embedding
+&nbsp;  
+
+Dashboard Embedding provides an interactive read-only experience. The level of interactivity is set when the dashboard is published.
+
+For more information, see  [Working with embedded analytics](https://docs.aws.amazon.com/quicksight/latest/user/embedded-analytics.html) in the Amazon QuickSight User Guide.
+
+&nbsp;  
+### Getting Started
+&nbsp;  
+
 ```javascript
-    session.setParameters({country: "United States", states: ["California", "Washington"]});
-```
+    import { embedDashboard } from 'amazon-quicksight-embedding-sdk';
 
-To reset a parameter so that it includes all values, you can pass the string `"[ALL]"`.
+    const embeddedDashboardExperience = embedDashboard(options);
+```
+This returns a dashboard object for further action.
+
+&nbsp;  
+### Options
+&nbsp;  
+
+#### 🔹 printEnabled: *boolean* *(optional, default=false)*
+This can be used to enable or disable print option for dashboard embedding. If "undoRedo" and "reset" are disabled and "printEnabled" is set to false, then the navrbar is hidden.
+
+#### 🔹 undoRedoDisabled: *boolean* *(optional, default=false)*
+This can be used to disable undo and redo buttons for dashboard embedding. If "undoRedo" and "reset" are disabled and "printEnabled" is set to false, then the navrbar is hidden.
+
+#### 🔹 resetDisabled: *boolean* *(optional, default=false)*
+This can be used to disable reset button for dashboard embedding. If "undoRedo" and "reset" are disabled and "printEnabled" is set to false, then the navrbar is hidden.
+
+#### 🔹 sheetId: *string* *(optional)*
+You can use this when you want to specify the initial sheet of the dashboard, instead of loading the first sheet of the embedded dashboard. You can provide the target sheet id of the dashboard as the value. In case the sheet id value is invalid, the first sheet of the dashboard will be loaded.
+
+#### 🔹 sheetTabsDisabled: *boolean* *(optional, default=false)*
+The `sheetTabsDisabled` element can be used to enable or disable sheet tab controls in dashboard embedding.
+
+#### 🔹 footerPaddingEnabled: *boolean* *(optional, default=false)*
+
+This adds 22 pixels of space at the bottom of the layout. You can set this to `true` if the "Powered by QuickSight" footer blocks part of your visual.
+
+#### 🔹 iframeResizeOnSheetChange: *boolean* (optional default=false)
+You can use this in combination with `height: "AutoFit"` option, when you want the embedded dashboard height to auto resize based on sheet height, on every sheet change event.
+
+#### 🔹 parametersChangeCallback: *Function* *(optional)*
+
+If you want your application to get notified and respond when the parameters in Amazon QuickSight dashboard changes, use the parameter change callback.
+
 ```javascript
-    session.setParameters({country: "United States", states: "[ALL]" });
+    parametersChangeCallback: yourParametersChangeCallback,
 ```
 
+Alternatively, you can register the "parametersChange" event on the returned dashboard object.
+```javascript
+    embeddedDashboardExperience.on("parametersChange", yourParametersChangeCallback);
+```
 
-### Step 7: Navigate to different dashboard (optional)
-#### Dashboard embedding
+#### 🔹 selectedSheetChangeCallback: *Function* *(optional)*
+
+If you want your application to get notified and respond when the selected sheet in Amazon QuickSight dashboard changes, use the selected sheet change callback.
+
+```javascript
+    selectedSheetChangeCallback: yourSelectedSheetChangeCallback,
+```
+
+Alternatively, you can register the "selectedSheetChange" event on the returned dashboard object.
+```javascript
+    embeddedDashboardExperience.on("selectedSheetChange", yourSelectedSheetChangeCallback);
+```
+
+#### 🔹 loadCallback: *Function*  *(optional)*
+
+If you want your application to get notified and respond when the Amazon QuickSight dashboard is fully loaded, use a load callback.
+
+```javascript
+    loadCallback: yourLoadCallback,
+```
+
+Alternatively, you can register the "load" event on the returned dashboard object.
+```javascript
+    embeddedDashboardExperience.on("load", yourLoadCallback);
+```
+
+#### 🔹 height: 'AutoFit' *(optional)*, 🔹 loadingHeight: *string* *(optional)*
+
+You can also choose to set height to be `AutoFit` to make the iframe fit your dashboard height. Use `loadingHeight` to specify the height you'd like to use before actual dashboard height is known.
+```javascript
+    height: "AutoFit",
+    loadingHeight: "700px"
+```
+
+Note: With AutoFit height enabled, modals generated by the dashboard can be hidden
+if the content is larger than the screen. An example of this type of modal is the one that displays when you select "Export to CSV" on a Table visual. To solve this issue, you can add the following code to autoscroll the focus to the modal.
+```javascript
+embeddedDashboardExperience.on("SHOW_MODAL_EVENT", () => {
+    window.scrollTo({
+        top: 0 // iframe top position
+    });
+});
+```
+
+&nbsp;  
+### Actions
+&nbsp;  
+
+#### 🔹 navigateToDashboard
 
 To navigate to a different dashboard, use dashboard.navigateToDashboard(options). The input parameter options should contain the dashboardId that you want to navigate to, and also the parameters for that dashboard, for example:
 ```javascript
-    var options = {
+    const options = {
         dashboardId: "37a99f75-8230-4409-ac52-e45c652cc21e",
         parameters: {
             country: [
@@ -392,120 +312,57 @@ To navigate to a different dashboard, use dashboard.navigateToDashboard(options)
             ]
         }
     };
-    dashboard.navigateToDashboard(options);
+    embeddedDashboardExperience.navigateToDashboard(options);
 ```
-This function is only supported for embedded dashboards.
 
-### Step 8: Navigate to sheet (optional)
-**This is currently only supported for dashboard embedding.**
+#### 🔹 navigateToSheet
 
 If you want to navigate from one sheet to another programmatically, with the Amazon quicksight dashboard, use the below method:
 
 ```javascript
-    dashboard.navigateToSheet(sheetId);
+    embeddedDashboardExperience.navigateToSheet(sheetId);
 ```
 
-### Step 9: Setup parameters change callback (optional)
-**This is currently only supported for dashboard embedding.**
-
-If you want your application to get notified and respond when the parameters in Amazon QuickSight dashboard changes, use the parameter change callback. Choose one of the following:
-
--  Use options:
-```javascript
-    parametersChangeCallback: yourParametersChangeCallback,
-```
-
-- Or, register the "parametersChange" event on the returned dashboard object:
-```javascript
-    dashboard.on("parametersChange", yourParametersChangeCallback);
-```
-
-### Step 10: Setup selected sheet change callback (optional)
-**This is currently only supported for dashboard embedding.**
-
-If you want your application to get notified and respond when the selected sheet in Amazon QuickSight dashboard changes, use the selected sheet change callback. Choose one of the following:
-
--  Use options:
-```javascript
-    selectedSheetChangeCallback: yourSelectedSheetChangeCallback,
-```
-
-- Or, register the "selectedSheetChange" event on the returned dashboard object:
-```javascript
-    dashboard.on("selectedSheetChange", yourSelectedSheetChangeCallback);
-```
-
-### Step 11: Get active parameter values (optional)
-**This is currently only supported for dashboard embedding.**
-
-If you want to get the active parameter values, from Amazon Quicksight dashboard in ad-hoc manner, use the below method with a callback:
-
-```javascript
-    dashboard.getActiveParameterValues(yourCallback);
-```
-
-The callback is needed since the process of getting active parameter values is asynchronous, even for ad-hoc fetches.
-
-### Step 12: Get sheets (optional)
-**This is currently only supported for dashboard embedding.**
+#### 🔹 getSheets
 
 If you want to get the current set of sheets, from Amazon Quicksight dashboard in ad-hoc manner, use the below method with a callback:
 
 ```javascript
-    dashboard.getSheets(yourCallback);
+    embeddedDashboardExperience.getSheets(yourCallback);
 ```
 
 The callback is needed since the process of getting sheets is asynchronous, even for ad-hoc fetches.
 
-### Step 13: Initiate print from JS SDK method
-**This is currently only supported for dashboard embedding.**
+#### 🔹 initiatePrint
 
 This feature allows you to initiate dashboard print, from parent website, without a navbar print icon, in the dashboard. To initiate a dashboard print from parent website, use dashboard.initiatePrint(), for example:
 ```javascript
-    dashboard.initiatePrint();
+    embeddedDashboardExperience.initiatePrint();
 ```
 
-### Step 14: Invoke Q search bar actions (optional)
-**These are only supported for Q search bar embedding.**
+#### 🔹 getActiveParameterValues
 
-#### Set Q search bar question
-
-This feature sends a question to the Q search bar and immediately queries the question. It also automatically opens the Q popover.
+If you want to get the active parameter values, from Amazon Quicksight dashboard in ad-hoc manner, use the below method with a callback:
 
 ```javascript
-    qBar.setQBarQuestion('show me monthly revenue');
+    embeddedDashboardExperience.getActiveParameterValues(yourCallback);
 ```
 
+The callback is needed since the process of getting active parameter values is asynchronous, even for ad-hoc fetches.
 
-#### Close Q popover
+&nbsp;  
+### Example
+&nbsp;  
 
-This feature closes the Q popover, returns the iframe to the original Q search bar size.
-
-```javascript
-    qBar.closeQPopover();
-```
-
-
-## Troubleshooting
-1. Make sure the URL you provide in options is not encoded. You should avoid using an encoded URL because it breaks the authcode in the URL by changing it. Also, check that the URL sent in the response from the server side is not encoded.
-2. The URL only works if it used with the authcode it came with. The URL and authcode need to be used together. They expire after five minutes, so it's worth checking that you're not troubleshooting an expired combination of URL and authcode.
-2. Some browsers (e.g. mobile safari) have default setting to "Always Block Cookies". Change the setting to either "Allow form Websites I Visit" or "Always Allow".
-3. Q search bar troubleshooting:
-    * Shifting page contents in unwanted way - try giving the embedding container and the iframe class a style with position absolute.
-    * Clicking on some parts of your application does not close the Q search bar - use the `expandCallback` and `collapseCallback` to create a backdrop/element on the page that's always clickable so that the document listener can properly close the search bar. 
-
-
-## Example
-### Dashboard embedding
 ```html
     <!DOCTYPE html>
     <html>
 
     <head>
-        <title>Basic Embed</title>
+        <title>Dashboard Embedding Example</title>
         <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
-            var dashboard
+            let embeddedDashboardExperience;
             function onDashboardLoad(payload) {
                 console.log("Do something when the dashboard is fully loaded.");
             }
@@ -515,22 +372,32 @@ This feature closes the Q popover, returns the iframe to the original Q search b
             }
 
             function embedDashboard() {
-                var containerDiv = document.getElementById("embeddingContainer");
-                var options = {
-                    url: "https://us-east-1.quicksight.aws.amazon.com/sn/dashboards/dashboardId?isauthcode=true&identityprovider=quicksight&code=authcode",
+                const containerDiv = document.getElementById("embeddingContainer");
+                const options = {
+                    url: "<YOUR_EMBED_URL>", // replace this value with the url generated via embedding API
                     container: containerDiv,
                     parameters: {
-                        country: "United States"
+                        country: "United States",
+                        states: [
+                            "California",
+                            "Washington"
+                        ]
                     },
                     scrolling: "no",
                     height: "700px",
                     width: "1000px",
+                    iframeResizeOnSheetChange: false,
+                    sheetId: 'YOUR_SHEETID',
+                    sheetTabsDisabled: false,
                     locale: "en-US",
-                    footerPaddingEnabled: true
+                    footerPaddingEnabled: true,
+                    printEnabled: false,
+                    undoRedoDisabled: false,
+                    resetDisabled: false
                 };
-                dashboard = QuickSightEmbedding.embedDashboard(options);
-                dashboard.on("error", onError);
-                dashboard.on("load", onDashboardLoad);
+                embeddedDashboardExperience = QuickSightEmbedding.embedDashboard(options);
+                embeddedDashboardExperience.on("error", onError);
+                embeddedDashboardExperience.on("load", onDashboardLoad);
             }
 
             function onCountryChange(obj) {
@@ -554,7 +421,174 @@ This feature closes the Q popover, returns the iframe to the original Q search b
     </html>
 ```
 
-### QuickSight console embedding
+&nbsp;  
+## Visual Embedding
+&nbsp;  
+
+Visual Embedding provides an interactive read-only experience.
+
+For more information, see  [Embedding Amazon QuickSight Visuals](https://docs.aws.amazon.com/console/quicksight/visual-embedding) in the Amazon QuickSight User Guide.
+
+&nbsp;  
+### Getting Started
+&nbsp;  
+
+```javascript
+    import { embedVisual } from 'amazon-quicksight-embedding-sdk';
+
+    const embeddedVisualExperience = embedVisual(options);
+```
+This returns a visual object for further action.
+
+&nbsp;  
+### Options
+&nbsp;  
+
+#### 🔹 fitToIframeWidth: *boolean* *(optional, default=true)*
+
+If this is set to `false`, the visual keeps its dimensions as it was designed within its dashboard layout. Otherwise, it adjusts its width to match the iframe's width, while maintaining the original aspect ratio.
+
+#### 🔹 parametersChangeCallback: *Function* *(optional)*
+
+If you want your application to get notified and respond when the parameters in Amazon QuickSight dashboard changes, use the parameter change callback. Choose one of the following:
+
+-  Use options:
+```javascript
+    parametersChangeCallback: yourParametersChangeCallback,
+```
+
+- Or, register the "parametersChange" event on the returned dashboard object:
+```javascript
+    embeddedVisualExperience.on("parametersChange", yourParametersChangeCallback);
+```
+
+#### 🔹 loadCallback: *Function* *(optional)*
+
+If you want your application to get notified and respond when the Amazon QuickSight visual is fully loaded, use a load callback. Choose one of the following:
+
+-  Use options:
+```javascript
+    loadCallback: yourLoadCallback,
+```
+
+- Or, register the "load" event on the returned visual object:
+```javascript
+    embeddedVisualExperience.on("load", yourLoadCallback);
+```
+
+#### 🔹 height: 'AutoFit' *(optional)*, 🔹 loadingHeight: *string* *(optional)*
+
+You can also choose to set height to be `AutoFit` to make the iframe fit your visual height. Use `loadingHeight` to specify the height you'd like to use before actual visual height is known.
+```javascript
+    height: "AutoFit",
+    loadingHeight: "700px"
+```
+
+&nbsp;  
+### Actions
+&nbsp;  
+
+#### 🔹 getActiveParameterValues
+
+If you want to get the active parameter values, from Amazon Quicksight visual in ad-hoc manner, use the below method with a callback:
+
+```javascript
+    embeddedVisualExperience.getActiveParameterValues(yourCallback);
+```
+
+The callback is needed since the process of getting active parameter values is asynchronous, even for ad-hoc fetches.
+
+&nbsp;  
+### Example
+&nbsp;  
+
+```html
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <title>Visual Embedding Example</title>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script type="text/javascript">
+            let embeddedVisualExperience;
+            function onVisualLoad(payload) {
+                console.log("Do something when the visual is fully loaded.");
+            }
+
+            function onError(payload) {
+                console.log("Do something when the visual fails loading");
+            }
+
+            function embedVisual() {
+                const containerDiv = document.getElementById("embeddingContainer");
+                const options = {
+                    url: "<YOUR_EMBED_URL>", // replace this value with the url generated via embedding API
+                    container: containerDiv,
+                    parameters: {
+                        country: "United States"
+                    },
+                    height: "700px",
+                    width: "1000px",
+                    locale: "en-US"
+                };
+                embeddedVisualExperience = QuickSightEmbedding.embedVisual(options);
+                embeddedVisualExperience.on("error", onError);
+                embeddedVisualExperience.on("load", onVisualLoad);
+            }
+
+            function onCountryChange(obj) {
+                embeddedVisualExperience.setParameters({country: obj.value});
+            }
+        </script>
+    </head>
+
+    <body onload="embedVisual()">
+        <span>
+            <label for="country">Country</label>
+            <select id="country" name="country" onchange="onCountryChange(this)">
+                <option value="United States">United States</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Canada">Canada</option>
+            </select>
+        </span>
+        <div id="embeddingContainer"></div>
+    </body>
+
+    </html>
+```
+
+&nbsp;  
+## Console Embedding
+&nbsp;  
+
+Console embeding provides the QuickSight authoring experience.
+
+  For more information, see [Embedding the Amazon QuickSight Console](https://docs.aws.amazon.com/quicksight/latest/user/embedded-analytics-full-console-for-authenticated-users.html)
+
+  Embedded authoring experience allows the user to create QuickSight assets, just like they can in the AWS console for QuickSight. Exactly what the user can do in the console is controlled by a custom permission profile. The profile can remove abilities such as creating or updating data sources and datasets. You can set also the default visual type. Embedded consoles currently don't support screen scaling in formatting options.
+
+&nbsp;  
+### Getting Started
+&nbsp;  
+
+```javascript
+    import { embedSession } from 'amazon-quicksight-embedding-sdk';
+
+    const embeddedSessionExperience = embedSession(options);
+```
+This returns an console session object for further action.
+
+&nbsp;  
+### Options
+&nbsp;  
+
+#### 🔹 defaultEmbeddingVisualType: *'TABLE' | 'AUTO_GRAPH'* *(optional)*
+You can set the embedding visual type for embedded sessions. The default visual type provided in the options will be used during visual creating. By default, when you add a new visual in an embedded session, `AUTO_GRAPH` is selected by default. 
+
+&nbsp;  
+### Example
+&nbsp;  
+
 ```html
     <!DOCTYPE html>
     <html>
@@ -563,16 +597,16 @@ This feature closes the Q popover, returns the iframe to the original Q search b
         <title>QuickSight Console Embedding</title>
         <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
-            var session
+            let embeddedSessionExperience;
 
             function onError(payload) {
                 console.log("Do something when the session fails loading");
             }
 
             function embedSession() {
-                var containerDiv = document.getElementById("embeddingContainer");
-                var options = {
-                    url: "https://us-east-1.quicksight.aws.amazon.com/sn/dashboards/dashboardId?isauthcode=true&identityprovider=quicksight&code=authcode", // replace this dummy url with the one generated via embedding API
+                const containerDiv = document.getElementById("embeddingContainer");
+                const options = {
+                    url: "<YOUR_EMBED_URL>", // replace this value with the url generated via embedding API
                     container: containerDiv,
                     parameters: {
                         country: "United States"
@@ -582,14 +616,14 @@ This feature closes the Q popover, returns the iframe to the original Q search b
                     width: "1000px",
                     locale: "en-US",
                     footerPaddingEnabled: true,
-                    defaultEmbeddingVisualType: "TABLE", // this option only applies to QuickSight console embedding and is not used for dashboard embedding
+                    defaultEmbeddingVisualType: "TABLE",
                 };
-                session = QuickSightEmbedding.embedSession(options);
-                session.on("error", onError);
+                embeddedSessionExperience = QuickSightEmbedding.embedSession(options);
+                embeddedSessionExperience.on("error", onError);
             }
 
             function onCountryChange(obj) {
-                session.setParameters({country: obj.value});
+                embeddedSessionExperience.setParameters({country: obj.value});
             }
         </script>
     </head>
@@ -609,7 +643,85 @@ This feature closes the Q popover, returns the iframe to the original Q search b
     </html>
 ```
 
-### QuickSight Q search bar embedding
+&nbsp;  
+## QSearchBar Embedding
+&nbsp;  
+
+QSearchBar Embedding provides the [QuickSight Q](https://aws.amazon.com/quicksight/q/) search bar experience.
+
+For more information, see  [Embedding Amazon QuickSight Q Search Bar](https://docs.aws.amazon.com/quicksight/latest/user/embedded-analytics-q-search-bar-for-authenticated-users.html) in the Amazon QuickSight User Guide.
+
+&nbsp;  
+### Getting Started
+&nbsp;  
+
+```javascript
+    import { embedQSearchBar } from 'amazon-quicksight-embedding-sdk';
+
+    const embeddedQBarExperience = embedQSearchBar(options);
+```
+This returns a Q search bar object for further action.
+
+&nbsp;  
+### Options
+&nbsp;  
+
+The `qSearchBarOptions` object is to specify Q specific options when embedding:
+```javascript
+    const qSearchBarOptions = {
+        expandCallback: () => {},
+        collapseCallback: () => {},
+        iconDisabled: false,
+        topicNameDisabled: false,
+        themeId: 'theme12345',
+        allowTopicSelection: true
+    };
+```
+
+Note for Q search bar embedding, you'll likely want to use `className` to give the iframe a `position: absolute` so that when expanded it does not shift the contents of your application. If elements in your application are appearing in front of the Q search bar, you can provide the iframe with a higher z-index as well.
+
+#### 🔹 expandCallback: *Function* *(optional)*
+The `expandCallback` in `qSearchBarOptions` can be used to specify behavior for your application when the Q search bar is expanded (clicked into).
+
+#### 🔹 collapseCallback: *Function* *(optional)*
+The `collapseCallback` in `qSearchBarOptions` can be used to specify behavior for your application when the Q search bar is collapsed (clicked out of).
+
+#### 🔹 iconDisabled: *boolean* *(optional, default=false)*
+The `iconDisabled` element in `qSearchBarOptions` can be used to customize whether or not the QuickSight Q icon appears in the embedded search bar.
+
+#### 🔹 topicNameDisabled: *boolean* *(optional, default=false)*
+The `topicNameDisabled` element in `qSearchBarOptions` can be used to customize whether or not the QuickSight Q Topic name appears in the embedded search bar.
+
+#### 🔹 themeId: *string* *(optional)*
+The `themeId` element in `qSearchBarOptions` can be used to set a content theme for the embedded search bar. Note that the embedded QuickSight user, or the group or namespace they belong to, must have permissions on this theme. The default theme is the default QuickSight theme seen in the console application.
+
+#### 🔹 allowTopicSelection: *boolean* *(optional)*
+The `allowTopicSelection` element in `qSearchBarOptions` can be used to customize whether or not the embedded user can change the selected topic for the Q search bar. Note that this can only be set to false if the `initialTopicId` was specified in the embedding API; for more information, see [QuickSight Embedding APIs](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html). The default value is `true`.
+
+&nbsp;  
+### Actions
+&nbsp;  
+
+#### 🔹 setQBarQuestion
+
+This feature sends a question to the Q search bar and immediately queries the question. It also automatically opens the Q popover.
+
+```javascript
+    embeddedQBarExperience.setQBarQuestion('show me monthly revenue');
+```
+
+#### 🔹 closeQPopover
+
+This feature closes the Q popover, returns the iframe to the original Q search bar size.
+
+```javascript
+    embeddedQBarExperience.closeQPopover();
+```
+
+&nbsp;  
+### Example
+&nbsp;  
+
 ```html
     <!DOCTYPE html>
     <html>
@@ -618,7 +730,7 @@ This feature closes the Q popover, returns the iframe to the original Q search b
         <title>QuickSight Q Search Bar Embedding</title>
         <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
-            var session
+            let embeddedQBarExperience;
 
             function onError(payload) {
                 console.log("Do something when the session fails loading");
@@ -633,9 +745,9 @@ This feature closes the Q popover, returns the iframe to the original Q search b
             }
 
             function embedQSearchBar() {
-                var containerDiv = document.getElementById("embeddingContainer");
-                var options = {
-                    url: "https://us-east-1.quicksight.aws.amazon.com/sn/dashboards/dashboardId?isauthcode=true&identityprovider=quicksight&code=authcode", // replace this dummy url with the one generated via embedding API
+                const containerDiv = document.getElementById("embeddingContainer");
+                const options = {
+                    url: "<YOUR_EMBED_URL>", // replace this value with the url generated via embedding API
                     container: containerDiv,
                     width: "1000px",
                     locale: "en-US",
@@ -648,12 +760,12 @@ This feature closes the Q popover, returns the iframe to the original Q search b
                         allowTopicSelection: true
                     }
                 };
-                session = QuickSightEmbedding.embedQSearchBar(options);
-                session.on("error", onError);
+                embeddedQBarExperience = QuickSightEmbedding.embedQSearchBar(options);
+                embeddedQBarExperience.on("error", onError);
             }
 
             function onCountryChange(obj) {
-                session.setParameters({country: obj.value});
+                embeddedQBarExperience.setParameters({country: obj.value});
             }
         </script>
     </head>
@@ -665,8 +777,21 @@ This feature closes the Q popover, returns the iframe to the original Q search b
     </html>
 ```
 
+&nbsp;  
+## Troubleshooting
+&nbsp;  
+1. Make sure the URL you provide in options is not encoded. You should avoid using an encoded URL because it breaks the authcode in the URL by changing it. Also, check that the URL sent in the response from the server side is not encoded.
+2. The URL only works if it used with the authcode it came with. The URL and authcode need to be used together. They expire after five minutes, so it's worth checking that you're not troubleshooting an expired combination of URL and authcode.
+2. Some browsers (e.g. mobile safari) have default setting to "Always Block Cookies". Change the setting to either "Allow form Websites I Visit" or "Always Allow".
+3. Q search bar troubleshooting:
+    * Shifting page contents in unwanted way - try giving the embedding container and the iframe class a style with position absolute.
+    * Clicking on some parts of your application does not close the Q search bar - use the `expandCallback` and `collapseCallback` to create a backdrop/element on the page that's always clickable so that the document listener can properly close the search bar.
+
+
+&nbsp;  
 ## License
-Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+&nbsp;  
+Copyright 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: Apache-2.0
 
 ---

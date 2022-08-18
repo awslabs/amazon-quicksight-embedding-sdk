@@ -180,11 +180,11 @@ function getIframeSrc(options): string {
     }
     
     if (footerPaddingEnabled) {
-        src = src + '&footerPaddingEnabled=' + String(footerPaddingEnabled);
+        src = src + '&footerPaddingEnabled=true';
     }
 
-    if (fitToIframeWidth) {
-        src = src + '&fitToIframeWidth=' + String(!!fitToIframeWidth);
+    if (fitToIframeWidth !== false) {
+        src = src + '&fitToIframeWidth=true';
 
     }
 
