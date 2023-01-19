@@ -17,7 +17,7 @@ Amazon QuickSight offers four different embedding experiences with options for b
 
 -  **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
    ```html
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.1/dist/quicksight-embedding-js-sdk.min.js"></script>
    ```
 -  **Option 2:** Install the QuickSight Embedding SDK in NodeJs:
    ```shell
@@ -360,7 +360,7 @@ The callback is needed since the process of getting active parameter values is a
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             let embeddedDashboardExperience;
             function onDashboardLoad(payload) {
@@ -401,7 +401,7 @@ The callback is needed since the process of getting active parameter values is a
             }
 
             function onCountryChange(obj) {
-                dashboard.setParameters({country: obj.value});
+                embeddedDashboardExperience.setParameters({country: obj.value});
             }
         </script>
     </head>
@@ -508,7 +508,7 @@ The callback is needed since the process of getting active parameter values is a
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             let embeddedVisualExperience;
             function onVisualLoad(payload) {
@@ -595,7 +595,7 @@ You can set the embedding visual type for embedded sessions. The default visual 
 
     <head>
         <title>QuickSight Console Embedding</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             let embeddedSessionExperience;
 
@@ -728,7 +728,7 @@ This feature closes the Q popover, returns the iframe to the original Q search b
 
     <head>
         <title>QuickSight Q Search Bar Embedding</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             let embeddedQBarExperience;
 

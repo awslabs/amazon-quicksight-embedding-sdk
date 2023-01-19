@@ -1,3 +1,7 @@
+**1.20.1**
+* Minor fixes
+* Upgrade dependency packages
+
 **1.20.0**
 * Add visual embedding support with new `embedVisual` function
 
