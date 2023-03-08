@@ -4,55 +4,150 @@ Thank you for using the Amazon QuickSight JavaScript SDK. You can use this SDK t
 
 For more information and to learn how to use QuickSight Embedding, please visit [QuickSight Developer Portal Website](https://developer.quicksight.aws/)
 
-Amazon QuickSight offers four different embedding experiences with options for branding, user isolation with namespaces, and custom UI permissions.
+Amazon QuickSight offers four different embedding experiences with options for user isolation with namespaces, and custom UI permissions.
 
 * [Dashboard Embedding](#dashboard-embedding)
 * [Visual Embedding](#visual-embedding)
 * [Console Embedding](#console-embedding)
 * [QSearchBar Embedding](#qsearchbar-embedding)
 
+
 &nbsp;  
 ## Installation
+&nbsp;
+
+**Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
+```html
+...
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script type="text/javascript">
+    const onLoad = async () => {
+        const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
+        //...
+    };
+</script>
+...
+<body onload="onLoad()">
+...
+```
+
+**Option 2:** Install the Amazon QuickSight Embedding SDK in NodeJs:
+```shell
+npm install amazon-quicksight-embedding-sdk
+```
+and then use it in your code using `require` syntax
+```javascript
+const QuickSightEmbedding = require("amazon-quicksight-embedding-sdk");
+
+const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
+```
+
+or, using named `import` syntax:
+
+```javascript
+import { createEmbeddingContext } from 'amazon-quicksight-embedding-sdk';
+
+const embeddingContext = await createEmbeddingContext();
+```
+
+or, using wildcard `import` syntax:
+
+```javascript
+import * as QuickSightEmbedding from 'amazon-quicksight-embedding-sdk';
+
+const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
+```
+
+&nbsp;  
+## Creating the Embedding Context
 &nbsp;  
 
--  **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
-   ```html
-    <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.1/dist/quicksight-embedding-js-sdk.min.js"></script>
-   ```
--  **Option 2:** Install the QuickSight Embedding SDK in NodeJs:
-   ```shell
-    npm install amazon-quicksight-embedding-sdk
-   ```
-   and then use it in your code using `require` syntax
-   ```javascript
-    const QuickSightEmbedding = require("amazon-quicksight-embedding-sdk");
+Use `createEmbeddingContext` method to create an embedding context. It returns a promise of `EmbeddingContext` type.
 
-    const embeddedDashboardExperience = QuickSightEmbedding.embedDashboard(options);
-   ```
+```typescript
+export type EmbeddingContext = {
+    embedDashboard: EmbedDashboard;
+    embedVisual: EmbedVisual;
+    embedQSearchBar: EmbedQSearch;
+    embedConsole: EmbedConsole;
+};
+```
 
-   or, using named `import` syntax:
+You can create the embedding context by calling `createEmbeddingContext` method without any arguments
+```javascript
+import { createEmbeddingContext } from 'amazon-quicksight-embedding-sdk';
 
-   ```javascript
-    import {
-        embedDashboard,
-        embedVisual,
-        embedSession,
-        embedQSearchBar,
-    } from 'amazon-quicksight-embedding-sdk';
+const embeddingContext: EmbeddingContext = await createEmbeddingContext();
 
-    const embeddedDashboardExperience = embedDashboard(options);
-   ```
+```
 
-   or, using wildcard `import` syntax:
+or, you can pass an object argument with `onChange` property
 
-   ```javascript
-    import * as QuickSightEmbedding from 'amazon-quicksight-embedding-sdk';
+```javascript
+import { createEmbeddingContext } from 'amazon-quicksight-embedding-sdk';
 
-    const embeddedQSearchBarExperience = QuickSightEmbedding.embedQSearchBar(options);
-   ```
+const embeddingContext: EmbeddingContext = await createEmbeddingContext({
+    onChange: (changeEvent) => {
+        console.log('Context received a change', changeEvent);
+    },
+});
+```
 
 &nbsp;  
-### Common Options for All Embedding Experiences
+## Embedding the Amazon QuickSight Experiences
+&nbsp;  
+
+An `EmbeddingContext` instance exposes 4 experience methods
+
+* embedDashboard
+* embedVisual
+* embedQSearchBar
+* embedConsole
+
+These methods take 2 parameters:
+
+* frameOptions (required)
+* contentOptions (optional)
+
+&nbsp;  
+### Example
+&nbsp;  
+
+```typescript
+import { createEmbeddingContext } from 'amazon-quicksight-embedding-sdk';
+
+const embeddingContext = await createEmbeddingContext();
+
+const {
+    embedDashboard,
+    embedVisual,
+    embedConsole,
+    embedQSearchBar,
+} = embeddingContext;
+
+const frameOptions = {
+    //...
+};
+const contentOptions = {
+    //...
+};
+
+// Embedding a dashboard experience
+const embeddedDashboardExperience = await embedDashboard(frameOptions, contentOptions);
+
+// Embedding a visual experience
+const embeddedVisualExperience = await embedVisual(frameOptions, contentOptions);
+
+// Embedding a console experience
+const embeddedConsoleExperience = await embedConsole(frameOptions, contentOptions);
+
+// Embedding a Q search bar experience
+const embeddedQSearchExperience = await embedQSearchBar(frameOptions, contentOptions);
+
+```
+
+&nbsp;  
+### Common Properties of `frameOptions` for All Embedding Experiences
 &nbsp;  
 
 #### 🔹 url: *string* *(required)*
@@ -69,46 +164,52 @@ This is the parent HTMLElement where we're going to embed QuickSight.
 
 It can be an HTMLElement:
 ```javascript
-    container: document.getElementById("embeddingContainer")
+    container: document.getElementById("experience-container")
 ```
 Or, it can be a query selector string:
 ```javascript
-    container: "#embeddingContainer"
+    container: "#experience-container"
 ```
 
-#### 🔹 scrolling: *'auto' | 'yes' | 'no'* *(optional, default='no')*
-
-This lets you set up a specific scrolling experience for the iframe that holds your embedded QuickSight session.
-
-#### 🔹 width: *string* *(optional, default='100%')*, 🔹 height: *string* *(optional, default='100%')*
-
-You can set `width` and `height` for the iframe that holds your embedded QuickSight session. Both of these default to 100%. You can set them to be fixed values:
+#### 🔹 width: *string* *(optional, default='100%')*,
+You can set `width` for the iframe that holds your embedded QuickSight experience. You can set it to be a fixed value:
 ```javascript
-    height: "700px",
     width: "1000px"
 ```
-
-Or, relative values:
+Or, a relative value:
 ```javascript
-    height: "80%",
     width: "60%"
 ```
 
-To make your embedded QuickSight session responsive, don't set `width` or `height` (leave them at the default: `100%`). Then you can make the container HTMLElement responsive to screen size change.
+To make your embedded QuickSight experience responsive, don't set it (leave them at the default: `100%`). Then you can make the container HTMLElement responsive to screen size change.
+
+#### 🔹 height: *string* *(optional, default='100%')*
+
+You can set `height` for the iframe that holds your embedded QuickSight experience. You can set it to be a fixed value:
+```javascript
+    height: "700px"
+```
+
+Or, a relative value:
+```javascript
+    height: "80%"
+```
+
+To make your embedded QuickSight experience responsive, don't set it (leave them at the default: `100%`). Then you can make the container HTMLElement responsive to screen size change.
 
 #### 🔹 className: *string* *(optional)*
 
-You can customize style of the iframe that holds your dashboard by one of the followings:
+You can customize style of the iframe that holds your embedded experience by one of the followings:
 
 -  Option 1: Use the "quicksight-embedding-iframe" class we predefined for you:
 ```
-quicksight-embedding-iframe {
+.quicksight-embedding-iframe {
     margin: 5px;
 }
 ```
--  Option 2: Or, create your own class and pass in through `className` element:
+-  Option 2: Or, create your own class and pass in through `className` property:
 ```
-your-own-class {
+.your-own-class {
     margin: 5px;
 }
 ```
@@ -118,8 +219,90 @@ your-own-class {
 
 We've overridden the border and padding of the iframe to be 0px, because setting border and padding on the iframe might cause unexpected issues. If you have to set border and padding on the embedded QuickSight session, set it on the container div that contains the iframe.
 
+#### 🔹 withIframePlaceholder: *boolean* *(optional, default=false)*
 
-#### 🔹 locale: *string* *(optional)*
+It renders a simple spinner in the embedded experience container while the contents of the embedding experience iframe is being loaded.
+
+#### 🔹 onChange: *SimpleChangeEventHandler* *(optional)*
+
+This callback is invoked when there is a change in the SDK code status.
+
+```
+export type SimpleChangeEventHandler = (message: SimpleChangeEvent, metadata?: ExperienceFrameMetadata) => void;
+
+export interface SimpleChangeEvent {
+    eventName: ChangeEventName;
+    eventLevel: ChangeEventLevel;
+    message?: string;
+    data?: any;
+}
+
+export type ExperienceFrameMetadata = {
+    frame: EmbeddingIFrameElement;
+};
+```
+
+Supported `eventLevel`s:
+
+    ERROR
+    INFO
+    WARN
+
+`ErrorChangeEventName`s
+
+    NO_FRAME_OPTIONS = 'NO_FRAME_OPTIONS',
+    INVALID_FRAME_OPTIONS = 'INVALID_FRAME_OPTIONS',
+    FRAME_NOT_CREATED: invoked when the creation of the iframe element failed
+    NO_BODY: invoked when there is no `body` element in the hosting html
+    NO_CONTAINER: invoked when the experience container is not found
+    INVALID_CONTAINER: invoked when the container provided is not a valid DOM node
+    NO_URL: invoked when no url is provided in the frameOptions 
+    INVALID_URL: invoked when the url provided is not a valid url for the experience
+    NO_FRAME_OPTIONS: invoked when frameOptions property is not populated,
+    INVALID_FRAME_OPTIONS: invoked when the frameOptions value is not object type,
+
+`InfoChangeEventName`s
+
+    FRAME_STARTED: invoked just before the iframe is created
+    FRAME_MOUNTED: invoked after the iframe is appended into the experience container
+    FRAME_LOADED: invoked after iframe element emited the `load` event
+
+`WarnChangeEventName`s
+
+    UNRECOGNIZED_CONTENT_OPTIONS: invoked when the content options for the experience contain unrecognized properties
+    UNRECOGNIZED_FRAME_OPTIONS: invoked when the frame options for the experience contain unrecognized properties
+    UNRECOGNIZED_EVENT_TARGET: invoked when a message with unrecognized event target is received
+
+
+```javascript
+const frameOptions = {
+    //...
+    onChange: (changeEvent, metadata) => {
+        if (changeEvent.eventLevel === 'ERROR') {
+            console.log(`Do something when embedding experience failed with "${changeEvent.eventName}"`);
+            return;
+        }
+        switch (changeEvent.eventName) {
+            case 'FRAME_MOUNTED': {
+                console.log("Do something when the experience frame is mounted.");
+                break;
+            }
+            case 'FRAME_LOADED': {
+                console.log("Do something when the experience frame is loaded.");
+                break;
+            }
+            //...
+        }
+    },
+};
+```
+
+&nbsp;  
+### Common Properties of `contentOptions` for All Embedding Experiences
+&nbsp;  
+
+
+#### 🔹 locale: *string* *(optional)* (not available in QSearchBar embedding)
 
 You can set locale for the embedded QuickSight session:
 ```javascript
@@ -147,52 +330,48 @@ zh-TW (中文 (繁體))
 
 For a more updated list of locales, please refer to https://docs.aws.amazon.com/quicksight/latest/user/choosing-a-language-in-quicksight.html. Any unsupported locale value will fallback to using `en-US`.
 
-#### 🔹 parameters: *Object* *(optional)*
 
-This is an object that contains `key:value` pairs for parameters names:values.
-It allows you to set initial parameter values for your embedded QuickSight session. Pass an array as value for multi-value parameters.
-For more information about parameters in Amazon QuickSight, see https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html
+#### 🔹 onMessage: *SimpleMessageEventHandler* *(optional)*
 
-#### 🔹 errorCallback: *Function* *(optional)*
+You can add `onMessage` callback into the `contentOptions` of all embedding experiences. 
 
-If you want your application get notified and respond when the embedded QuickSight session fails to load, use a error callback.
+```typescript
+export type SimpleMessageEventHandler = (message: SimpleMessageEvent, metadata?: ExperienceFrameMetadata) => void;
 
-```javascript
-    errorCallback: yourErrorCallback,
+export interface SimpleMessageEvent {
+    eventName: MessageEventName;
+    message?: any;
+}
+
+export type ExperienceFrameMetadata = {
+    frame: EmbeddingIFrameElement;
+};
+
 ```
 
-Alternatively, you can register the "error" event on the returned experience object.
+See the experience specific documentation below for the supported `eventName`s for each experience type. 
 
-```javascript
-     embeddedExperience.on("error", yourErrorCallback);
+```typescript
+
+const contentOptions = {
+    //...
+    onMessage: async (messageEvent, experienceMetadata) => {
+        switch (messageEvent.eventName) {
+            case 'CONTENT_LOADED': {
+                console.log("Do something when the embedded experience is fully loaded.");
+                break;
+            }
+            case 'ERROR_OCCURRED': {
+                console.log("Do something when the embedded experience fails loading.");
+                break;
+            }
+            //...
+        }
+    }
+};
 ```
 
-We pass a payload object to your callback function with a specific `payload.errorCode`. Currently, the error codes are:
-
-- `Forbidden` -- the URL's authentication code expired
-
-- `Unauthorized` -- the session obtained from the authentication code expired
-
-If you follow the instructions to generate the correct URL, but you still receive these error codes, you need to generate a new URL.
-
-&nbsp;  
-### Common Actions for All Embedding Experiences
-&nbsp;  
-
-#### 🔹 setParameters: *Function* *(optional)*
-
-Use this function to update parameter values. Pass an array as value for multi-value parameters.
-You can build your own UI to trigger this, so that viewers of the embedded QuickSight session can control it from your app page.
-
-Parameters in an embedded experience session can be set by using the following call:
-```javascript
-    embeddedExperience.setParameters({country: "United States", states: ["California", "Washington"]});
-```
-
-To reset a parameter so that it includes all values, you can pass the string `"[ALL]"`.
-```javascript
-    embeddedExperience.setParameters({country: "United States", states: "[ALL]" });
-```
+***
 
 &nbsp;  
 ## Dashboard Embedding
@@ -206,129 +385,335 @@ For more information, see  [Working with embedded analytics](https://docs.aws.am
 ### Getting Started
 &nbsp;  
 
-```javascript
-    import { embedDashboard } from 'amazon-quicksight-embedding-sdk';
+Use `embedDashboard` method to embed a QuickSight dashboard. It returns a promise of `DashboardFrame` type.
 
-    const embeddedDashboardExperience = embedDashboard(options);
+```typescript
+// Getters
+export type GetParameters = () => Promise<Parameter[]>;
+export type GetSheets = () => Promise<Sheet[]>;
+export type GetSelectedSheetId = () => Promise<string>;
+
+// Setters
+export type SetParameters = (parameters: Parameter[]) => Promise<ResponseMessage>;
+export type SetSelectedSheetId = (sheetId: string) => Promise<ResponseMessage>;
+
+// Invokers
+export type InitiatePrint = () => Promise<ResponseMessage>;
+export type Undo = () => Promise<ResponseMessage>;
+export type Redo = () => Promise<ResponseMessage>;
+export type Reset = () => Promise<ResponseMessage>;
+export type NavigateToDashboard = (dashboardId: string, options?: NavigateToDashboardOptions) => Promise<ResponseMessage>;
+
+export interface DashboardFrame extends BaseFrame {
+    getParameters: GetParameters;
+    getSheets: GetSheets;
+    getSelectedSheetId: GetSelectedSheetId;
+    setParameters: SetParameters;
+    setSelectedSheetId: SetSelectedSheetId;
+    initiatePrint: InitiatePrint;
+    undo: Undo;
+    redo: Redo;
+    reset: Reset;
+    navigateToDashboard: NavigateToDashboard;
+}
+
+export type Send = (eventName: MessageEventName, message?: any) => void;
+
+export interface BaseFrame {
+    send: Send;
+}
+
 ```
-This returns a dashboard object for further action.
 
 &nbsp;  
-### Options
+### Example
 &nbsp;  
 
-#### 🔹 printEnabled: *boolean* *(optional, default=false)*
-This can be used to enable or disable print option for dashboard embedding. If "undoRedo" and "reset" are disabled and "printEnabled" is set to false, then the navrbar is hidden.
+```html
+<!DOCTYPE html>
+<html>
 
-#### 🔹 undoRedoDisabled: *boolean* *(optional, default=false)*
-This can be used to disable undo and redo buttons for dashboard embedding. If "undoRedo" and "reset" are disabled and "printEnabled" is set to false, then the navrbar is hidden.
+    <head>
+        <title>Dashboard Embedding Example</title>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script type="text/javascript">
+            const embedDashboard = async() => {
+                const {
+                    createEmbeddingContext,
+                } = QuickSightEmbedding;
 
-#### 🔹 resetDisabled: *boolean* *(optional, default=false)*
-This can be used to disable reset button for dashboard embedding. If "undoRedo" and "reset" are disabled and "printEnabled" is set to false, then the navrbar is hidden.
+                const embeddingContext = await createEmbeddingContext({
+                    onChange: (changeEvent, metadata) => {
+                        console.log('Context received a change', changeEvent, metadata);
+                    },
+                });
 
-#### 🔹 sheetId: *string* *(optional)*
+                const frameOptions = {
+                    url: '<YOUR_EMBED_URL>',
+                    container: '#experience-container',
+                    height: "700px",
+                    width: "300px",
+                    resizeHeightOnSizeChangedEvent: true,
+                    onChange: (changeEvent, metadata) => {
+                        switch (changeEvent.eventName) {
+                            case 'FRAME_MOUNTED': {
+                                console.log("Do something when the experience frame is mounted.");
+                                break;
+                            }
+                            case 'FRAME_LOADED': {
+                                console.log("Do something when the experience frame is loaded.");
+                                break;
+                            }
+                        }
+                    },
+                };
+
+                const contentOptions = {
+                    parameters: [
+                        {
+                            Name: 'country',
+                            Values: [
+                                'United States'
+                            ],
+                        },
+                        {
+                            Name: 'states',
+                            Values: [
+                                'California',
+                                'Washington'
+                            ]
+                        }
+                    ],
+                    locale: "en-US",
+                    sheetOptions: {
+                        initialSheetId: '<YOUR_SHEETID>',
+                        singleSheet: false,                        
+                        emitSizeChangedEventOnSheetChange: false,
+                    },
+                    toolbarOptions: {
+                        export: false,
+                        undoRedo: false,
+                        reset: false
+                    },
+                    attributionOptions: {
+                        overlayContent: false,
+                    },
+                    onMessage: async (messageEvent, experienceMetadata) => {
+                        switch (messageEvent.eventName) {
+                            case 'CONTENT_LOADED': {
+                                console.log("All visuals are loaded. The title of the document:", messageEvent.message.title);
+                                break;
+                            }
+                            case 'ERROR_OCCURRED': {
+                                console.log("Error occurred while rendering the experience. Error code:", messageEvent.message.errorCode);
+                                break;
+                            }
+                            case 'PARAMETERS_CHANGED': {
+                                console.log("Parameters changed. Changed parameters:", messageEvent.message.changedParameters);
+                                break;
+                            }
+                            case 'SELECTED_SHEET_CHANGED': {
+                                console.log("Selected sheet changed. Selected sheet:", messageEvent.message.selectedSheet);
+                                break;
+                            }
+                            case 'SIZE_CHANGED': {
+                                console.log("Size changed. New dimensions:", messageEvent.message);
+                                break;
+                            }
+                            case 'MODAL_OPENED': {
+                                window.scrollTo({
+                                    top: 0 // iframe top position
+                                });
+                                break;
+                            }
+                        }
+                    },
+                };
+                const embeddedDashboardExperience = await embeddingContext.embedDashboard(frameOptions, contentOptions);
+
+                const selectCountryElement = document.getElementById('country');
+                selectCountryElement.addEventListener('change', (event) => {
+                    embeddedDashboardExperience.setParameters([
+                        {
+                            Name: 'country',
+                            Values: event.target.value
+                        }
+                    ]);
+                });
+            };
+        </script>
+    </head>
+
+    <body onload="embedDashboard()">
+        <span>
+            <label for="country">Country</label>
+            <select id="country" name="country">
+                <option value="United States">United States</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Canada">Canada</option>
+            </select>
+        </span>
+        <div id="experience-container"></div>
+    </body>
+
+</html>
+```
+
+&nbsp;  
+### `frameOptions`
+&nbsp; 
+
+See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange` properties
+
+&nbsp;  
+#### resizeHeightOnSizeChangedEvent: *boolean* *(optional, default: false)*
+
+Use `resizeHeightOnSizeChangedEvent` to allow changing the iframe height when the height of the embedded content changed.
+```javascript
+    height: "300px",
+    resizeHeightOnSizeChangedEvent: true
+```
+
+When the `resizeHeightOnSizeChangedEvent` property is set to true, the value of the `height` property acts as a loading height.
+
+Note: With the `resizeHeightOnSizeChangedEvent` set to true, modals generated by the dashboard can be hidden if the content is larger than the screen. An example of this type of modal is the one that displays when you select "Export to CSV" on a Table visual. To solve this issue, you can add the following code to autoscroll the focus to the modal.
+```javascript
+const contentOptions = {
+    //...
+    onMessage: (messageEvent, metadata) => {
+        switch (messageEvent.eventName) {
+            case 'MODAL_OPENED': {
+                window.scrollTo({
+                    top: 0 // iframe top position
+                });
+                break;
+            }
+            //...
+        }
+    },
+}
+```
+
+&nbsp;  
+### `contentOptions`
+&nbsp; 
+
+See [Common Properties of `contentOptions` for All Embedding Experiences](#common-properties-of-contentoptions-for-all-embedding-experiences) for `locale` property
+
+&nbsp;  
+#### 🔹 parameters: *Parameter[]* *(optional)*
+
+It allows you to set initial parameter values for your embedded QuickSight dashboard. Pass an array as value for multi-value parameters.
+For more information about parameters in Amazon QuickSight, see https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html
+
+#### 🔹 toolbarOptions
+
+If sub-properties of the toolbarOptions are set to false, then the navrbar is hidden.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 export: *boolean* *(optional, default=false)*
+This can be used to show or hide export icon for dashboard embedding. 
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 undoRedo: *boolean* *(optional, default=false)*
+This can be used to show or hide the undo and redo buttons for dashboard embedding.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 reset: *boolean* *(optional, default=false)*
+This can be used to show or hide the reset button for dashboard embedding.
+
+#### 🔹 sheetOptions
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 initialSheetId: *string* *(optional)*
 You can use this when you want to specify the initial sheet of the dashboard, instead of loading the first sheet of the embedded dashboard. You can provide the target sheet id of the dashboard as the value. In case the sheet id value is invalid, the first sheet of the dashboard will be loaded.
 
-#### 🔹 sheetTabsDisabled: *boolean* *(optional, default=false)*
-The `sheetTabsDisabled` element can be used to enable or disable sheet tab controls in dashboard embedding.
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 singleSheet: *boolean* *(optional, default=false)*
+The `singleSheet` property can be used to enable or disable sheet tab controls in dashboard embedding.
 
-#### 🔹 footerPaddingEnabled: *boolean* *(optional, default=false)*
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 emitSizeChangedEventOnSheetChange: *boolean* (optional default=false)
+You can use this in combination with `resizeHeightOnSizeChangedEvent: true` frame option, when you want the embedded dashboard height to auto resize based on sheet height, on every sheet change event.
 
-This adds 22 pixels of space at the bottom of the layout. You can set this to `true` if the "Powered by QuickSight" footer blocks part of your visual.
+#### 🔹 attributionOptions
 
-#### 🔹 iframeResizeOnSheetChange: *boolean* (optional default=false)
-You can use this in combination with `height: "AutoFit"` option, when you want the embedded dashboard height to auto resize based on sheet height, on every sheet change event.
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 overlayContent: *boolean* *(optional, default=false)*
 
-#### 🔹 parametersChangeCallback: *Function* *(optional)*
+We add 22 pixels of additional height at the bottom of the layout to provide dedicated space to the "Powered by QuickSight" footer.
+You can set this property to `true` to overlay it with your content.
 
-If you want your application to get notified and respond when the parameters in Amazon QuickSight dashboard changes, use the parameter change callback.
+#### 🔹 onMessage: *SimpleMessageEventHandler* *(optional)*
 
-```javascript
-    parametersChangeCallback: yourParametersChangeCallback,
-```
+The `eventName`s the dashboard experience receive
 
-Alternatively, you can register the "parametersChange" event on the returned dashboard object.
-```javascript
-    embeddedDashboardExperience.on("parametersChange", yourParametersChangeCallback);
-```
-
-#### 🔹 selectedSheetChangeCallback: *Function* *(optional)*
-
-If you want your application to get notified and respond when the selected sheet in Amazon QuickSight dashboard changes, use the selected sheet change callback.
-
-```javascript
-    selectedSheetChangeCallback: yourSelectedSheetChangeCallback,
-```
-
-Alternatively, you can register the "selectedSheetChange" event on the returned dashboard object.
-```javascript
-    embeddedDashboardExperience.on("selectedSheetChange", yourSelectedSheetChangeCallback);
-```
-
-#### 🔹 loadCallback: *Function*  *(optional)*
-
-If you want your application to get notified and respond when the Amazon QuickSight dashboard is fully loaded, use a load callback.
-
-```javascript
-    loadCallback: yourLoadCallback,
-```
-
-Alternatively, you can register the "load" event on the returned dashboard object.
-```javascript
-    embeddedDashboardExperience.on("load", yourLoadCallback);
-```
-
-#### 🔹 height: 'AutoFit' *(optional)*, 🔹 loadingHeight: *string* *(optional)*
-
-You can also choose to set height to be `AutoFit` to make the iframe fit your dashboard height. Use `loadingHeight` to specify the height you'd like to use before actual dashboard height is known.
-```javascript
-    height: "AutoFit",
-    loadingHeight: "700px"
-```
-
-Note: With AutoFit height enabled, modals generated by the dashboard can be hidden
-if the content is larger than the screen. An example of this type of modal is the one that displays when you select "Export to CSV" on a Table visual. To solve this issue, you can add the following code to autoscroll the focus to the modal.
-```javascript
-embeddedDashboardExperience.on("SHOW_MODAL_EVENT", () => {
-    window.scrollTo({
-        top: 0 // iframe top position
-    });
-});
-```
+    CONTENT_LOADED: Received when the visuals of the Amazon QuickSight dashboard are fully loaded
+    ERROR_OCCURRED: Received when an error occurred while rendering the visuals of the Amazon QuickSight dashboard. The message contains `errorCode`. The error codes are:
+    - `Forbidden` -- the URL's authentication code expired
+    - `Unauthorized` -- the session obtained from the authentication code expired
+    If you follow the instructions to generate the correct URL, but you still receive these error codes, you need to generate a new URL.
+    PARAMETERS_CHANGED: Received when the parameters in Amazon QuickSight dashboard changes.
+    SELECTED_SHEET_CHANGED: Received when the selected sheet in Amazon QuickSight dashboard changes.
+    SIZE_CHANGED: Received when the size of the Amazon QuickSight dashboard changes.
+    MODAL_OPENED: Received when a modal opened in Amazon QuickSight dashboard.
 
 &nbsp;  
 ### Actions
 &nbsp;  
 
+#### 🔹 setParameters: *Function* *(optional)*
+
+Use this function to update parameter values. Pass an array as value for multi-value parameters.
+You can build your own UI to trigger this, so that viewers of the embedded QuickSight session can control it from your app page.
+
+Parameters in an embedded experience session can be set by using the following call:
+```javascript
+    embeddedExperience.setParameters([
+        {
+            Name: 'country',
+            Values: ['United States'],
+        },
+        {
+            Name: 'states'
+            Values: ['California', 'Washington'],
+        }
+    ]);
+```
+
+To reset a parameter so that it includes all values, you can pass the string `ALL_VALUES`.
+```javascript
+    embeddedExperience.setParameters([
+        {
+            Name: 'states'
+            Values: ['ALL_VALUES'],
+        }
+    ]);
+```
+
 #### 🔹 navigateToDashboard
 
 To navigate to a different dashboard, use dashboard.navigateToDashboard(options). The input parameter options should contain the dashboardId that you want to navigate to, and also the parameters for that dashboard, for example:
 ```javascript
+    const dashboardId: "37a99f75-8230-4409-ac52-e45c652cc21e",
     const options = {
-        dashboardId: "37a99f75-8230-4409-ac52-e45c652cc21e",
-        parameters: {
-            country: [
-                "United States"
-            ]
-        }
+        parameters: [
+            {
+                Name: 'country',
+                Values: ['United States'],
+            }
+        ]
     };
-    embeddedDashboardExperience.navigateToDashboard(options);
+    embeddedDashboardExperience.navigateToDashboard(dashboardId, options);
 ```
 
-#### 🔹 navigateToSheet
+#### 🔹 setSelectedSheetId
 
 If you want to navigate from one sheet to another programmatically, with the Amazon quicksight dashboard, use the below method:
 
 ```javascript
-    embeddedDashboardExperience.navigateToSheet(sheetId);
+    embeddedDashboardExperience.setSelectedSheetId('<YOUR_SHEET_ID>');
 ```
 
 #### 🔹 getSheets
 
-If you want to get the current set of sheets, from Amazon Quicksight dashboard in ad-hoc manner, use the below method with a callback:
+If you want to get the current set of sheets, from Amazon QuickSight dashboard in ad-hoc manner, use the below method:
 
-```javascript
-    embeddedDashboardExperience.getSheets(yourCallback);
+```typescript
+    const sheets: Sheet[] = await embeddedDashboardExperience.getSheets();
 ```
 
 The callback is needed since the process of getting sheets is asynchronous, even for ad-hoc fetches.
@@ -340,86 +725,38 @@ This feature allows you to initiate dashboard print, from parent website, withou
     embeddedDashboardExperience.initiatePrint();
 ```
 
-#### 🔹 getActiveParameterValues
+#### 🔹 getParameters
 
-If you want to get the active parameter values, from Amazon Quicksight dashboard in ad-hoc manner, use the below method with a callback:
+If you want to get the active parameter values, from Amazon QuickSight dashboard in ad-hoc manner, use the below method:
+
+```typescript
+    const parameters: Parameter[] = await embeddedDashboardExperience.getParameters();
+```
+
+#### 🔹 undo
+
+If you want to unto the changes, use the below method:
 
 ```javascript
-    embeddedDashboardExperience.getActiveParameterValues(yourCallback);
+    embeddedDashboardExperience.undo();
 ```
 
-The callback is needed since the process of getting active parameter values is asynchronous, even for ad-hoc fetches.
+#### 🔹 redo
 
-&nbsp;  
-### Example
-&nbsp;  
+If you want to redo the changes, use the below method:
 
-```html
-    <!DOCTYPE html>
-    <html>
-
-    <head>
-        <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.1/dist/quicksight-embedding-js-sdk.min.js"></script>
-        <script type="text/javascript">
-            let embeddedDashboardExperience;
-            function onDashboardLoad(payload) {
-                console.log("Do something when the dashboard is fully loaded.");
-            }
-
-            function onError(payload) {
-                console.log("Do something when the dashboard fails loading");
-            }
-
-            function embedDashboard() {
-                const containerDiv = document.getElementById("embeddingContainer");
-                const options = {
-                    url: "<YOUR_EMBED_URL>", // replace this value with the url generated via embedding API
-                    container: containerDiv,
-                    parameters: {
-                        country: "United States",
-                        states: [
-                            "California",
-                            "Washington"
-                        ]
-                    },
-                    scrolling: "no",
-                    height: "700px",
-                    width: "1000px",
-                    iframeResizeOnSheetChange: false,
-                    sheetId: 'YOUR_SHEETID',
-                    sheetTabsDisabled: false,
-                    locale: "en-US",
-                    footerPaddingEnabled: true,
-                    printEnabled: false,
-                    undoRedoDisabled: false,
-                    resetDisabled: false
-                };
-                embeddedDashboardExperience = QuickSightEmbedding.embedDashboard(options);
-                embeddedDashboardExperience.on("error", onError);
-                embeddedDashboardExperience.on("load", onDashboardLoad);
-            }
-
-            function onCountryChange(obj) {
-                embeddedDashboardExperience.setParameters({country: obj.value});
-            }
-        </script>
-    </head>
-
-    <body onload="embedDashboard()">
-        <span>
-            <label for="country">Country</label>
-            <select id="country" name="country" onchange="onCountryChange(this)">
-                <option value="United States">United States</option>
-                <option value="Mexico">Mexico</option>
-                <option value="Canada">Canada</option>
-            </select>
-        </span>
-        <div id="embeddingContainer"></div>
-    </body>
-
-    </html>
+```javascript
+    embeddedDashboardExperience.redo();
 ```
+
+#### 🔹 reset
+
+If you want to reset the changes, use the below method:
+
+```javascript
+    embeddedDashboardExperience.reset();
+```
+***
 
 &nbsp;  
 ## Visual Embedding
@@ -433,135 +770,226 @@ For more information, see  [Embedding Amazon QuickSight Visuals](https://docs.aw
 ### Getting Started
 &nbsp;  
 
-```javascript
-    import { embedVisual } from 'amazon-quicksight-embedding-sdk';
+Use `embedVisual` method to embed a QuickSight dashboard. It returns a promise of `VisualFrame` type.
 
-    const embeddedVisualExperience = embedVisual(options);
+```typescript
+export type SetParameters = (setParametersOptions: SetParametersOptions) => void;
+export type Reset = () => void;
+
+export interface VisualFrame extends BaseFrame {
+    setParameters: SetParameters;
+    reset: Reset;
+}
+
+export type Send = (eventName: MessageEventName, message?: any) => void;
+
+export interface BaseFrame {
+    send: Send;
+}
+
 ```
-This returns a visual object for further action.
-
-&nbsp;  
-### Options
-&nbsp;  
-
-#### 🔹 fitToIframeWidth: *boolean* *(optional, default=true)*
-
-If this is set to `false`, the visual keeps its dimensions as it was designed within its dashboard layout. Otherwise, it adjusts its width to match the iframe's width, while maintaining the original aspect ratio.
-
-#### 🔹 parametersChangeCallback: *Function* *(optional)*
-
-If you want your application to get notified and respond when the parameters in Amazon QuickSight dashboard changes, use the parameter change callback. Choose one of the following:
-
--  Use options:
-```javascript
-    parametersChangeCallback: yourParametersChangeCallback,
-```
-
-- Or, register the "parametersChange" event on the returned dashboard object:
-```javascript
-    embeddedVisualExperience.on("parametersChange", yourParametersChangeCallback);
-```
-
-#### 🔹 loadCallback: *Function* *(optional)*
-
-If you want your application to get notified and respond when the Amazon QuickSight visual is fully loaded, use a load callback. Choose one of the following:
-
--  Use options:
-```javascript
-    loadCallback: yourLoadCallback,
-```
-
-- Or, register the "load" event on the returned visual object:
-```javascript
-    embeddedVisualExperience.on("load", yourLoadCallback);
-```
-
-#### 🔹 height: 'AutoFit' *(optional)*, 🔹 loadingHeight: *string* *(optional)*
-
-You can also choose to set height to be `AutoFit` to make the iframe fit your visual height. Use `loadingHeight` to specify the height you'd like to use before actual visual height is known.
-```javascript
-    height: "AutoFit",
-    loadingHeight: "700px"
-```
-
-&nbsp;  
-### Actions
-&nbsp;  
-
-#### 🔹 getActiveParameterValues
-
-If you want to get the active parameter values, from Amazon Quicksight visual in ad-hoc manner, use the below method with a callback:
-
-```javascript
-    embeddedVisualExperience.getActiveParameterValues(yourCallback);
-```
-
-The callback is needed since the process of getting active parameter values is asynchronous, even for ad-hoc fetches.
 
 &nbsp;  
 ### Example
 &nbsp;  
 
 ```html
-    <!DOCTYPE html>
-    <html>
+<!DOCTYPE html>
+<html>
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
-            let embeddedVisualExperience;
-            function onVisualLoad(payload) {
-                console.log("Do something when the visual is fully loaded.");
-            }
+            const embedVisual = async() => {    
+                const {
+                    createEmbeddingContext,
+                } = QuickSightEmbedding;
 
-            function onError(payload) {
-                console.log("Do something when the visual fails loading");
-            }
-
-            function embedVisual() {
-                const containerDiv = document.getElementById("embeddingContainer");
-                const options = {
-                    url: "<YOUR_EMBED_URL>", // replace this value with the url generated via embedding API
-                    container: containerDiv,
-                    parameters: {
-                        country: "United States"
+                const embeddingContext = await createEmbeddingContext({
+                    onChange: (changeEvent, metadata) => {
+                        console.log('Context received a change', changeEvent, metadata);
                     },
+                });
+
+                const frameOptions = {
+                    url: "<YOUR_EMBED_URL>", // replace this value with the url generated via embedding API
+                    container: '#experience-container',
                     height: "700px",
                     width: "1000px",
-                    locale: "en-US"
+                    onChange: (changeEvent, metadata) => {
+                        switch (changeEvent.eventName) {
+                            case 'FRAME_MOUNTED': {
+                                console.log("Do something when the experience frame is mounted.");
+                                break;
+                            }
+                            case 'FRAME_LOADED': {
+                                console.log("Do something when the experience frame is loaded.");
+                                break;
+                            }
+                        }
+                    },
                 };
-                embeddedVisualExperience = QuickSightEmbedding.embedVisual(options);
-                embeddedVisualExperience.on("error", onError);
-                embeddedVisualExperience.on("load", onVisualLoad);
-            }
 
-            function onCountryChange(obj) {
-                embeddedVisualExperience.setParameters({country: obj.value});
-            }
+                const contentOptions = {
+                    parameters: [
+                        {
+                            Name: 'country',
+                            Values: ['United States'],
+                        },
+                        {
+                            Name: 'states',
+                            Values: [
+                                'California',
+                                'Washington'
+                            ]
+                        }
+                    ],
+                    locale: "en-US",
+                    onMessage: async (messageEvent, experienceMetadata) => {
+                        switch (messageEvent.eventName) {
+                            case 'CONTENT_LOADED': {
+                                console.log("All visuals are loaded. The title of the document:", messageEvent.message.title);
+                                break;
+                            }
+                            case 'ERROR_OCCURRED': {
+                                console.log("Error occured while rendering the experience. Error code:", messageEvent.message.errorCode);
+                                break;
+                            }
+                            case 'PARAMETERS_CHANGED': {
+                                console.log("Parameters changed. Changed parameters:", messageEvent.message.changedParameters);
+                                break;
+                            }
+                            case 'SIZE_CHANGED': {
+                                console.log("Size changed. New dimensions:", messageEvent.message);
+                                break;
+                            }
+                        }
+                    },
+                };
+                const embeddedVisualExperience = await embeddingContext.embedVisual(frameOptions, contentOptions);
+
+                const selectCountryElement = document.getElementById('country');
+                selectCountryElement.addEventListener('change', (event) => {
+                    embeddedVisualExperience.setParameters([
+                        {
+                            Name: 'country',
+                            Values: event.target.value
+                        }
+                    ]);
+                });
+            };
         </script>
     </head>
 
     <body onload="embedVisual()">
         <span>
             <label for="country">Country</label>
-            <select id="country" name="country" onchange="onCountryChange(this)">
+            <select id="country" name="country">
                 <option value="United States">United States</option>
                 <option value="Mexico">Mexico</option>
                 <option value="Canada">Canada</option>
             </select>
         </span>
-        <div id="embeddingContainer"></div>
+        <div id="experience-container"></div>
     </body>
 
-    </html>
+</html>
 ```
+
+&nbsp;  
+### `frameOptions`
+&nbsp; 
+
+See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange` properties
+
+&nbsp;  
+#### resizeHeightOnSizeChangedEvent: *boolean* *(optional, default: false)*
+
+Use `resizeHeightOnSizeChangedEvent` to allow changing the iframe height when the height of the embedded content changed.
+```javascript
+    height: "300px",
+    resizeHeightOnSizeChangedEvent: true
+```
+
+When the `resizeHeightOnSizeChangedEvent` property is set to true, the value of the `height` property acts as a loading height.
+
+&nbsp;  
+### `contentOptions`
+&nbsp;  
+
+See [Common Properties of `contentOptions` for All Embedding Experiences](#common-properties-of-contentoptions-for-all-embedding-experiences) for `locale` and `parameters` properties
+
+#### 🔹 fitToIframeWidth: *boolean* *(optional, default=true)*
+
+If this is set to `false`, the visual keeps its dimensions as it was designed within its dashboard layout. Otherwise, it adjusts its width to match the iframe's width, while maintaining the original aspect ratio.
+
+The observed behavior of the fitToIframeWidth property varies depending on the layout setting of the underlying dashboard that the visual is a part of:
+
+In Tiled and Free-form layouts, the width is fixed. When the fitToIframeWidth property is toggled, the width changes between fixed width and full iframe width.
+
+In Classic layout, the width is responsive. Since the visual already fits to the width of the iframe, it remains full iframe width even when the fitToIframeWidth property is set to false.
+
+#### 🔹 onMessage: *SimpleMessageEventHandler* *(optional)*
+
+The `eventName`s the dashboard experience receive
+
+    CONTENT_LOADED: Received when the visuals of the Amazon QuickSight dashboard are fully loaded
+    ERROR_OCCURRED: Received when an error occurred while rendering the Amazon QuickSight visual. The message contains `errorCode`. The error codes are:
+    - `Forbidden` -- the URL's authentication code expired
+    - `Unauthorized` -- the session obtained from the authentication code expired
+    If you follow the instructions to generate the correct URL, but you still receive these error codes, you need to generate a new URL.
+    PARAMETERS_CHANGED: Received when the parameters in Amazon QuickSight dashboard changes.
+    SIZE_CHANGED: Received when the size of the Amazon QuickSight dashboard changes.
+
+&nbsp;  
+### Actions
+&nbsp;  
+
+#### 🔹 setParameters: *Function* *(optional)*
+
+Use this function to update parameter values. Pass an array as value for multi-value parameters.
+You can build your own UI to trigger this, so that viewers of the embedded QuickSight session can control it from your app page.
+
+Parameters in an embedded experience session can be set by using the following call:
+```javascript
+    embeddedExperience.setParameters([
+        {
+            Name: 'country',
+            Values: ['United States'],
+        },
+        {
+            Name: 'states'
+            Values: ['California', 'Washington'],
+        }
+    ]);
+```
+
+To reset a parameter so that it includes all values, you can pass the string `ALL_VALUES`.
+```javascript
+    embeddedExperience.setParameters([
+        {
+            Name: 'states'
+            Values: ['ALL_VALUES'],
+        }
+    ]);
+```
+
+#### 🔹 reset
+
+If you want to reset the changes, use the below method:
+
+```javascript
+    embeddedDashboardExperience.reset();
+```
+
+***
 
 &nbsp;  
 ## Console Embedding
 &nbsp;  
 
-Console embeding provides the QuickSight authoring experience.
+Console embedding provides the QuickSight authoring experience.
 
   For more information, see [Embedding the Amazon QuickSight Console](https://docs.aws.amazon.com/quicksight/latest/user/embedded-analytics-full-console-for-authenticated-users.html)
 
@@ -571,77 +999,103 @@ Console embeding provides the QuickSight authoring experience.
 ### Getting Started
 &nbsp;  
 
-```javascript
-    import { embedSession } from 'amazon-quicksight-embedding-sdk';
+Use `embedConsole` method to embed a QuickSight dashboard. It returns a promise of `ConsoleFrame` type.
 
-    const embeddedSessionExperience = embedSession(options);
+
+```typescript
+export type Send = (eventName: MessageEventName, message?: any) => void;
+
+export interface BaseFrame {
+    send: Send;
+}
 ```
-This returns an console session object for further action.
-
-&nbsp;  
-### Options
-&nbsp;  
-
-#### 🔹 defaultEmbeddingVisualType: *'TABLE' | 'AUTO_GRAPH'* *(optional)*
-You can set the embedding visual type for embedded sessions. The default visual type provided in the options will be used during visual creating. By default, when you add a new visual in an embedded session, `AUTO_GRAPH` is selected by default. 
 
 &nbsp;  
 ### Example
 &nbsp;  
 
 ```html
-    <!DOCTYPE html>
-    <html>
+<!DOCTYPE html>
+<html>
 
     <head>
-        <title>QuickSight Console Embedding</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <title>Console Embedding Example</title>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
-            let embeddedSessionExperience;
+            const embedConsole = async() => {
+                const {
+                    createEmbeddingContext,
+                } = QuickSightEmbedding;
 
-            function onError(payload) {
-                console.log("Do something when the session fails loading");
-            }
-
-            function embedSession() {
-                const containerDiv = document.getElementById("embeddingContainer");
-                const options = {
-                    url: "<YOUR_EMBED_URL>", // replace this value with the url generated via embedding API
-                    container: containerDiv,
-                    parameters: {
-                        country: "United States"
+                const embeddingContext = await createEmbeddingContext({
+                    onChange: (changeEvent, metadata) => {
+                        console.log('Context received a change', changeEvent, metadata);
                     },
-                    scrolling: "no",
+                });
+
+                const frameOptions = {
+                    url: "<YOUR_EMBED_URL>", // replace this value with the url generated via embedding API
+                    container: '#experience-container',
                     height: "700px",
                     width: "1000px",
-                    locale: "en-US",
-                    footerPaddingEnabled: true,
-                    defaultEmbeddingVisualType: "TABLE",
+                    onChange: (changeEvent, metadata) => {
+                        switch (changeEvent.eventName) {
+                            case 'FRAME_MOUNTED': {
+                                console.log("Do something when the experience frame is mounted.");
+                                break;
+                            }
+                            case 'FRAME_LOADED': {
+                                console.log("Do something when the experience frame is loaded.");
+                                break;
+                            }
+                        }
+                    },
                 };
-                embeddedSessionExperience = QuickSightEmbedding.embedSession(options);
-                embeddedSessionExperience.on("error", onError);
-            }
 
-            function onCountryChange(obj) {
-                embeddedSessionExperience.setParameters({country: obj.value});
-            }
+                const contentOptions = {
+                    onMessage: async (messageEvent, experienceMetadata) => {
+                        switch (messageEvent.eventName) {
+                            case 'ERROR_OCCURRED': {
+                                console.log("Do something when the embedded experience fails loading.");
+                                break;
+                            }
+                        }
+                    }
+                };
+                const embeddedConsoleExperience = await embeddingContext.embedConsole(frameOptions, contentOptions);
+            };
         </script>
     </head>
 
-    <body onload="embedSession()">
-        <span>
-            <label for="country">Country</label>
-            <select id="country" name="country" onchange="onCountryChange(this)">
-                <option value="United States">United States</option>
-                <option value="Mexico">Mexico</option>
-                <option value="Canada">Canada</option>
-            </select>
-        </span>
-        <div id="embeddingContainer"></div>
+    <body onload="embedConsole()">
+        <div id="experience-container"></div>
     </body>
 
-    </html>
+</html>
 ```
+
+&nbsp;  
+### `frameOptions`
+&nbsp; 
+
+See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange` properties
+
+&nbsp;  
+### `contentOptions`
+&nbsp;  
+
+See [Common Properties of `contentOptions` for All Embedding Experiences](#common-properties-of-contentoptions-for-all-embedding-experiences) for `locale` property
+
+#### 🔹 onMessage: *SimpleMessageEventHandler* *(optional)*
+
+The `eventName`s the dashboard experience receive
+
+    ERROR_OCCURRED: Received when an error occurred while rendering the Amazon QuickSight visual. The message contains `errorCode`. The error codes are:
+    - `Forbidden` -- the URL's authentication code expired
+    - `Unauthorized` -- the session obtained from the authentication code expired
+    If you follow the instructions to generate the correct URL, but you still receive these error codes, you need to generate a new URL.
+
+***
 
 &nbsp;  
 ## QSearchBar Embedding
@@ -655,67 +1109,23 @@ For more information, see  [Embedding Amazon QuickSight Q Search Bar](https://do
 ### Getting Started
 &nbsp;  
 
-```javascript
-    import { embedQSearchBar } from 'amazon-quicksight-embedding-sdk';
+Use `embedQSearchBar` method to embed a QuickSight dashboard. It returns a promise of `QSearchFrame` type.
 
-    const embeddedQBarExperience = embedQSearchBar(options);
-```
-This returns a Q search bar object for further action.
+```typescript
+export type SetQuestion = (question: string) => void;
+export type Close = () => void;
 
-&nbsp;  
-### Options
-&nbsp;  
+export interface QSearchFrame extends BaseFrame {
+    setQuestion: SetQuestion;
+    close: Close;
+}
 
-The `qSearchBarOptions` object is to specify Q specific options when embedding:
-```javascript
-    const qSearchBarOptions = {
-        expandCallback: () => {},
-        collapseCallback: () => {},
-        iconDisabled: false,
-        topicNameDisabled: false,
-        themeId: 'theme12345',
-        allowTopicSelection: true
-    };
-```
+export type Send = (eventName: MessageEventName, message?: any) => void;
 
-Note for Q search bar embedding, you'll likely want to use `className` to give the iframe a `position: absolute` so that when expanded it does not shift the contents of your application. If elements in your application are appearing in front of the Q search bar, you can provide the iframe with a higher z-index as well.
+export interface BaseFrame {
+    send: Send;
+}
 
-#### 🔹 expandCallback: *Function* *(optional)*
-The `expandCallback` in `qSearchBarOptions` can be used to specify behavior for your application when the Q search bar is expanded (clicked into).
-
-#### 🔹 collapseCallback: *Function* *(optional)*
-The `collapseCallback` in `qSearchBarOptions` can be used to specify behavior for your application when the Q search bar is collapsed (clicked out of).
-
-#### 🔹 iconDisabled: *boolean* *(optional, default=false)*
-The `iconDisabled` element in `qSearchBarOptions` can be used to customize whether or not the QuickSight Q icon appears in the embedded search bar.
-
-#### 🔹 topicNameDisabled: *boolean* *(optional, default=false)*
-The `topicNameDisabled` element in `qSearchBarOptions` can be used to customize whether or not the QuickSight Q Topic name appears in the embedded search bar.
-
-#### 🔹 themeId: *string* *(optional)*
-The `themeId` element in `qSearchBarOptions` can be used to set a content theme for the embedded search bar. Note that the embedded QuickSight user, or the group or namespace they belong to, must have permissions on this theme. The default theme is the default QuickSight theme seen in the console application.
-
-#### 🔹 allowTopicSelection: *boolean* *(optional)*
-The `allowTopicSelection` element in `qSearchBarOptions` can be used to customize whether or not the embedded user can change the selected topic for the Q search bar. Note that this can only be set to false if the `initialTopicId` was specified in the embedding API; for more information, see [QuickSight Embedding APIs](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html). The default value is `true`.
-
-&nbsp;  
-### Actions
-&nbsp;  
-
-#### 🔹 setQBarQuestion
-
-This feature sends a question to the Q search bar and immediately queries the question. It also automatically opens the Q popover.
-
-```javascript
-    embeddedQBarExperience.setQBarQuestion('show me monthly revenue');
-```
-
-#### 🔹 closeQPopover
-
-This feature closes the Q popover, returns the iframe to the original Q search bar size.
-
-```javascript
-    embeddedQBarExperience.closeQPopover();
 ```
 
 &nbsp;  
@@ -723,59 +1133,134 @@ This feature closes the Q popover, returns the iframe to the original Q search b
 &nbsp;  
 
 ```html
-    <!DOCTYPE html>
-    <html>
+<!DOCTYPE html>
+<html>
 
     <head>
-        <title>QuickSight Q Search Bar Embedding</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.20.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <title>Q Search Bar Embedding Example</title>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
-            let embeddedQBarExperience;
+            const embedQSearchBar = async() => {    
+                const {
+                    createEmbeddingContext,
+                } = QuickSightEmbedding;
 
-            function onError(payload) {
-                console.log("Do something when the session fails loading");
-            }
+                const embeddingContext = await createEmbeddingContext({
+                    onChange: (changeEvent, metadata) => {
+                        console.log('Context received a change', changeEvent, metadata);
+                    },
+                });
 
-            function onExpand() {
-                console.log("Do something when the Q search bar opens");
-            }
-
-            function onCollapse() {
-                console.log("Do something when the Q search bar closes");
-            }
-
-            function embedQSearchBar() {
-                const containerDiv = document.getElementById("embeddingContainer");
-                const options = {
+                const frameOptions = {
                     url: "<YOUR_EMBED_URL>", // replace this value with the url generated via embedding API
-                    container: containerDiv,
+                    container: '#experience-container',
+                    height: "700px",
                     width: "1000px",
-                    locale: "en-US",
-                    qSearchBarOptions: {
-                        expandCallback: onExpand,
-                        collapseCallback: onCollapse,
-                        iconDisabled: false,
-                        topicNameDisabled: false, 
-                        themeId: 'theme12345',
-                        allowTopicSelection: true
+                    onChange: (changeEvent, metadata) => {
+                        switch (changeEvent.eventName) {
+                            case 'FRAME_MOUNTED': {
+                                console.log("Do something when the experience frame is mounted.");
+                                break;
+                            }
+                            case 'FRAME_LOADED': {
+                                console.log("Do something when the experience frame is loaded.");
+                                break;
+                            }
+                        }
+                    },
+                };
+
+                const contentOptions = {
+                    hideTopicName: false, 
+                    theme: '<YOUR_THEME_ID>',
+                    allowTopicSelection: true,
+                    onMessage: async (messageEvent, experienceMetadata) => {
+                        switch (messageEvent.eventName) {
+                            case 'Q_SEARCH_OPENED': {
+                                console.log("Do something when Q Search content expanded");
+                                break;
+                            }
+                            case 'Q_SEARCH_CLOSED': {
+                                console.log("Do something when Q Search content collapsed");
+                                break;
+                            }
+                            case 'Q_SEARCH_SIZE_CHANGED': {
+                                console.log("Do something when Q Search size changed");
+                                break;
+                            }
+                            case 'CONTENT_LOADED': {
+                                console.log("Do something when the Q Search is loaded.");
+                                break;
+                            }
+                            case 'ERROR_OCCURRED': {
+                                console.log("Do something when the Q Search fails loading.");
+                                break;
+                            }
+                        }
                     }
                 };
-                embeddedQBarExperience = QuickSightEmbedding.embedQSearchBar(options);
-                embeddedQBarExperience.on("error", onError);
-            }
-
-            function onCountryChange(obj) {
-                embeddedQBarExperience.setParameters({country: obj.value});
-            }
+                const embeddedQSearchBarExperience = await embeddingContext.embedQSearchBar(frameOptions, contentOptions);
+            };
         </script>
     </head>
 
     <body onload="embedQSearchBar()">
-        <div id="embeddingContainer"></div>
+        <div id="experience-container"></div>
     </body>
 
-    </html>
+</html>
 ```
+
+&nbsp;  
+### `frameOptions`
+&nbsp; 
+
+See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange` properties
+
+Note for Q search bar embedding, you'll likely want to use `className` to give the iframe a `position: absolute` so that when expanded it does not shift the contents of your application. If elements in your application are appearing in front of the Q search bar, you can provide the iframe with a higher z-index as well.
+
+&nbsp;  
+### `contentOptions`
+&nbsp;  
+
+#### 🔹 hideTopicName: *boolean* *(optional, default=false)*
+The `hideTopicName` property can be used to customize whether or not the QuickSight Q Topic name appears in the embedded search bar.
+
+#### 🔹 theme: *string* *(optional)*
+The `theme` property can be used to set a content theme for the embedded search bar. Note that the embedded QuickSight user, or the group or namespace they belong to, must have permissions on this theme. The default theme is the default QuickSight theme seen in the console application.
+
+#### 🔹 allowTopicSelection: *boolean* *(optional)*
+The `allowTopicSelection` property can be used to customize whether or not the embedded user can change the selected topic for the Q search bar. Note that this can only be set to false if the `initialTopicId` was specified in the embedding API; for more information, see [QuickSight Embedding APIs](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html). The default value is `true`.
+
+#### 🔹 onMessage: *SimpleMessageEventHandler* *(optional)*
+
+The `eventName`s the dashboard experience receive
+
+    Q_SEARCH_CLOSED: Received when the Q search collapsed
+    Q_SEARCH_OPENED: Received when the Q search expanded
+    Q_SEARCH_SIZE_CHANGED: Received when the size of the Q search changed
+
+&nbsp;  
+### Actions
+&nbsp;  
+
+#### 🔹 setQuestion
+
+This feature sends a question to the Q search bar and immediately queries the question. It also automatically opens the Q popover.
+
+```javascript
+    embeddedQBarExperience.setQuestion('show me monthly revenue');
+```
+
+#### 🔹 close
+
+This feature closes the Q popover, returns the iframe to the original Q search bar size.
+
+```javascript
+    embeddedQBarExperience.close();
+```
+
+***
 
 &nbsp;  
 ## Troubleshooting
@@ -785,7 +1270,7 @@ This feature closes the Q popover, returns the iframe to the original Q search b
 2. Some browsers (e.g. mobile safari) have default setting to "Always Block Cookies". Change the setting to either "Allow form Websites I Visit" or "Always Allow".
 3. Q search bar troubleshooting:
     * Shifting page contents in unwanted way - try giving the embedding container and the iframe class a style with position absolute.
-    * Clicking on some parts of your application does not close the Q search bar - use the `expandCallback` and `collapseCallback` to create a backdrop/element on the page that's always clickable so that the document listener can properly close the search bar.
+    * Clicking on some parts of your application does not close the Q search bar - listen to the `Q_SEARCH_OPENED` and `Q_SEARCH_CLOSED` messages to create a backdrop/element on the page that's always clickable so that the document listener can properly close the search bar.
 
 
 &nbsp;  
@@ -793,7 +1278,3 @@ This feature closes the Q popover, returns the iframe to the original Q search b
 &nbsp;  
 Copyright 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: Apache-2.0
-
----
-
-💭  [Give us feedback on your QuickSight embedding experience!](https://amazonmr.au1.qualtrics.com/jfe/form/SV_82jpzFSMLDBH1K6)

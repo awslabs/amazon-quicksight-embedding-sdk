@@ -1,6 +1,21 @@
+**2.0.0**
+* Add new functionality
+  * Add `undo`, `redo`, and `reset` actions
+  * Add optional loading spinner
+  * Support unselect operation in setParameters action
+* Modernize the library
+  * Use TypeScript
+  * Use promises for actions
+  * Improve error, warning and info messages
+* Change options and response models
+  * Split options into `frameOptions` and `contentOptions` and define experience specific `contentOptions`
+  * Use `onMessage` message handler for all messages received from the embedded experience.
+  * Unify the data model for `parameters` option, `setParameters` and `getParameters` actions and `PARAMETERS_CHANGED` message payload
+  * Return status response for all actions
+* Upgrade dependency packages
+
 **1.20.1**
 * Minor fixes
-* Upgrade dependency packages
 
 **1.20.0**
 * Add visual embedding support with new `embedVisual` function

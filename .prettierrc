@@ -1,0 +1,10 @@
+{
+    "arrowParens": "avoid",
+    "bracketSpacing": false,
+    "insertPragma": false,
+    "parser": "typescript",
+    "printWidth": 150,
+    "singleQuote": true,
+    "tabWidth": 4,
+    "trailingComma": "es5"
+}

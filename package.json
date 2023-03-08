@@ -1,55 +1,74 @@
 {
-  "name": "amazon-quicksight-embedding-sdk",
-  "description": "JS SDK for embedding Amazon QuickSight",
-  "version": "1.20.1",
-  "main": "dist/index.js",
-  "homepage": "https://github.com/awslabs/amazon-quicksight-embedding-sdk",
-  "directories": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:awslabs/amazon-quicksight-embedding-sdk.git"
-  },
-  "keywords": [
-    "Amazon",
-    "AWS",
-    "QuickSight"
-  ],
-  "author": {
-    "name": "QuickSight",
-    "email": "",
-    "url": "https://aws.amazon.com/quicksight/"
-  },
-  "license": "Apache-2.0",
-  "devDependencies": {
-    "@babel/cli": "^7.15.7",
-    "@babel/core": "^7.15.5",
-    "@babel/preset-env": "^7.15.6",
-    "@babel/preset-flow": "^7.14.5",
-    "@babel/register": "^7.15.3",
-    "babel-eslint": "^10.1.0",
-    "chai": "^4.3.4",
-    "eslint": "^7.30.0",
-    "eslint-plugin-flowtype": "5.8.0",
-    "expose-loader": "^3.0.0",
-    "flow-bin": "0.145.0",
-    "jsdom": "^15.2.1",
-    "jsdom-global": "^3.0.2",
-    "mocha": "^9.1.3",
-    "sinon": "^11.1.1",
-    "webpack": "^5.37.1",
-    "webpack-cli": "^4.7.2",
-    "webpack-merge": "^5.8.0"
-  },
-  "scripts": {
-    "build": "babel src/ -d dist/",
-    "clean": "rm -rf dist/",
-    "lint": "eslint --ignore-path .gitignore .",
-    "test": "mocha --recursive --require @babel/register",
-    "flow": "flow",
-    "dev": "webpack --config webpack.dev.js",
-    "prod": "webpack --config webpack.prod.js",
-    "release": "npm run lint && npm run flow && npm run test && npm run build && npm run dev && npm run prod"
-  }
+    "name": "amazon-quicksight-embedding-sdk",
+    "description": "JS SDK for embedding Amazon QuickSight",
+    "version": "2.0.0",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "/dist"
+    ],
+    "homepage": "https://github.com/awslabs/amazon-quicksight-embedding-sdk",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:awslabs/amazon-quicksight-embedding-sdk.git"
+    },
+    "keywords": [
+        "Amazon",
+        "AWS",
+        "QuickSight"
+    ],
+    "author": {
+        "name": "QuickSight",
+        "email": "",
+        "url": "https://aws.amazon.com/quicksight/"
+    },
+    "license": "Apache-2.0",
+    "devDependencies": {
+        "@babel/cli": "^7.19.3",
+        "@babel/core": "^7.20.5",
+        "@babel/plugin-transform-runtime": "^7.19.6",
+        "@babel/preset-env": "^7.20.2",
+        "@babel/preset-typescript": "^7.18.6",
+        "@babel/runtime": "^7.20.6",
+        "@testing-library/jest-dom": "^5.16.5",
+        "@types/jest": "^28.1.8",
+        "@types/node": "^18.11.15",
+        "@types/punycode": "^2.1.0",
+        "@types/uuid": "^9.0.0",
+        "@typescript-eslint/eslint-plugin": "^5.46.1",
+        "@typescript-eslint/parser": "^5.46.1",
+        "babel-jest": "^28.1.3",
+        "babel-loader": "^8.3.0",
+        "copy-webpack-plugin": "^10.2.4",
+        "eslint": "^8.29.0",
+        "expose-loader": "^3.1.0",
+        "jest": "^27.5.1",
+        "jsdom": "^19.0.0",
+        "prettier": "^2.8.1",
+        "punycode": "^2.1.1",
+        "sinon": "^14.0.2",
+        "ts-jest": "^27.1.5",
+        "ts-node": "10.9.1",
+        "typescript": "^4.9.4",
+        "uuid": "^9.0.0",
+        "webpack": "^5.75.0",
+        "webpack-cli": "^4.10.0",
+        "webpack-dev-server": "^4.11.1",
+        "webpack-merge": "^5.8.0"
+    },
+    "scripts": {
+        "clean": "rm -rf dist/",
+        "lint": "eslint .",
+        "prettier:check": "prettier --check \"./{.jest,src,tst}/**/*.ts\"",
+        "prettier:write": "prettier --write \"./{.jest,src,tst}/**/*.ts\"",
+        "test": "jest",
+        "dev": "STAGE=dev webpack --config webpack.config.ts",
+        "prod": "STAGE=prod webpack --config webpack.config.ts",
+        "start": "STAGE=dev webpack server --config webpack.config.ts",
+        "types": "tsc --project tsconfig.types.json",
+        "build:dev": "npm run types && npm run lint && npm run test && npm run dev",
+        "build:prod": "npm run types && npm run lint && npm run test && npm run prod",
+        "release": "npm run build:prod",
+        "prepublishOnly": "npm run clean && npm run build:prod"
+    }
 }
