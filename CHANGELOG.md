@@ -1,3 +1,6 @@
+**2.0.1**
+* Minor bug fixes
+
 **2.0.0**
 * Add new functionality
   * Add `undo`, `redo`, and `reset` actions
