@@ -30,7 +30,7 @@ const createConsoleFrame = (
             eventName: ChangeEventName.NO_URL,
             eventLevel: ChangeEventLevel.ERROR,
             message,
-        });
+        }, {frame: null});
         throw new Error(message);
     }
 
@@ -43,7 +43,7 @@ const createConsoleFrame = (
             data: {
                 url,
             },
-        });
+        }, {frame: null});
         throw new Error('Invalid console experience url');
     }
     const {experienceIdentifier, internalExperience} = buildInternalExperienceInfo(
@@ -72,7 +72,7 @@ const createConsoleFrame = (
                 data: {
                     unrecognizedContentOptions: unrecognizedContentOptionNames,
                 },
-            });
+            }, {frame: null});
             console.warn('Console content options contain unrecognized properties');
         }
 

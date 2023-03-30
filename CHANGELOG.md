@@ -1,3 +1,10 @@
+**2.0.2**
+* Minor bug fixes
+  * An issue with iframe affecting layout is fixed
+  * An issue with spinner creation being restricted by content security policy is fixed
+  * onChange handler now returns reference to the embedding iframe
+  * Improvements on the README.md and OPTIONS_DIFFERENCES_V1_TO_V2.md
+
 **2.0.1**
 * Minor bug fixes
 

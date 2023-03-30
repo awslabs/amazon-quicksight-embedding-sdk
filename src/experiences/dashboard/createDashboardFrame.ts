@@ -37,7 +37,7 @@ const createDashboardFrame = (
             eventName: ChangeEventName.NO_URL,
             eventLevel: ChangeEventLevel.ERROR,
             message,
-        });
+        }, {frame: null});
         throw new Error(message);
     }
 
@@ -50,7 +50,7 @@ const createDashboardFrame = (
             data: {
                 url,
             },
-        });
+        }, {frame: null});
         throw new Error('Invalid dashboard experience url');
     }
     const {experienceIdentifier, internalExperience} = buildInternalExperienceInfo(
@@ -94,7 +94,7 @@ const createDashboardFrame = (
                 data: {
                     unrecognizedContentOptions: unrecognizedContentOptionNames,
                 },
-            });
+            }, {frame: null});
             console.warn(warnMessage);
         }
 

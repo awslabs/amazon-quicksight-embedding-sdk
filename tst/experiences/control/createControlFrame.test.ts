@@ -47,7 +47,7 @@ describe('createControlFrame', () => {
             data: {
                 experience: TEST_INTERNAL_EXPERIENCE,
             },
-        });
+        }, {frame: null});
         const iFrame = TEST_CONTAINER.querySelector('iframe');
         expect(iFrame).not.toEqual(undefined);
     });

@@ -49,7 +49,7 @@ const createEmbeddingContext: CreateEmbeddingContext = async (frameOptions?: Cre
             eventName: ChangeEventName.NO_BODY,
             eventLevel: ChangeEventLevel.ERROR,
             message: 'could not locate <body> element in the page',
-        });
+        }, {frame: null});
         throw new Error('could not locate <body> element in the page');
     }
 
@@ -99,7 +99,7 @@ const createEmbeddingContext: CreateEmbeddingContext = async (frameOptions?: Cre
                 data: {
                     methodName,
                 },
-            });
+            }, {frame: null});
             throw new Error(errorMessage);
         }
         if (typeof frameOptions !== 'object' || Array.isArray(frameOptions)) {
@@ -112,7 +112,7 @@ const createEmbeddingContext: CreateEmbeddingContext = async (frameOptions?: Cre
                     methodName,
                     frameOptionsType: Array.isArray(frameOptions) ? 'array' : typeof frameOptions,
                 },
-            });
+            }, {frame: null});
             throw new Error(errorMessage);
         }
         const {
@@ -136,7 +136,7 @@ const createEmbeddingContext: CreateEmbeddingContext = async (frameOptions?: Cre
                 data: {
                     unrecognizedFrameOptions: unrecognizedFrameOptionNames,
                 },
-            });
+            }, {frame: null});
             console.warn(warnMessage);
         }
     };

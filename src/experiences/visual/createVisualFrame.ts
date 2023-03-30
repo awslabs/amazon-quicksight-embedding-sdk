@@ -33,7 +33,7 @@ const createVisualFrame = (
             eventName: ChangeEventName.NO_URL,
             eventLevel: ChangeEventLevel.ERROR,
             message,
-        });
+        }, {frame: null});
         throw new Error(message);
     }
 
@@ -46,7 +46,7 @@ const createVisualFrame = (
             data: {
                 url,
             },
-        });
+        }, {frame: null});
         throw new Error('Invalid visual experience url');
     }
     const {experienceIdentifier, internalExperience} = buildInternalExperienceInfo(
@@ -85,7 +85,7 @@ const createVisualFrame = (
                 data: {
                     unrecognizedContentOptions: unrecognizedContentOptionNames,
                 },
-            });
+            }, {frame: null});
             console.warn('Visual content options contain unrecognized properties');
         }
 

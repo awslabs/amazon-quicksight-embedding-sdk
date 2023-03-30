@@ -131,7 +131,7 @@ export type ParameterValue = Omit<Primitives, 'boolean'>;
 
 export interface Parameter {
     Name: string;
-    Values: ParameterValue[]
+    Values: ParameterValue[];
 }
 
 export interface DashboardContentOptions extends BaseContentOptions {
@@ -333,7 +333,7 @@ export type FrameOptions = {
     container: string | HTMLElement;
     width?: string;
     height?: string;
-    resizeHeightOnSizeChangedEvent?: boolean
+    resizeHeightOnSizeChangedEvent?: boolean;
     withIframePlaceholder?: boolean | HTMLElement;
     className?: string;
     onChange?: SimpleChangeEventHandler;

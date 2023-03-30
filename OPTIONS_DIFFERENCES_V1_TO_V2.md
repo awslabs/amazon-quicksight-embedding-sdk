@@ -2,6 +2,28 @@
 ## Dashboard Embedding Options in the Version 1.x
 &nbsp;  
 
+#### 🔹 height: 'AutoFit' *(optional)* 🔹 loadingHeight: string *(optional)*
+In the version 1.x
+```javascript
+    const options = {
+        // ...
+        height: 'AutoFit',
+        loadingHeight: '300px'
+    }
+```
+
+In the version 2.0
+```javascript
+    const frameOptions = {
+        // ...
+        height: '300px',
+        resizeHeightOnSizeChangedEvent: true
+    };
+    const contentOptions = {
+        // ...
+    };
+```
+
 #### 🔹 printEnabled: *boolean* *(optional, default=false)*
 
 In the version 1.x

@@ -74,7 +74,7 @@ describe('createExperienceFrame', () => {
             data: {
                 experience: TEST_INTERNAL_EXPERIENCE,
             },
-        });
+        }, {frame: null});
     });
 
     it('should create experience frame with fixed width and height', () => {
@@ -150,7 +150,7 @@ describe('createExperienceFrame', () => {
             data: {
                 experience: TEST_INTERNAL_EXPERIENCE,
             },
-        });
+        }, {frame: null});
         expect(createIframe).not.toHaveBeenCalled();
     });
 
@@ -175,7 +175,7 @@ describe('createExperienceFrame', () => {
             data: {
                 experience: TEST_INTERNAL_EXPERIENCE,
             },
-        });
+        }, {frame: null});
         expect(createIframe).not.toHaveBeenCalled();
     });
 
@@ -199,7 +199,7 @@ describe('createExperienceFrame', () => {
             data: {
                 experience: TEST_INTERNAL_EXPERIENCE,
             },
-        });
+        }, {frame: null});
         expect(createIframe).not.toHaveBeenCalled();
     });
 });

@@ -62,7 +62,7 @@ describe('createVisualFrame', () => {
             data: {
                 experience: TEST_INTERNAL_EXPERIENCE,
             },
-        });
+        }, {frame: null});
         const iFrame = TEST_CONTAINER.querySelector('iframe');
         expect(iFrame).not.toEqual(undefined);
     });
@@ -117,6 +117,6 @@ describe('createVisualFrame', () => {
             data: {
                 unrecognizedContentOptions: [TEST_UNRECOGNIZED_CONTENT_OPTION],
             },
-        });
+        }, {frame: null});
     });
 });

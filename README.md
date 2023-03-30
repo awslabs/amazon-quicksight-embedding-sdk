@@ -19,7 +19,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
 ...
-<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.2/dist/quicksight-embedding-js-sdk.min.js"></script>
 <script type="text/javascript">
     const onLoad = async () => {
         const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
@@ -65,6 +65,15 @@ const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
 Use `createEmbeddingContext` method to create an embedding context. It returns a promise of `EmbeddingContext` type.
 
 ```typescript
+
+export type CreateEmbeddingContext = (frameOptions?: CreateEmbeddingContextFrameOptions) => Promise<EmbeddingContext>;
+
+export type SimpleChangeEventHandler = (message: SimpleChangeEvent, metadata?: ExperienceFrameMetadata) => void;
+
+export type CreateEmbeddingContextFrameOptions = {
+    onChange?: SimpleChangeEventHandler;
+};
+
 export type EmbeddingContext = {
     embedDashboard: EmbedDashboard;
     embedVisual: EmbedVisual;
@@ -92,6 +101,8 @@ const embeddingContext: EmbeddingContext = await createEmbeddingContext({
     },
 });
 ```
+
+The embedding context creates an additional zero-pixel iframe and appends it into the `body` element on the page to centralize communication between the SDK and the embedded QuickSight content.
 
 &nbsp;  
 ## Embedding the Amazon QuickSight Experiences
@@ -435,7 +446,7 @@ export interface BaseFrame {
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.2/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedDashboard = async() => {
                 const {
@@ -655,7 +666,7 @@ The `eventName`s the dashboard experience receive
 ### Actions
 &nbsp;  
 
-#### 🔹 setParameters: *Function* *(optional)*
+#### 🔹 setParameters: *(parameters: Parameter[]) => Promise<ResponseMessage>;*
 
 Use this function to update parameter values. Pass an array as value for multi-value parameters.
 You can build your own UI to trigger this, so that viewers of the embedded QuickSight session can control it from your app page.
@@ -684,7 +695,7 @@ To reset a parameter so that it includes all values, you can pass the string `AL
     ]);
 ```
 
-#### 🔹 navigateToDashboard
+#### 🔹 navigateToDashboard *(dashboardId: string, options?: NavigateToDashboardOptions) => Promise<ResponseMessage>*
 
 To navigate to a different dashboard, use dashboard.navigateToDashboard(options). The input parameter options should contain the dashboardId that you want to navigate to, and also the parameters for that dashboard, for example:
 ```javascript
@@ -700,7 +711,7 @@ To navigate to a different dashboard, use dashboard.navigateToDashboard(options)
     embeddedDashboardExperience.navigateToDashboard(dashboardId, options);
 ```
 
-#### 🔹 setSelectedSheetId
+#### 🔹 setSelectedSheetId *(sheetId: string) => Promise<ResponseMessage>*
 
 If you want to navigate from one sheet to another programmatically, with the Amazon quicksight dashboard, use the below method:
 
@@ -708,7 +719,7 @@ If you want to navigate from one sheet to another programmatically, with the Ama
     embeddedDashboardExperience.setSelectedSheetId('<YOUR_SHEET_ID>');
 ```
 
-#### 🔹 getSheets
+#### 🔹 getSheets *() => Promise<Sheet[]>*
 
 If you want to get the current set of sheets, from Amazon QuickSight dashboard in ad-hoc manner, use the below method:
 
@@ -716,16 +727,22 @@ If you want to get the current set of sheets, from Amazon QuickSight dashboard i
     const sheets: Sheet[] = await embeddedDashboardExperience.getSheets();
 ```
 
-The callback is needed since the process of getting sheets is asynchronous, even for ad-hoc fetches.
+#### 🔹 getSelectedSheetId *() => Promise<string>*
 
-#### 🔹 initiatePrint
+If you want to get the current sheet id, from Amazon QuickSight dashboard in ad-hoc manner, use the below method:
+
+```typescript
+    const selectedSheetId: string = await embeddedDashboardExperience.getSelectedSheetId();
+```
+
+#### 🔹 initiatePrint *() => Promise<ResponseMessage>*
 
 This feature allows you to initiate dashboard print, from parent website, without a navbar print icon, in the dashboard. To initiate a dashboard print from parent website, use dashboard.initiatePrint(), for example:
 ```javascript
     embeddedDashboardExperience.initiatePrint();
 ```
 
-#### 🔹 getParameters
+#### 🔹 getParameters *() => Promise<Parameter[]>*
 
 If you want to get the active parameter values, from Amazon QuickSight dashboard in ad-hoc manner, use the below method:
 
@@ -733,7 +750,7 @@ If you want to get the active parameter values, from Amazon QuickSight dashboard
     const parameters: Parameter[] = await embeddedDashboardExperience.getParameters();
 ```
 
-#### 🔹 undo
+#### 🔹 undo *() => Promise<ResponseMessage>*
 
 If you want to unto the changes, use the below method:
 
@@ -741,7 +758,7 @@ If you want to unto the changes, use the below method:
     embeddedDashboardExperience.undo();
 ```
 
-#### 🔹 redo
+#### 🔹 redo *() => Promise<ResponseMessage>*
 
 If you want to redo the changes, use the below method:
 
@@ -749,7 +766,7 @@ If you want to redo the changes, use the below method:
     embeddedDashboardExperience.redo();
 ```
 
-#### 🔹 reset
+#### 🔹 reset *() => Promise<ResponseMessage>*
 
 If you want to reset the changes, use the below method:
 
@@ -799,7 +816,7 @@ export interface BaseFrame {
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.2/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedVisual = async() => {    
                 const {
@@ -946,7 +963,7 @@ The `eventName`s the dashboard experience receive
 ### Actions
 &nbsp;  
 
-#### 🔹 setParameters: *Function* *(optional)*
+#### 🔹 setParameters: *(parameters: Parameter[]) => Promise<ResponseMessage>;*
 
 Use this function to update parameter values. Pass an array as value for multi-value parameters.
 You can build your own UI to trigger this, so that viewers of the embedded QuickSight session can control it from your app page.
@@ -975,7 +992,7 @@ To reset a parameter so that it includes all values, you can pass the string `AL
     ]);
 ```
 
-#### 🔹 reset
+#### 🔹 reset *() => Promise<ResponseMessage>*
 
 If you want to reset the changes, use the below method:
 
@@ -1020,7 +1037,7 @@ export interface BaseFrame {
 
     <head>
         <title>Console Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.2/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedConsole = async() => {
                 const {
@@ -1138,7 +1155,7 @@ export interface BaseFrame {
 
     <head>
         <title>Q Search Bar Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.2/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQSearchBar = async() => {    
                 const {

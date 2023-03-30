@@ -19,6 +19,7 @@ import {
     ExperienceFrameMetadata,
     EmbeddingIFrameElement,
     SimpleMessageEvent,
+    SimpleChangeEvent,
 } from '../types';
 
 const MESSAGE_RESPONSE_TIMEOUT = 5000;
@@ -33,11 +34,24 @@ const createExperienceFrame = (
 ): ExperienceFrame => {
     const {url, container, width = '100%', height = '100%', withIframePlaceholder, className, onChange} = frameOptions;
 
+    let experienceIframe: EmbeddingIFrameElement | null = null;
+
+    // Decorate change event listener with experience frame's metadata
+    const _onChange = (changeEvent: SimpleChangeEvent) => {
+        if (typeof onChange !== 'function') {
+            return;
+        }
+        const metadata: ExperienceFrameMetadata = {
+            frame: experienceIframe,
+        };
+        onChange(changeEvent, metadata);
+    };
+
     // Make sure container is provided
 
     if (!container) {
         const message = 'Container is required for the experience';
-        onChange?.({
+        _onChange({
             eventName: ChangeEventName.NO_CONTAINER,
             eventLevel: ChangeEventLevel.ERROR,
             message,
@@ -50,14 +64,27 @@ const createExperienceFrame = (
 
     let _container: HTMLElement;
     if (typeof container === 'string') {
-        _container = document.querySelector(container);
+        try {
+            _container = document.querySelector(container);
+        } catch (error) {
+            const {message} = error as Error;
+            _onChange({
+                eventName: ChangeEventName.INVALID_CONTAINER,
+                eventLevel: ChangeEventLevel.ERROR,
+                message,
+                data: {
+                    experience: internalExperience,
+                },
+            });
+            throw error;
+        }
     } else if (typeof container === 'object' && container.nodeName) {
         _container = container;
     }
 
     if (!_container) {
         const message = `Invalid container '${container}' for the experience`;
-        onChange?.({
+        _onChange({
             eventName: ChangeEventName.INVALID_CONTAINER,
             eventLevel: ChangeEventLevel.ERROR,
             message,
@@ -93,7 +120,7 @@ const createExperienceFrame = (
     if (url) {
         _url = buildExperienceUrl(url, contentOptionsWithoutOnMessage as BuildExperienceUrlOptions, internalExperience);
     } else {
-        onChange?.({
+        _onChange({
             eventName: ChangeEventName.NO_URL,
             eventLevel: ChangeEventLevel.ERROR,
             message: 'Url is required for the experience',
@@ -105,8 +132,6 @@ const createExperienceFrame = (
     }
 
     // Start creating the frame
-
-    let experienceIframe: EmbeddingIFrameElement | null;
 
     const sendToOwnFrame = async (messageEvent: TargetedMessageEvent) => {
         const eventId = v4();
@@ -149,7 +174,7 @@ const createExperienceFrame = (
     let timeoutInstance: NodeJS.Timeout;
 
     timeoutInstance = setTimeout(() => {
-        onChange?.({
+        _onChange({
             eventName: ChangeEventName.FRAME_NOT_CREATED,
             eventLevel: ChangeEventLevel.ERROR,
             message: 'Creating the frame timed out',
@@ -164,7 +189,7 @@ const createExperienceFrame = (
         if (timeoutInstance) {
             clearTimeout(timeoutInstance);
         }
-        onChange?.({
+        _onChange({
             eventName: ChangeEventName.FRAME_LOADED,
             eventLevel: ChangeEventLevel.INFO,
             message: 'The frame loaded',
@@ -176,7 +201,7 @@ const createExperienceFrame = (
 
     // Create the iframe
 
-    onChange?.({
+    _onChange({
         eventName: ChangeEventName.FRAME_STARTED,
         eventLevel: ChangeEventLevel.INFO,
         message: 'Creating the frame',
@@ -197,7 +222,7 @@ const createExperienceFrame = (
     });
 
     if (!experienceIframe) {
-        onChange?.({
+        _onChange({
             eventName: ChangeEventName.FRAME_NOT_CREATED,
             eventLevel: ChangeEventLevel.ERROR,
             message: 'Failed to create the frame',
@@ -208,7 +233,7 @@ const createExperienceFrame = (
         throw new Error('Failed to create the frame');
     }
 
-    onChange?.({
+    _onChange({
         eventName: ChangeEventName.FRAME_MOUNTED,
         eventLevel: ChangeEventLevel.INFO,
         message: 'The frame mounted',

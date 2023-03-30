@@ -140,6 +140,6 @@ describe('createDashboardFrame', () => {
             data: {
                 unrecognizedContentOptions: [TEST_UNRECOGNIZED_CONTENT_OPTION],
             },
-        });
+        }, {frame: null});
     });
 });

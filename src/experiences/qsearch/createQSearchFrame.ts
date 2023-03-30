@@ -32,7 +32,7 @@ const createQSearchFrame = (
             eventName: ChangeEventName.NO_URL,
             eventLevel: ChangeEventLevel.ERROR,
             message,
-        });
+        }, {frame: null});
         throw new Error(message);
     }
 
@@ -45,7 +45,7 @@ const createQSearchFrame = (
             data: {
                 url,
             },
-        });
+        }, {frame: null});
         throw new Error('Invalid q search experience url');
     }
     const {experienceIdentifier, internalExperience} = buildInternalExperienceInfo(
@@ -89,7 +89,7 @@ const createQSearchFrame = (
                 data: {
                     unrecognizedContentOptions: unrecognizedContentOptionNames,
                 },
-            });
+            }, {frame: null});
             console.warn('Q search content options contain unrecognized properties');
         }
 

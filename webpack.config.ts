@@ -62,6 +62,9 @@ const config = () => {
         },
         plugins: [
             new webpack.BannerPlugin(webpackBanner),
+            new webpack.DefinePlugin({
+                __SDK_VERSION__: JSON.stringify(version),
+            }),
         ],
         devServer: isProd ? undefined : {
             allowedHosts: 'all',

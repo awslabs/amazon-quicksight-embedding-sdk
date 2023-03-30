@@ -39,7 +39,7 @@ const createControlFrame = (
     const experienceIdentifier = getControlExperienceIdentifier(internalExperience);
     experienceEventListenerBuilder(experienceIdentifier, onMessage);
 
-    const {internalSend} = createExperienceFrame(
+    const {internalSend, frame} = createExperienceFrame(
         {
             url: controlUrl,
             container,
@@ -87,7 +87,7 @@ const createControlFrame = (
                     data: {
                         eventTarget: _messageEvent.eventTarget,
                     },
-                });
+                }, {frame});
                 console.warn('Message with unrecognized event target received');
             }
         }
