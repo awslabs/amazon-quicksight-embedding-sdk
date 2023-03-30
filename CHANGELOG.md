@@ -1,3 +1,6 @@
+**2.0.3**
+* Minor bug fixes
+
 **2.0.2**
 * Minor bug fixes
   * An issue with iframe affecting layout is fixed

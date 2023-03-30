@@ -19,7 +19,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
 ...
-<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.3/dist/quicksight-embedding-js-sdk.min.js"></script>
 <script type="text/javascript">
     const onLoad = async () => {
         const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
@@ -446,7 +446,7 @@ export interface BaseFrame {
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.3/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedDashboard = async() => {
                 const {
@@ -816,7 +816,7 @@ export interface BaseFrame {
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.3/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedVisual = async() => {    
                 const {
@@ -1037,7 +1037,7 @@ export interface BaseFrame {
 
     <head>
         <title>Console Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.3/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedConsole = async() => {
                 const {
@@ -1155,7 +1155,7 @@ export interface BaseFrame {
 
     <head>
         <title>Q Search Bar Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.0.3/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQSearchBar = async() => {    
                 const {
