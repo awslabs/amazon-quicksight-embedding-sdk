@@ -210,18 +210,18 @@ const createExperienceFrame = (
         },
     });
 
-    experienceIframe = createIframe({
-        id: experienceIdentifier,
-        src: _url,
-        width,
-        height,
-        container: _container,
-        onLoad: onLoadHandler,
-        withIframePlaceholder,
-        className,
-    });
-
-    if (!experienceIframe) {
+    try {
+        experienceIframe = createIframe({
+            id: experienceIdentifier,
+            src: _url,
+            width,
+            height,
+            container: _container,
+            onLoad: onLoadHandler,
+            withIframePlaceholder,
+            className,
+        });
+    } catch (error) {
         _onChange({
             eventName: ChangeEventName.FRAME_NOT_CREATED,
             eventLevel: ChangeEventLevel.ERROR,
@@ -230,7 +230,7 @@ const createExperienceFrame = (
                 experience: internalExperience,
             },
         });
-        throw new Error('Failed to create the frame');
+        throw error;
     }
 
     _onChange({

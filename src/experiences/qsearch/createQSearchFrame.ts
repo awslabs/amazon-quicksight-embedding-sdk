@@ -11,11 +11,14 @@ import {
     ResponseMessage,
     SimpleMessageEvent,
     TransformedQSearchContentOptions,
+    FrameStyles,
 } from '../../types';
 import {ChangeEventLevel, MessageEventName, ChangeEventName} from '../../enums';
 import createExperienceFrame from '../createExperienceFrame';
 import {extractQSearchExperienceFromUrl, getQSearchExperienceIdentifier} from '.';
 import {buildInternalExperienceInfo} from '../commons';
+
+const MAX_Z_INDEX = '2147483647';
 
 const createQSearchFrame = (
     frameOptions: FrameOptions,
@@ -25,6 +28,7 @@ const createQSearchFrame = (
 ): QSearchFrame => {
     const {url, onChange} = frameOptions;
     const {contextId} = controlOptions || {};
+    let frameStyles: FrameStyles;
 
     if (!url) {
         const message = 'Url is required for the experience';
@@ -55,15 +59,49 @@ const createQSearchFrame = (
         getQSearchExperienceIdentifier
     );
 
-    const interceptMessage = (messageEvent: SimpleMessageEvent, metadata: ExperienceFrameMetadata) => {
-        // Intercepting onMessage
-        // if the resizeHeightOnSizeChangedEvent is true, upon receiving SIZE_CHANGED message, update the height of the iframe
-        if (['Q_SEARCH_OPENED', 'Q_SEARCH_CLOSED'].includes(messageEvent.eventName)) {
-            metadata.frame.style.height = `${messageEvent.message.height}px`;
-        } else if (messageEvent.eventName === MessageEventName.CONTENT_LOADED) {
-            window.addEventListener('click', event => {
-                !experienceFrame.frame.contains(event.target as Node) && _close();
-            });
+    const interceptMessage = (
+        messageEvent: SimpleMessageEvent,
+        metadata: ExperienceFrameMetadata
+    ) => {
+        switch (messageEvent.eventName) {
+            case MessageEventName.Q_SEARCH_OPENED:
+            case MessageEventName.Q_SEARCH_CLOSED: {
+                metadata.frame.style.height = `${messageEvent.message.height}px`;
+                break;
+            }
+            case MessageEventName.CONTENT_LOADED: {
+                window.addEventListener('click', event => {
+                    !experienceFrame.frame.contains(event.target as Node) &&
+                        _close();
+                });
+                break;
+            }
+            case MessageEventName.Q_SEARCH_ENTERED_FULLSCREEN: {
+                frameStyles = {
+                    position: metadata.frame.style.position,
+                    top: metadata.frame.style.top,
+                    left: metadata.frame.style.left,
+                    zIndex: metadata.frame.style.zIndex,
+                    width: metadata.frame.style.width,
+                    height: metadata.frame.style.height,
+                };
+                metadata.frame.style.position = 'fixed';
+                metadata.frame.style.top = '0px';
+                metadata.frame.style.left = '0px';
+                metadata.frame.style.zIndex = MAX_Z_INDEX;
+                metadata.frame.style.width = '100vw';
+                metadata.frame.style.height = '100vh';
+                break;
+            }
+            case MessageEventName.Q_SEARCH_EXITED_FULLSCREEN: {
+                metadata.frame.style.position = frameStyles.position;
+                metadata.frame.style.top = frameStyles.top;
+                metadata.frame.style.left = frameStyles.left;
+                metadata.frame.style.zIndex = frameStyles.zIndex;
+                metadata.frame.style.width = frameStyles.width;
+                metadata.frame.style.height = frameStyles.height;
+                break;
+            }
         }
     };
 

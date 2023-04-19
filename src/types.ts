@@ -339,6 +339,15 @@ export type FrameOptions = {
     onChange?: SimpleChangeEventHandler;
 };
 
+export type FrameStyles = {
+    position: string,
+    top: string,
+    left: string,
+    zIndex: string,
+    width: string,
+    height: string,
+};
+
 export type UrlInfo = {
     guid: string;
     host: string;

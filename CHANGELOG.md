@@ -1,3 +1,7 @@
+**2.1.0**
+* Support fullscreen mode in Q search bar embedding
+* Minor bug fixes
+
 **2.0.3**
 * Minor bug fixes
 

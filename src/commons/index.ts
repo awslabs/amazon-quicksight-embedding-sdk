@@ -4,7 +4,7 @@
 import {encode} from 'punycode';
 import {BuildExperienceUrlOptions, TargetedMessageEvent, InternalExperience, PostMessageEvent, UrlInfo, ParameterValue} from '../types';
 
-const SDK_VERSION = '2.0.3';
+const SDK_VERSION = '2.1.0';
 
 const FRAME_TIMEOUT = 60000;
 
