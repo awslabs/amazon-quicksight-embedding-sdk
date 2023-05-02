@@ -35,6 +35,7 @@ export enum InvokerMessageEventName {
     UNDO = 'UNDO',
     REDO = 'REDO',
     RESET = 'RESET',
+    TOGGLE_BOOKMARKS_PANE = 'TOGGLE_BOOKMARKS_PANE',
 }
 
 export const MessageEventName = {...InfoMessageEventName, ...SetterMessageEventName, ...GetterMessageEventName, ...InvokerMessageEventName};

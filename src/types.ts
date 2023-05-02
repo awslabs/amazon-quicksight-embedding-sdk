@@ -115,6 +115,7 @@ export interface ToolbarOptions {
     export?: boolean | ExportToolbarOption;
     undoRedo?: boolean | ToolbarOption;
     reset?: boolean | ToolbarOption;
+    bookmarks?: boolean | ToolbarOption;
 }
 
 export interface AttributionOptions {
@@ -150,6 +151,7 @@ export interface TransformedDashboardContentOptions extends BaseContentOptions {
     footerPaddingEnabled?: boolean;
     undoRedoDisabled?: boolean;
     printEnabled?: boolean;
+    showBookmarksIcon?: boolean;
     hideAutoRefresh?: boolean;
     resetDisabled?: boolean;
     sheetTabsDisabled?: boolean;
@@ -193,6 +195,7 @@ export type InitiatePrint = () => Promise<ResponseMessage>;
 export type Undo = () => Promise<ResponseMessage>;
 export type Redo = () => Promise<ResponseMessage>;
 export type Reset = () => Promise<ResponseMessage>;
+export type ToggleBookmarksPane = () => Promise<ResponseMessage>;
 export type NavigateToDashboard = (dashboardId: string, options?: NavigateToDashboardOptions) => Promise<ResponseMessage>;
 
 export interface DashboardFrame extends BaseFrame {
@@ -205,6 +208,7 @@ export interface DashboardFrame extends BaseFrame {
     undo: Undo;
     redo: Redo;
     reset: Reset;
+    toggleBookmarksPane: ToggleBookmarksPane;
     navigateToDashboard: NavigateToDashboard;
 }
 

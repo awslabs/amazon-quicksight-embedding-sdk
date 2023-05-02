@@ -1,3 +1,8 @@
+**2.2.0**
+* Support bookmarks
+  * Set the visibility of the bookmarks icon in the embedded dashboard
+  * Add action to toggle bookmarks pane in the embedded dashboard
+
 **2.1.0**
 * Support fullscreen mode in Q search bar embedding
 * Minor bug fixes

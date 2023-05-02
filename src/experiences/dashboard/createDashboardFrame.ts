@@ -123,6 +123,9 @@ const createDashboardFrame = (
         if (toolbarOptions?.reset !== true) {
             transformedContentOptions.resetDisabled = true;
         }
+        if (toolbarOptions?.bookmarks === true) {
+            transformedContentOptions.showBookmarksIcon = true;
+        }
 
         if (sheetOptions?.initialSheetId) {
             transformedContentOptions.sheetId = sheetOptions.initialSheetId;
@@ -180,6 +183,12 @@ const createDashboardFrame = (
         });
     };
 
+    const _toggleBookmarksPane = async (): Promise<ResponseMessage> => {
+        return _send({
+            eventName: MessageEventName.TOGGLE_BOOKMARKS_PANE,
+        });
+    };
+
     const _reset = async (): Promise<ResponseMessage> => {
         return _send({
             eventName: MessageEventName.RESET,
@@ -234,6 +243,7 @@ const createDashboardFrame = (
         undo: _undo,
         redo: _redo,
         reset: _reset,
+        toggleBookmarksPane: _toggleBookmarksPane,
         send: _send,
         addEventListener: experienceFrame.internalAddEventListener,
     };

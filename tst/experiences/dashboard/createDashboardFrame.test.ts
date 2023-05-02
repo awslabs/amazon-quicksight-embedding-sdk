@@ -62,6 +62,7 @@ describe('createDashboardFrame', () => {
         expect(transformedContentOptions.undoRedoDisabled).toBe(true);
         expect(transformedContentOptions.resetDisabled).toBe(true);
         expect(transformedContentOptions.printEnabled).toBe(undefined);
+        expect(transformedContentOptions.showBookmarksIcon).toBe(undefined);
     });
 
     it('should create dashboard frame with toolbar options', () => {
@@ -76,6 +77,7 @@ describe('createDashboardFrame', () => {
                 undoRedo: true,
                 reset: true,
                 export: true,
+                bookmarks: true,
             },
         };
         const dashboardFrame = createDashboardFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
@@ -88,6 +90,7 @@ describe('createDashboardFrame', () => {
         expect(transformedContentOptions.undoRedoDisabled).toBe(undefined);
         expect(transformedContentOptions.resetDisabled).toBe(undefined);
         expect(transformedContentOptions.printEnabled).toBe(true);
+        expect(transformedContentOptions.showBookmarksIcon).toBe(true);
     });
 
     it('should throw error if no url', () => {
