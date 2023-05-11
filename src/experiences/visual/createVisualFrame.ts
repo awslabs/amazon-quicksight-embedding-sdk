@@ -12,6 +12,7 @@ import {
     VisualContentOptions,
     VisualFrame,
     Parameter,
+    ParametersAsObject,
 } from '../../types';
 import {ChangeEventLevel, MessageEventName, ChangeEventName} from '../../enums';
 import createExperienceFrame from '../createExperienceFrame';
@@ -92,9 +93,15 @@ const createVisualFrame = (
         const transformedContentOptions: TransformedVisualContentOptions = {
             fitToIframeWidth: fitToIframeWidth ?? true,
             locale,
-            parameters,
             onMessage,
         };
+
+        if (Array.isArray(parameters)) {
+            transformedContentOptions.parameters = parameters.reduce((parametersAsObject: ParametersAsObject, parameter: Parameter) => {
+                parametersAsObject[parameter.Name] = parameter.Values;
+                return parametersAsObject;
+            }, {});
+        }
 
         return transformedContentOptions;
     };

@@ -1,3 +1,9 @@
+
+**2.2.1**
+* Minor bug fixes
+  * Fix issue with setting parameters in visual embedding
+  * Remove extra space below the spinner
+
 **2.2.0**
 * Support bookmarks
   * Set the visibility of the bookmarks icon in the embedded dashboard

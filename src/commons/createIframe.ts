@@ -1,5 +1,7 @@
 import {CreateIframeOptions, CreatePostRequestOptions, EmbeddingIFrameElement, PostRequest} from '../types';
 
+const IFRAME_CLASS_NAME = 'quicksight-embedding-iframe';
+
 const createSvgElement = (tagName: string, attributes: Record<string, string>, styles: Record<string, string> = {}, children: Element[] = []) => {
     const element = document.createElementNS('http://www.w3.org/2000/svg', tagName);
     Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, value));
@@ -95,6 +97,7 @@ const createIframe = (options: CreateIframeOptions): EmbeddingIFrameElement | nu
         iframePlaceholder.style.display = 'flex';
         iframePlaceholder.style.justifyContent = 'center';
         iframePlaceholder.style.alignItems = 'center';
+        iframePlaceholder.className = `${IFRAME_CLASS_NAME}-placeholder`;
 
         if (height.endsWith('px')) {
             iframePlaceholder.style.height = height;
@@ -108,7 +111,7 @@ const createIframe = (options: CreateIframeOptions): EmbeddingIFrameElement | nu
         container.appendChild(iframePlaceholder);
     }
 
-    const _className = ['quicksight-embedding-iframe'];
+    const _className = [IFRAME_CLASS_NAME];
     if (className) {
         _className.push(className);
     }
@@ -128,6 +131,7 @@ const createIframe = (options: CreateIframeOptions): EmbeddingIFrameElement | nu
 
     if (iframePlaceholder) {
         iframe.style.opacity = '0';
+        iframe.style.position = 'absolute';
     }
 
     if (width === '0px' && height === '0px') {
@@ -152,6 +156,7 @@ const createIframe = (options: CreateIframeOptions): EmbeddingIFrameElement | nu
     const onLoadLocal = (event: Event) => {
         if (iframePlaceholder) {
             iframePlaceholder.remove();
+            iframe.style.position = '';
             iframe.style.opacity = '1';
             iframe.style.transition = 'opacity .5s ease-in-out';
         }

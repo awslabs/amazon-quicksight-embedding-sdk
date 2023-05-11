@@ -1,7 +1,7 @@
 {
     "name": "amazon-quicksight-embedding-sdk",
     "description": "JS SDK for embedding Amazon QuickSight",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [

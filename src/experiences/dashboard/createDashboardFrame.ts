@@ -103,7 +103,7 @@ const createDashboardFrame = (
             onMessage,
         };
 
-        if (parameters) {
+        if (Array.isArray(parameters)) {
             transformedContentOptions.parameters = parameters.reduce((parametersAsObject: ParametersAsObject, parameter: Parameter) => {
                 parametersAsObject[parameter.Name] = parameter.Values;
                 return parametersAsObject;

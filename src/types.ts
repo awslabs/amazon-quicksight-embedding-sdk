@@ -265,7 +265,11 @@ export interface VisualContentOptions extends BaseContentOptions {
     fitToIframeWidth?: boolean;
 }
 
-export type TransformedVisualContentOptions = VisualContentOptions;
+export interface TransformedVisualContentOptions extends BaseContentOptions {
+    locale?: string;
+    fitToIframeWidth?: boolean;
+    parameters?: ParametersAsObject;
+}
 
 export type EmbedVisual = (frameOptions: FrameOptions, contentOptions?: VisualContentOptions) => Promise<VisualFrame>;
 

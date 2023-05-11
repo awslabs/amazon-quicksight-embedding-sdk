@@ -19,7 +19,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
 ...
-<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.1/dist/quicksight-embedding-js-sdk.min.js"></script>
 <script type="text/javascript">
     const onLoad = async () => {
         const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
@@ -448,7 +448,7 @@ export interface BaseFrame {
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedDashboard = async() => {
                 const {
@@ -846,7 +846,7 @@ export interface BaseFrame {
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedVisual = async() => {    
                 const {
@@ -967,6 +967,11 @@ When the `resizeHeightOnSizeChangedEvent` property is set to true, the value of 
 
 See [Common Properties of `contentOptions` for All Embedding Experiences](#common-properties-of-contentoptions-for-all-embedding-experiences) for `locale` and `parameters` properties
 
+#### 🔹 parameters: *Parameter[]* *(optional)*
+
+It allows you to set initial parameter values for your embedded QuickSight visual. Pass an array as value for multi-value parameters.
+For more information about parameters in Amazon QuickSight, see https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html
+
 #### 🔹 fitToIframeWidth: *boolean* *(optional, default=true)*
 
 If this is set to `false`, the visual keeps its dimensions as it was designed within its dashboard layout. Otherwise, it adjusts its width to match the iframe's width, while maintaining the original aspect ratio.
@@ -1067,7 +1072,7 @@ export interface BaseFrame {
 
     <head>
         <title>Console Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedConsole = async() => {
                 const {
@@ -1185,7 +1190,7 @@ export interface BaseFrame {
 
     <head>
         <title>Q Search Bar Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQSearchBar = async() => {    
                 const {
