@@ -1,3 +1,6 @@
+**2.2.2**
+* Minor update and bug fixes
+  * Add a survey link to README
 
 **2.2.1**
 * Minor bug fixes

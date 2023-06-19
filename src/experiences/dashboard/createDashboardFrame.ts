@@ -213,12 +213,12 @@ const createDashboardFrame = (
         });
     };
 
-    const _navigateToDashboard = async (dashboardId: string, navigateToDashboardOptions: NavigateToDashboardOptions): Promise<ResponseMessage> => {
+    const _navigateToDashboard = async (dashboardId: string, navigateToDashboardOptions?: NavigateToDashboardOptions): Promise<ResponseMessage> => {
         return _send({
             eventName: MessageEventName.NAVIGATE_TO_DASHBOARD,
             message: {
                 DashboardId: dashboardId,
-                Parameters: navigateToDashboardOptions.parameters,
+                Parameters: navigateToDashboardOptions?.parameters,
             }
         });
     };
