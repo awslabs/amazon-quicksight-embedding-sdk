@@ -13,9 +13,12 @@ Amazon QuickSight offers four different embedding experiences with options for u
 
 
 &nbsp; 
-> Do you use SDKs and APIs to manage QuickSight, and embed in a website or App?
+> How can we improve your experience embedding QuickSight assets?
 > 
-> Help us improve your experience by [taking this <5-minute survey](https://amazonmr.au1.qualtrics.com/jfe/form/SV_5oS7MAbenBxz60m).
+> Fill out [this short survey about your experience with QuickSight Embedded Analytics](https://amazonmr.au1.qualtrics.com/jfe/form/SV_5uSL2PkBwcaPloq). It takes less than 5 minutes.
+> 
+> Your responses will inform product decisions, helping us improve the things you care about.
+
 
 &nbsp;  
 ## Installation
@@ -24,7 +27,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
 ...
-<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.0/dist/quicksight-embedding-js-sdk.min.js"></script>
 <script type="text/javascript">
     const onLoad = async () => {
         const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
@@ -407,11 +410,16 @@ Use `embedDashboard` method to embed a QuickSight dashboard. It returns a promis
 // Getters
 export type GetParameters = () => Promise<Parameter[]>;
 export type GetSheets = () => Promise<Sheet[]>;
+export type GetSheetVisuals = (sheetId: string) => Promise<Visual[]>;
+export type GetVisualActions = (sheetId: string, visualId: string) => Promise<VisualAction[]>;
 export type GetSelectedSheetId = () => Promise<string>;
 
 // Setters
 export type SetParameters = (parameters: Parameter[]) => Promise<ResponseMessage>;
 export type SetSelectedSheetId = (sheetId: string) => Promise<ResponseMessage>;
+export type AddVisualActions = (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<ResponseMessage>;
+export type RemoveVisualActions = (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<ResponseMessage>;
+export type SetVisualActions = (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<ResponseMessage>;
 
 // Invokers
 export type InitiatePrint = () => Promise<ResponseMessage>;
@@ -424,6 +432,11 @@ export type NavigateToDashboard = (dashboardId: string, options?: NavigateToDash
 export interface DashboardFrame extends BaseFrame {
     getParameters: GetParameters;
     getSheets: GetSheets;
+    getSheetVisuals: GetSheetVisuals;
+    getVisualActions: GetVisualActions;
+    addVisualActions: AddVisualActions;
+    removeVisualActions: RemoveVisualActions;
+    setVisualActions: SetVisualActions;
     getSelectedSheetId: GetSelectedSheetId;
     setParameters: SetParameters;
     setSelectedSheetId: SetSelectedSheetId;
@@ -453,7 +466,7 @@ export interface BaseFrame {
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedDashboard = async() => {
                 const {
@@ -762,6 +775,86 @@ If you want to get the current sheet id, from Amazon QuickSight dashboard in ad-
     const selectedSheetId: string = await embeddedDashboardExperience.getSelectedSheetId();
 ```
 
+#### 🔹 getSheetVisuals *(sheetId: string) => Promise&lt;Visual[]&gt;*
+
+If you want to get the list of the visuals of a sheet from the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    embeddedDashboardExperience.getSheetVisuals('<YOUR_SHEET_ID>');
+```
+
+#### 🔹 getVisualActions *(sheetId: string, visualId: string) => Promise&lt;VisualAction[]&gt;*
+
+If you want to get the list of actions of a visual from the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    embeddedDashboardExperience.getVisualActions('<YOUR_SHEET_ID>', '<YOUR_VISUAL_ID>');
+```
+
+#### 🔹 addVisualActions *(sheetId: string, visualId: string, actions: VisualAction[]) => Promise&lt;ResponseMessage&gt;*
+
+If you want to add actions to a visual of the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    embeddedDashboardExperience.addVisualActions('<YOUR_SHEET_ID>', '<YOUR_VISUAL_ID>', [
+        {
+            Name: '<NEW_ACTION_NAME>',
+            CustomActionId: `<NEW_ACTION_ID>`,
+            Status: 'ENABLED',
+            Trigger: 'DATA_POINT_CLICK',
+            ActionOperations: [{
+                CallbackOperation: {
+                    EmbeddingMessage: {}
+                }
+            }]
+        }
+    ]);
+```
+
+This method appends the new actions provided in the request to the existing actions of the visual
+
+#### 🔹 removeVisualActions *(sheetId: string, visualId: string, actions: VisualAction[]) => Promise&lt;ResponseMessage&gt;*
+
+If you want to remove actions from a visual of the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    embeddedDashboardExperience.removeVisualActions('<YOUR_SHEET_ID>', '<YOUR_VISUAL_ID>', [
+        {
+            Name: '<EXISTING_ACTION_NAME>',
+            CustomActionId: `<EXISTING_ACTION_ID>`,
+            Status: 'ENABLED',
+            Trigger: 'DATA_POINT_CLICK',
+            ActionOperations: [{
+                CallbackOperation: {
+                    EmbeddingMessage: {}
+                }
+            }]
+        }
+    ]);
+```
+
+#### 🔹 setVisualActions *(sheetId: string, visualId: string, actions: VisualAction[]) => Promise&lt;ResponseMessage&gt;*
+
+If you want to set actions of a visual of the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    embeddedDashboardExperience.setVisualActions('<YOUR_SHEET_ID>', '<YOUR_VISUAL_ID>', [
+        {
+            Name: '<NEW_ACTION_NAME>',
+            CustomActionId: `<NEW_ACTION_ID>`,
+            Status: 'ENABLED',
+            Trigger: 'DATA_POINT_CLICK',
+            ActionOperations: [{
+                CallbackOperation: {
+                    EmbeddingMessage: {}
+                }
+            }]
+        }
+    ]);
+```
+
+This method replaces all existing actions of the visual with the new actions provided in the request
+
 #### 🔹 initiatePrint *() => Promise&lt;ResponseMessage&gt;*
 
 This feature allows you to initiate dashboard print, from parent website, without a navbar print icon, in the dashboard. To initiate a dashboard print from parent website, use dashboard.initiatePrint(), for example:
@@ -828,9 +921,18 @@ Use `embedVisual` method to embed a QuickSight dashboard. It returns a promise o
 export type SetParameters = (setParametersOptions: SetParametersOptions) => void;
 export type Reset = () => void;
 
+export type GetActions = () => Promise<any[]>;
+export type AddActions = (actions: VisualAction[]) => Promise<ResponseMessage[]>;
+export type RemoveActions = (actions: VisualAction[]) => Promise<ResponseMessage[]>;
+export type SetActions = (actions: VisualAction[]) => Promise<ResponseMessage[]>;    
+
 export interface VisualFrame extends BaseFrame {
     setParameters: SetParameters;
     reset: Reset;
+    getActions: GetActions;
+    addActions: AddActions;
+    removeActions: RemoveActions;
+    setActions: SetActions;
 }
 
 export type Send = (eventName: MessageEventName, message?: any) => void;
@@ -851,7 +953,7 @@ export interface BaseFrame {
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedVisual = async() => {    
                 const {
@@ -1010,7 +1112,7 @@ You can build your own UI to trigger this, so that viewers of the embedded Quick
 
 Parameters in an embedded experience session can be set by using the following call:
 ```javascript
-    embeddedExperience.setParameters([
+    embeddedVisualExperience.setParameters([
         {
             Name: 'country',
             Values: ['United States'],
@@ -1024,7 +1126,7 @@ Parameters in an embedded experience session can be set by using the following c
 
 To reset a parameter so that it includes all values, you can pass the string `ALL_VALUES`.
 ```javascript
-    embeddedExperience.setParameters([
+    embeddedVisualExperience.setParameters([
         {
             Name: 'states'
             Values: ['ALL_VALUES'],
@@ -1032,12 +1134,84 @@ To reset a parameter so that it includes all values, you can pass the string `AL
     ]);
 ```
 
+#### 🔹 getActions *() => Promise&lt;VisualAction[]&gt;*
+
+If you want to get the list of actions of the visual, use the below method:
+
+```javascript
+    embeddedVisualExperience.getVisualActions();
+```
+
+#### 🔹 addActions *(actions: VisualAction[]) => Promise&lt;ResponseMessage&gt;*
+
+If you want to add actions to the visual, use the below method:
+
+```javascript
+    embeddedVisualExperience.addActions([
+        {
+            Name: '<NEW_ACTION_NAME>',
+            CustomActionId: `<NEW_ACTION_ID>`,
+            Status: 'ENABLED',
+            Trigger: 'DATA_POINT_CLICK',
+            ActionOperations: [{
+                CallbackOperation: {
+                    EmbeddingMessage: {}
+                }
+            }]
+        }
+    ]);
+```
+
+This method appends the new actions provided in the request to the existing actions of the visual
+
+#### 🔹 removeActions *(actions: VisualAction[]) => Promise&lt;ResponseMessage&gt;*
+
+If you want to remove actions from the visual, use the below method:
+
+```javascript
+    embeddedVisualExperience.removeActions([
+        {
+            Name: '<EXISTING_ACTION_NAME>',
+            CustomActionId: `<EXISTING_ACTION_ID>`,
+            Status: 'ENABLED',
+            Trigger: 'DATA_POINT_CLICK',
+            ActionOperations: [{
+                CallbackOperation: {
+                    EmbeddingMessage: {}
+                }
+            }]
+        }
+    ]);
+```
+
+#### 🔹 setActions *(actions: VisualAction[]) => Promise&lt;ResponseMessage&gt;*
+
+If you want to set actions of the visual, use the below method:
+
+```javascript
+    embeddedVisualExperience.setActions([
+        {
+            Name: '<NEW_ACTION_NAME>',
+            CustomActionId: `<NEW_ACTION_ID>`,
+            Status: 'ENABLED',
+            Trigger: 'DATA_POINT_CLICK',
+            ActionOperations: [{
+                CallbackOperation: {
+                    EmbeddingMessage: {}
+                }
+            }]
+        }
+    ]);
+```
+
+This method replaces all existing actions of the visual with the new actions provided in the request
+
 #### 🔹 reset *() => Promise&lt;ResponseMessage&gt;*
 
 If you want to reset the changes, use the below method:
 
 ```javascript
-    embeddedDashboardExperience.reset();
+    embeddedVisualExperience.reset();
 ```
 
 ***
@@ -1077,7 +1251,7 @@ export interface BaseFrame {
 
     <head>
         <title>Console Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedConsole = async() => {
                 const {
@@ -1195,7 +1369,7 @@ export interface BaseFrame {
 
     <head>
         <title>Q Search Bar Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.2.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQSearchBar = async() => {    
                 const {

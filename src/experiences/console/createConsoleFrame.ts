@@ -78,19 +78,19 @@ const createConsoleFrame = (
 
         const transformedContentOptions: TransformedConsoleContentOptions = {
             locale,
-            onMessage,
         };
 
         return transformedContentOptions;
     };
 
-    const experienceFrame = createExperienceFrame(
+    const experienceFrame = createExperienceFrame({
         frameOptions,
-        transformContentOptions(contentOptions),
+        contentOptions,
+        transformedContentOptions: transformContentOptions(contentOptions),
         controlOptions,
         internalExperience,
         experienceIdentifier
-    );
+    });
 
     const _send = async (messageEvent: SimpleMessageEvent): Promise<any> => {
         const targetedMessageEvent: TargetedMessageEvent = {

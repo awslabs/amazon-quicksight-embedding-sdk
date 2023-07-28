@@ -58,7 +58,7 @@ describe('createDashboardFrame', () => {
         expect(typeof dashboardFrame.initiatePrint).toEqual('function');
         const iFrame = TEST_CONTAINER.querySelector('iframe');
         expect(iFrame).not.toEqual(undefined);
-        const transformedContentOptions = createExperienceFrame.mock.calls[0][1];
+        const transformedContentOptions = createExperienceFrame.mock.calls[0][0].transformedContentOptions;
         expect(transformedContentOptions.undoRedoDisabled).toBe(true);
         expect(transformedContentOptions.resetDisabled).toBe(true);
         expect(transformedContentOptions.printEnabled).toBe(undefined);
@@ -86,7 +86,7 @@ describe('createDashboardFrame', () => {
         expect(typeof dashboardFrame.initiatePrint).toEqual('function');
         const iFrame = TEST_CONTAINER.querySelector('iframe');
         expect(iFrame).not.toEqual(undefined);
-        const transformedContentOptions = createExperienceFrame.mock.calls[0][1];
+        const transformedContentOptions = createExperienceFrame.mock.calls[0][0].transformedContentOptions;
         expect(transformedContentOptions.undoRedoDisabled).toBe(undefined);
         expect(transformedContentOptions.resetDisabled).toBe(undefined);
         expect(transformedContentOptions.printEnabled).toBe(true);

@@ -1,3 +1,7 @@
+**2.3.0**
+* Support setting, adding, removing visual actions on runtime
+* Minor bug fixes
+
 **2.2.2**
 * Minor update and bug fixes
   * Add a survey link to README

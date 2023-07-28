@@ -4,34 +4,26 @@
 import {v4} from 'uuid';
 import {buildExperienceUrl, FRAME_TIMEOUT, SDK_VERSION} from '../commons';
 import createIframe from '../commons/createIframe';
-import {ChangeEventLevel, MessageEventName, ChangeEventName} from '../enums';
+import {ChangeEventLevel, MessageEventName, ChangeEventName, ExperienceType} from '../enums';
 import {
     BuildExperienceUrlOptions,
-    ContentOptions,
-    ControlOptions,
     TargetedMessageEvent,
     SimpleMessageEventHandler,
     ExperienceFrame,
-    FrameOptions,
-    InterceptMessage,
-    InternalExperience,
     PostMessageEvent,
     ExperienceFrameMetadata,
     EmbeddingIFrameElement,
     SimpleMessageEvent,
     SimpleChangeEvent,
+    CreateExperienceFrameOptions,
 } from '../types';
 
 const MESSAGE_RESPONSE_TIMEOUT = 5000;
 
-const createExperienceFrame = (
-    frameOptions: FrameOptions,
-    contentOptions: ContentOptions,
-    controlOptions: ControlOptions,
-    internalExperience: InternalExperience,
-    experienceIdentifier: string,
-    interceptMessage?: InterceptMessage
-): ExperienceFrame => {
+const createExperienceFrame = (createExperienceFrameOptions: CreateExperienceFrameOptions): ExperienceFrame => {
+    const {frameOptions, contentOptions, transformedContentOptions, controlOptions, internalExperience, experienceIdentifier, interceptMessage} =
+        createExperienceFrameOptions;
+
     const {url, container, width = '100%', height = '100%', withIframePlaceholder, className, onChange} = frameOptions;
 
     let experienceIframe: EmbeddingIFrameElement | null = null;
@@ -97,12 +89,13 @@ const createExperienceFrame = (
 
     const {eventManager, sendToControlFrame, timeout = FRAME_TIMEOUT} = controlOptions;
 
-    const {onMessage, ...contentOptionsWithoutOnMessage} = contentOptions || {};
+    const {onMessage} = contentOptions || {};
 
     const {experienceEventListenerBuilder} = eventManager;
 
     // Decorate message event listener with experience frame's metadata
     const _onMessage = (messageEvent: SimpleMessageEvent) => {
+        const {eventName} = messageEvent;
         const metadata: ExperienceFrameMetadata = {
             frame: experienceIframe,
         };
@@ -118,7 +111,7 @@ const createExperienceFrame = (
     // Make sure url is provided
 
     if (url) {
-        _url = buildExperienceUrl(url, contentOptionsWithoutOnMessage as BuildExperienceUrlOptions, internalExperience);
+        _url = buildExperienceUrl(url, transformedContentOptions as BuildExperienceUrlOptions, internalExperience);
     } else {
         _onChange({
             eventName: ChangeEventName.NO_URL,

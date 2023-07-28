@@ -22,7 +22,7 @@ const config = () => {
     const stage = process.env.STAGE || 'local';
     const isProd = stage === 'prod';
     return {
-        mode: 'development',
+        mode: isProd ? 'production' : 'development',
         entry,
         output: {
             path: distPath,
@@ -55,10 +55,6 @@ const config = () => {
                     }]
                 }
             ]
-    
-        },
-        optimization: {
-            minimize: isProd,
         },
         plugins: [
             new webpack.BannerPlugin(webpackBanner),

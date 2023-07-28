@@ -166,6 +166,7 @@ export interface FailureResponseMessage {
     success: false;
     errorCode: string;
     error?: string;
+    message?: string | string[];
 }
 
 export type ResponseMessage = SuccessResponseMessage | FailureResponseMessage;
@@ -181,14 +182,37 @@ export interface Sheet {
     SheetId: string;
 }
 
+export interface Visual {
+    Name: string;
+    VisualId: string;
+}
+
+export interface CallbackOperation {
+    EmbeddingMessage: object;
+}
+
+export type ActionOperation = CallbackOperation;
+export interface VisualAction {
+    CustomActionId: string;
+    Name: string;
+    Status: string;
+    Trigger: string;
+    ActionOperations: ActionOperation[];
+}
+
 // Getters
 export type GetParameters = () => Promise<Parameter[]>;
 export type GetSheets = () => Promise<Sheet[]>;
+export type GetSheetVisuals = (sheetId: string) => Promise<Visual[]>;
+export type GetVisualActions = (sheetId: string, visualId: string) => Promise<VisualAction[]>;
 export type GetSelectedSheetId = () => Promise<string>;
 
 // Setters
 export type SetParameters = (parameters: Parameter[]) => Promise<ResponseMessage>;
 export type SetSelectedSheetId = (sheetId: string) => Promise<ResponseMessage>;
+export type AddVisualActions = (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<ResponseMessage>;
+export type RemoveVisualActions = (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<ResponseMessage>;
+export type SetVisualActions = (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<ResponseMessage>;
 
 // Invokers
 export type InitiatePrint = () => Promise<ResponseMessage>;
@@ -201,6 +225,11 @@ export type NavigateToDashboard = (dashboardId: string, options?: NavigateToDash
 export interface DashboardFrame extends BaseFrame {
     getParameters: GetParameters;
     getSheets: GetSheets;
+    getSheetVisuals: GetSheetVisuals;
+    getVisualActions: GetVisualActions;
+    addVisualActions: AddVisualActions;
+    removeVisualActions: RemoveVisualActions;
+    setVisualActions: SetVisualActions;
     getSelectedSheetId: GetSelectedSheetId;
     setParameters: SetParameters;
     setSelectedSheetId: SetSelectedSheetId;
@@ -273,9 +302,17 @@ export interface TransformedVisualContentOptions extends BaseContentOptions {
 
 export type EmbedVisual = (frameOptions: FrameOptions, contentOptions?: VisualContentOptions) => Promise<VisualFrame>;
 
+export type GetActions = () => Promise<any[]>;
+export type AddActions = (actions: VisualAction[]) => Promise<ResponseMessage>;
+export type RemoveActions = (actions: VisualAction[]) => Promise<ResponseMessage>;
+export type SetActions = (actions: VisualAction[]) => Promise<ResponseMessage>;
 export interface VisualFrame extends BaseFrame {
     setParameters: SetParameters;
     reset: Reset;
+    getActions: GetActions;
+    addActions: AddActions;
+    removeActions: RemoveActions;
+    setActions: SetActions;
 }
 
 // common
@@ -378,6 +415,7 @@ export type ControlOptions = {
     urlInfo?: UrlInfo;
     timeout?: number;
     sendToControlFrame?: InternalSend;
+    onChange?: SimpleChangeEventHandler;
 };
 
 export type Experience = ConsoleExperience | ContextExperience | ControlExperience | VisualExperience | DashboardExperience | QSearchExperience;
@@ -403,6 +441,21 @@ export type ExperienceFrame = {
     internalSend: InternalSend;
     frame: EmbeddingIFrameElement;
 };
+
+export type TransformedContentOptions =
+    | TransformedConsoleContentOptions
+    | TransformedDashboardContentOptions
+    | TransformedQSearchContentOptions
+    | TransformedVisualContentOptions;
+export interface CreateExperienceFrameOptions {
+    frameOptions: FrameOptions;
+    contentOptions: ContentOptions;
+    transformedContentOptions: TransformedContentOptions;
+    controlOptions: ControlOptions;
+    internalExperience: InternalExperience;
+    experienceIdentifier: string;
+    interceptMessage?: InterceptMessage;
+}
 
 export type ExperienceEventListener = {
     addExperienceEventListener: (listener: SimpleMessageEventHandler) => void;

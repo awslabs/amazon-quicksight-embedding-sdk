@@ -39,18 +39,19 @@ const createControlFrame = (
     const experienceIdentifier = getControlExperienceIdentifier(internalExperience);
     experienceEventListenerBuilder(experienceIdentifier, onMessage);
 
-    const {internalSend, frame} = createExperienceFrame(
-        {
+    const {internalSend, frame} = createExperienceFrame({
+        frameOptions: {
             url: controlUrl,
             container,
             width: '0px',
             height: '0px',
             onChange,
         },
-        {
+        contentOptions: {
             onMessage,
         },
-        {
+        transformedContentOptions: {},
+        controlOptions: {
             eventManager,
             contextId,
             timeout: FRAME_TIMEOUT,
@@ -58,7 +59,7 @@ const createControlFrame = (
         },
         internalExperience,
         experienceIdentifier
-    );
+    });
 
     const sendAcknowledgment = (messageEvent: TargetedMessageEvent) => {
         const acknowledgment = {

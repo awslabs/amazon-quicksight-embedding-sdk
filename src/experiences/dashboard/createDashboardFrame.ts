@@ -16,6 +16,8 @@ import {
     Sheet,
     Parameter,
     ParametersAsObject,
+    Visual,
+    VisualAction,
 } from '../../types';
 import {ChangeEventLevel, MessageEventName, ChangeEventName} from '../../enums';
 import createExperienceFrame from '../createExperienceFrame';
@@ -100,7 +102,6 @@ const createDashboardFrame = (
 
         const transformedContentOptions: TransformedDashboardContentOptions = {
             locale,
-            onMessage,
         };
 
         if (Array.isArray(parameters)) {
@@ -109,7 +110,7 @@ const createDashboardFrame = (
                 return parametersAsObject;
             }, {});
         }
-        
+
         if (attributionOptions?.overlayContent !== true) {
             transformedContentOptions.footerPaddingEnabled = true;
         }
@@ -140,14 +141,15 @@ const createDashboardFrame = (
         return transformedContentOptions;
     };
 
-    const experienceFrame = createExperienceFrame(
+    const experienceFrame = createExperienceFrame({
         frameOptions,
-        transformContentOptions(contentOptions),
+        contentOptions,
+        transformedContentOptions: transformContentOptions(contentOptions),
         controlOptions,
         internalExperience,
         experienceIdentifier,
         interceptMessage
-    );
+    });
 
     const _send = async (messageEvent: SimpleMessageEvent): Promise<any> => {
         const targetedMessageEvent: TargetedMessageEvent = {
@@ -207,6 +209,58 @@ const createDashboardFrame = (
         });
     };
 
+    const _getSheetVisuals = async (sheetId: string): Promise<Visual[]> => {
+        return _send({
+            eventName: MessageEventName.GET_SHEET_VISUALS,
+            message: {
+                SheetId: sheetId,
+            },
+        });
+    };
+
+    const _getVisualActions = async (sheetId: string, visualId: string): Promise<VisualAction[]> => {
+        return _send({
+            eventName: MessageEventName.GET_VISUAL_ACTIONS,
+            message: {
+                SheetId: sheetId,
+                VisualId: visualId,
+            }
+        });
+    };
+
+    const _addVisualActions = async (sheetId: string, visualId: string, actions: VisualAction[]): Promise<ResponseMessage> => {
+        return _send({
+            eventName: MessageEventName.ADD_VISUAL_ACTIONS,
+            message: {
+                SheetId: sheetId,
+                VisualId: visualId,
+                Actions: actions,
+            },
+        });
+    };
+
+    const _removeVisualActions = async (sheetId: string, visualId: string, actions: VisualAction[]): Promise<ResponseMessage> => {
+        return _send({
+            eventName: MessageEventName.REMOVE_VISUAL_ACTIONS,
+            message: {
+                SheetId: sheetId,
+                VisualId: visualId,
+                Actions: actions,
+            },
+        });
+    };
+
+    const _setVisualActions = async (sheetId: string, visualId: string, actions: VisualAction[]): Promise<ResponseMessage> => {
+        return _send({
+            eventName: MessageEventName.SET_VISUAL_ACTIONS,
+            message: {
+                SheetId: sheetId,
+                VisualId: visualId,
+                Actions: actions,
+            },
+        });
+    };
+
     const _getSelectedSheetId = async (): Promise<string> => {
         return _send({
             eventName: MessageEventName.GET_SELECTED_SHEET_ID,
@@ -235,6 +289,11 @@ const createDashboardFrame = (
     return {
         getParameters: _getParameters,
         getSheets: _getSheets,
+        getSheetVisuals: _getSheetVisuals,
+        getVisualActions: _getVisualActions,
+        addVisualActions: _addVisualActions,
+        removeVisualActions: _removeVisualActions,
+        setVisualActions: _setVisualActions,
         getSelectedSheetId: _getSelectedSheetId,
         initiatePrint: _initiatePrint,
         navigateToDashboard: _navigateToDashboard,

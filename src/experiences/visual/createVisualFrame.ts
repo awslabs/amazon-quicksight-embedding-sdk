@@ -13,6 +13,7 @@ import {
     VisualFrame,
     Parameter,
     ParametersAsObject,
+    VisualAction,
 } from '../../types';
 import {ChangeEventLevel, MessageEventName, ChangeEventName} from '../../enums';
 import createExperienceFrame from '../createExperienceFrame';
@@ -93,7 +94,6 @@ const createVisualFrame = (
         const transformedContentOptions: TransformedVisualContentOptions = {
             fitToIframeWidth: fitToIframeWidth ?? true,
             locale,
-            onMessage,
         };
 
         if (Array.isArray(parameters)) {
@@ -106,14 +106,15 @@ const createVisualFrame = (
         return transformedContentOptions;
     };
 
-    const experienceFrame = createExperienceFrame(
+    const experienceFrame = createExperienceFrame({
         frameOptions,
-        transformContentOptions(contentOptions),
+        contentOptions,
+        transformedContentOptions: transformContentOptions(contentOptions),
         controlOptions,
         internalExperience,
         experienceIdentifier,
         interceptMessage
-    );
+    });
 
     const _send = async (messageEvent: SimpleMessageEvent): Promise<any> => {
         const targetedMessageEvent: TargetedMessageEvent = {
@@ -137,9 +138,46 @@ const createVisualFrame = (
         });
     };
 
+    const _getActions = async (): Promise<VisualAction[]> => {
+        return _send({
+            eventName: MessageEventName.GET_VISUAL_ACTIONS,
+        });
+    };
+
+    const _addActions = async (actions: VisualAction[]): Promise<ResponseMessage> => {
+        return _send({
+            eventName: MessageEventName.ADD_VISUAL_ACTIONS,
+            message: {
+                Actions: actions,
+            },
+        });
+    };
+
+    const _removeActions = async (actions: VisualAction[]): Promise<ResponseMessage> => {
+        return _send({
+            eventName: MessageEventName.REMOVE_VISUAL_ACTIONS,
+            message: {
+                Actions: actions,
+            },
+        });
+    };
+
+    const _setActions = async (actions: VisualAction[]): Promise<ResponseMessage> => {
+        return _send({
+            eventName: MessageEventName.SET_VISUAL_ACTIONS,
+            message: {
+                Actions: actions,
+            },
+        });
+    };
+
     return {
         setParameters: _setParameters,
         reset: _reset,
+        getActions: _getActions,
+        addActions: _addActions,
+        removeActions: _removeActions,
+        setActions: _setActions,
         send: _send,
         addEventListener: experienceFrame.internalAddEventListener,
     };

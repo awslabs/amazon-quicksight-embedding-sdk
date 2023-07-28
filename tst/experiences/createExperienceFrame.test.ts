@@ -53,13 +53,17 @@ describe('createExperienceFrame', () => {
         const contentOptions = {
             //
         };
-        const experienceFrame = createExperienceFrame(
+        const transformedContentOptions = {
+            //
+        };
+        const experienceFrame = createExperienceFrame({
             frameOptions,
             contentOptions,
-            TEST_CONTROL_OPTIONS,
-            TEST_INTERNAL_EXPERIENCE,
-            TEST_EXPERIENCE_IDENTIFIER
-        );
+            transformedContentOptions,
+            controlOptions: TEST_CONTROL_OPTIONS,
+            internalExperience: TEST_INTERNAL_EXPERIENCE,
+            experienceIdentifier: TEST_EXPERIENCE_IDENTIFIER,
+        });
         expect(createIframe).toHaveBeenCalled();
         const createFrameArguments = createIframe.mock.calls[0][0];
         expect(createFrameArguments.src.startsWith(TEST_URL)).toBe(true);
@@ -87,13 +91,17 @@ describe('createExperienceFrame', () => {
         const contentOptions = {
             //
         };
-        const experienceFrame = createExperienceFrame(
+        const transformedContentOptions = {
+            //
+        };
+        const experienceFrame = createExperienceFrame({
             frameOptions,
             contentOptions,
-            TEST_CONTROL_OPTIONS,
-            TEST_INTERNAL_EXPERIENCE,
-            TEST_EXPERIENCE_IDENTIFIER
-        );
+            transformedContentOptions,
+            controlOptions: TEST_CONTROL_OPTIONS,
+            internalExperience: TEST_INTERNAL_EXPERIENCE,
+            experienceIdentifier: TEST_EXPERIENCE_IDENTIFIER,
+        });
         expect(createIframe).toHaveBeenCalled();
         const createFrameArguments = createIframe.mock.calls[0][0];
         expect(createFrameArguments.src.startsWith(TEST_URL)).toBe(true);
@@ -114,13 +122,17 @@ describe('createExperienceFrame', () => {
         const contentOptions = {
             //
         };
-        const experienceFrame = createExperienceFrame(
+        const transformedContentOptions = {
+            //
+        };
+        const experienceFrame = createExperienceFrame({
             frameOptions,
             contentOptions,
-            TEST_CONTROL_OPTIONS,
-            TEST_INTERNAL_EXPERIENCE,
-            TEST_EXPERIENCE_IDENTIFIER
-        );
+            transformedContentOptions,
+            controlOptions: TEST_CONTROL_OPTIONS,
+            internalExperience: TEST_INTERNAL_EXPERIENCE,
+            experienceIdentifier: TEST_EXPERIENCE_IDENTIFIER,
+        });
         expect(createIframe).toHaveBeenCalled();
         const createFrameArguments = createIframe.mock.calls[0][0];
         expect(createFrameArguments.src.startsWith(TEST_URL)).toBe(true);
@@ -139,8 +151,18 @@ describe('createExperienceFrame', () => {
         const contentOptions = {
             //
         };
+        const transformedContentOptions = {
+            //
+        };
         const experienceFrame = () => {
-            createExperienceFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, TEST_INTERNAL_EXPERIENCE, TEST_EXPERIENCE_IDENTIFIER);
+            createExperienceFrame({
+                frameOptions,
+                contentOptions,
+                transformedContentOptions,
+                controlOptions: TEST_CONTROL_OPTIONS,
+                internalExperience: TEST_INTERNAL_EXPERIENCE,
+                experienceIdentifier: TEST_EXPERIENCE_IDENTIFIER,
+            });
         };
         expect(experienceFrame).toThrowError();
         expect(onChangeSpy).toHaveBeenCalledWith({
@@ -164,8 +186,18 @@ describe('createExperienceFrame', () => {
         const contentOptions = {
             //
         };
+        const transformedContentOptions = {
+            //
+        };
         const experienceFrame = () => {
-            createExperienceFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, TEST_INTERNAL_EXPERIENCE, TEST_EXPERIENCE_IDENTIFIER);
+            createExperienceFrame({
+                frameOptions,
+                contentOptions,
+                transformedContentOptions,
+                controlOptions: TEST_CONTROL_OPTIONS,
+                internalExperience: TEST_INTERNAL_EXPERIENCE,
+                experienceIdentifier: TEST_EXPERIENCE_IDENTIFIER,
+            });
         };
         expect(experienceFrame).toThrowError();
         expect(onChangeSpy).toHaveBeenCalledWith({
@@ -188,8 +220,18 @@ describe('createExperienceFrame', () => {
         const contentOptions = {
             //
         };
+        const transformedContentOptions = {
+            //
+        };
         const experienceFrame = () => {
-            createExperienceFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, TEST_INTERNAL_EXPERIENCE, TEST_EXPERIENCE_IDENTIFIER);
+            createExperienceFrame({
+                frameOptions,
+                contentOptions,
+                transformedContentOptions,
+                controlOptions: TEST_CONTROL_OPTIONS,
+                internalExperience: TEST_INTERNAL_EXPERIENCE,
+                experienceIdentifier: TEST_EXPERIENCE_IDENTIFIER,
+            });
         };
         expect(experienceFrame).toThrowError();
         expect(onChangeSpy).toHaveBeenCalledWith({

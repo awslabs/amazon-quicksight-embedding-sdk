@@ -133,7 +133,6 @@ const createQSearchFrame = (
 
         const transformedContentOptions: TransformedQSearchContentOptions = {
             allowTopicSelection,
-            onMessage,
         };
 
         if (hideIcon !== undefined) {
@@ -151,14 +150,15 @@ const createQSearchFrame = (
         return transformedContentOptions;
     };
 
-    const experienceFrame = createExperienceFrame(
+    const experienceFrame = createExperienceFrame({
         frameOptions,
-        transformContentOptions(contentOptions),
+        contentOptions,
+        transformedContentOptions: transformContentOptions(contentOptions),
         controlOptions,
         internalExperience,
         experienceIdentifier,
         interceptMessage
-    );
+    });
 
     const _send = async (messageEvent: SimpleMessageEvent): Promise<any> => {
         const targetedMessageEvent: TargetedMessageEvent = {
@@ -172,7 +172,7 @@ const createQSearchFrame = (
 
     const _setQuestion = async (question: string): Promise<ResponseMessage> => {
         return _send({
-            eventName: MessageEventName.SET_Q_SEARCH_QUESTION, 
+            eventName: MessageEventName.SET_Q_SEARCH_QUESTION,
             message: {
                 question
             },
