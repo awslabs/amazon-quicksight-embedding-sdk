@@ -1,3 +1,6 @@
+**2.3.1**
+* Minor bug fixes
+
 **2.3.0**
 * Support setting, adding, removing visual actions on runtime
 * Minor bug fixes

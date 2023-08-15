@@ -191,12 +191,12 @@ export interface CallbackOperation {
     EmbeddingMessage: object;
 }
 
-export type ActionOperation = CallbackOperation;
+export type ActionOperation = { CallbackOperation: CallbackOperation };
 export interface VisualAction {
     CustomActionId: string;
     Name: string;
-    Status: string;
-    Trigger: string;
+    Status: 'ENABLED' | 'DISABLED';
+    Trigger: 'DATA_POINT_CLICK' | 'DATA_POINT_MENU';
     ActionOperations: ActionOperation[];
 }
 
@@ -318,7 +318,7 @@ export interface VisualFrame extends BaseFrame {
 // common
 
 export type BuildExperienceUrlOptions = {
-    [key: string]: Primitives | Primitives[];
+    [key: string]: Primitives | Primitives[] | Record<string, Primitives>;
 };
 
 // SimpleChangeEvent is the change event that is exposed to the 3P

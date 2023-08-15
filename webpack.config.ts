@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import webpack from 'webpack';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 const srcPath = path.resolve(__dirname, 'src');
 const entry = path.resolve(srcPath, 'index.ts');
@@ -61,6 +62,7 @@ const config = () => {
             new webpack.DefinePlugin({
                 __SDK_VERSION__: JSON.stringify(version),
             }),
+            new ForkTsCheckerWebpackPlugin()
         ],
         devServer: isProd ? undefined : {
             allowedHosts: 'all',

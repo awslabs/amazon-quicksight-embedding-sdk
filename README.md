@@ -12,14 +12,6 @@ Amazon QuickSight offers four different embedding experiences with options for u
 * [QSearchBar Embedding](#qsearchbar-embedding)
 
 
-&nbsp; 
-> How can we improve your experience embedding QuickSight assets?
-> 
-> Fill out [this short survey about your experience with QuickSight Embedded Analytics](https://amazonmr.au1.qualtrics.com/jfe/form/SV_5uSL2PkBwcaPloq). It takes less than 5 minutes.
-> 
-> Your responses will inform product decisions, helping us improve the things you care about.
-
-
 &nbsp;  
 ## Installation
 &nbsp;
@@ -27,7 +19,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
 ...
-<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.1/dist/quicksight-embedding-js-sdk.min.js"></script>
 <script type="text/javascript">
     const onLoad = async () => {
         const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
@@ -466,7 +458,7 @@ export interface BaseFrame {
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedDashboard = async() => {
                 const {
@@ -801,7 +793,7 @@ If you want to add actions to a visual of the Amazon quicksight dashboard, use t
             Name: '<NEW_ACTION_NAME>',
             CustomActionId: `<NEW_ACTION_ID>`,
             Status: 'ENABLED',
-            Trigger: 'DATA_POINT_CLICK',
+            Trigger: 'DATA_POINT_CLICK', // or 'DATA_POINT_MENU'
             ActionOperations: [{
                 CallbackOperation: {
                     EmbeddingMessage: {}
@@ -823,7 +815,7 @@ If you want to remove actions from a visual of the Amazon quicksight dashboard, 
             Name: '<EXISTING_ACTION_NAME>',
             CustomActionId: `<EXISTING_ACTION_ID>`,
             Status: 'ENABLED',
-            Trigger: 'DATA_POINT_CLICK',
+            Trigger: 'DATA_POINT_CLICK', // or 'DATA_POINT_MENU'
             ActionOperations: [{
                 CallbackOperation: {
                     EmbeddingMessage: {}
@@ -843,7 +835,7 @@ If you want to set actions of a visual of the Amazon quicksight dashboard, use t
             Name: '<NEW_ACTION_NAME>',
             CustomActionId: `<NEW_ACTION_ID>`,
             Status: 'ENABLED',
-            Trigger: 'DATA_POINT_CLICK',
+            Trigger: 'DATA_POINT_CLICK', // or 'DATA_POINT_MENU'
             ActionOperations: [{
                 CallbackOperation: {
                     EmbeddingMessage: {}
@@ -953,7 +945,7 @@ export interface BaseFrame {
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedVisual = async() => {    
                 const {
@@ -1152,7 +1144,7 @@ If you want to add actions to the visual, use the below method:
             Name: '<NEW_ACTION_NAME>',
             CustomActionId: `<NEW_ACTION_ID>`,
             Status: 'ENABLED',
-            Trigger: 'DATA_POINT_CLICK',
+            Trigger: 'DATA_POINT_CLICK', // or 'DATA_POINT_MENU'
             ActionOperations: [{
                 CallbackOperation: {
                     EmbeddingMessage: {}
@@ -1174,7 +1166,7 @@ If you want to remove actions from the visual, use the below method:
             Name: '<EXISTING_ACTION_NAME>',
             CustomActionId: `<EXISTING_ACTION_ID>`,
             Status: 'ENABLED',
-            Trigger: 'DATA_POINT_CLICK',
+            Trigger: 'DATA_POINT_CLICK', // or 'DATA_POINT_MENU'
             ActionOperations: [{
                 CallbackOperation: {
                     EmbeddingMessage: {}
@@ -1194,7 +1186,7 @@ If you want to set actions of the visual, use the below method:
             Name: '<NEW_ACTION_NAME>',
             CustomActionId: `<NEW_ACTION_ID>`,
             Status: 'ENABLED',
-            Trigger: 'DATA_POINT_CLICK',
+            Trigger: 'DATA_POINT_CLICK', // or 'DATA_POINT_MENU'
             ActionOperations: [{
                 CallbackOperation: {
                     EmbeddingMessage: {}
@@ -1251,7 +1243,7 @@ export interface BaseFrame {
 
     <head>
         <title>Console Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedConsole = async() => {
                 const {
@@ -1369,7 +1361,7 @@ export interface BaseFrame {
 
     <head>
         <title>Q Search Bar Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQSearchBar = async() => {    
                 const {

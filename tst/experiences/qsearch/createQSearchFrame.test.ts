@@ -44,10 +44,8 @@ describe('createQSearchFrame', () => {
             width: '800px',
             onChange: onChangeSpy,
         };
-        const contentOptions = {
-            fitToIframeWidth: true,
-        };
-        const qsearchFrame = createQSearchFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+
+        const qsearchFrame = createQSearchFrame(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
         expect(typeof qsearchFrame.send).toEqual('function');
         expect(typeof qsearchFrame.setQuestion).toEqual('function');
         expect(typeof qsearchFrame.close).toEqual('function');
@@ -65,15 +63,14 @@ describe('createQSearchFrame', () => {
 
     it('should throw error if no url', () => {
         const frameOptions = {
+            // @ts-expect-error - should throw error when no url is passed
             url: undefined,
             container: TEST_CONTAINER,
             width: '800px',
         };
-        const contentOptions = {
-            fitToIframeWidth: true,
-        };
+
         const createQSearchFrameWrapper = () => {
-            createQSearchFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+            createQSearchFrame(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
         };
         expect(createQSearchFrameWrapper).toThrowError('Url is required for the experience');
     });
@@ -84,11 +81,9 @@ describe('createQSearchFrame', () => {
             container: TEST_CONTAINER,
             width: '800px',
         };
-        const contentOptions = {
-            fitToIframeWidth: true,
-        };
+
         const createQSearchFrameWrapper = () => {
-            createQSearchFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+            createQSearchFrame(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
         };
         expect(createQSearchFrameWrapper).toThrowError('Invalid q search experience url');
     });
@@ -103,6 +98,7 @@ describe('createQSearchFrame', () => {
         const contentOptions = {
             [TEST_UNRECOGNIZED_CONTENT_OPTION]: 'some value',
         };
+        // @ts-expect-error - should throw error when content option has invalid options
         const qsearchFrame = createQSearchFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
         expect(typeof qsearchFrame.send).toEqual('function');
         expect(typeof qsearchFrame.setQuestion).toEqual('function');

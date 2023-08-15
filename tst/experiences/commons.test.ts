@@ -44,6 +44,7 @@ describe('experiences commons', () => {
 
         it('should throw error if not valid experience', () => {
             const getExperienceIdentifierWrapper = () => {
+                // @ts-expect-error - Should throw error when experience config is invalid
                 getExperienceIdentifier({});
             };
             expect(getExperienceIdentifierWrapper).toThrowError('Cannot create experience identifier for the experience');

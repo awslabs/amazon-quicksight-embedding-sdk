@@ -4,7 +4,7 @@
 import {v4} from 'uuid';
 import {buildExperienceUrl, FRAME_TIMEOUT, SDK_VERSION} from '../commons';
 import createIframe from '../commons/createIframe';
-import {ChangeEventLevel, MessageEventName, ChangeEventName, ExperienceType} from '../enums';
+import {ChangeEventLevel, MessageEventName, ChangeEventName} from '../enums';
 import {
     BuildExperienceUrlOptions,
     TargetedMessageEvent,

@@ -1,14 +1,7 @@
 import createEmbeddingContext from '../src/createEmbeddingContext';
 import eventManagerBuilder from '../src/eventManager';
 
-jest.mock('../src/eventManager', () => ({
-    __esModule: true,
-    default: jest.fn(() => ({
-        experienceEventListenerBuilder: jest.fn(() => ({
-            invokeExperienceEventListener: jest.fn(),
-        })),
-    })),
-}));
+jest.mock('../src/eventManager');
 
 describe('createEmbeddingContext', () => {
     it('should create the embedding context', async () => {
@@ -29,7 +22,7 @@ describe('createEmbeddingContext', () => {
         const embedExperienceWrapper = async () => {
             return await embeddingContext.embedDashboard(undefined);
         };
-        expect(embedExperienceWrapper).rejects.toThrow('embedDashboard is called without frameOptions');
+        await expect(embedExperienceWrapper).rejects.toThrow('embedDashboard is called without frameOptions');
     });
 
     it('should throw error if invalid frameOptions is provided for embedDashboard method', async () => {
@@ -37,9 +30,10 @@ describe('createEmbeddingContext', () => {
             onChange: null,
         });
         const embedExperienceWrapper = async () => {
+            // @ts-expect-error - should throw error when frameOption is invalid
             return await embeddingContext.embedDashboard(5);
         };
-        expect(embedExperienceWrapper).rejects.toThrow('embedDashboard is called with non-object frameOptions');
+        await expect(embedExperienceWrapper).rejects.toThrow('embedDashboard is called with non-object frameOptions');
     });
 
     it('should throw error if frameOptions is not provided for embedVisual method', async () => {
@@ -49,7 +43,7 @@ describe('createEmbeddingContext', () => {
         const embedExperienceWrapper = async () => {
             return await embeddingContext.embedVisual(undefined);
         };
-        expect(embedExperienceWrapper).rejects.toThrow('embedVisual is called without frameOptions');
+        await expect(embedExperienceWrapper).rejects.toThrow('embedVisual is called without frameOptions');
     });
 
     it('should throw error if invalid frameOptions is provided for embedVisual method', async () => {
@@ -57,9 +51,10 @@ describe('createEmbeddingContext', () => {
             onChange: null,
         });
         const embedExperienceWrapper = async () => {
+            // @ts-expect-error - should throw error when frameOption is invalid
             return await embeddingContext.embedVisual([]);
         };
-        expect(embedExperienceWrapper).rejects.toThrow('embedVisual is called with non-object frameOptions');
+        await expect(embedExperienceWrapper).rejects.toThrow('embedVisual is called with non-object frameOptions');
     });
 
     it('should throw error if frameOptions is not provided for embedConsole method', async () => {
@@ -69,7 +64,7 @@ describe('createEmbeddingContext', () => {
         const embedExperienceWrapper = async () => {
             return await embeddingContext.embedConsole(undefined);
         };
-        expect(embedExperienceWrapper).rejects.toThrow('embedConsole is called without frameOptions');
+        await expect(embedExperienceWrapper).rejects.toThrow('embedConsole is called without frameOptions');
     });
 
     it('should throw error if invalid frameOptions is provided for embedConsole method', async () => {
@@ -77,9 +72,10 @@ describe('createEmbeddingContext', () => {
             onChange: null,
         });
         const embedExperienceWrapper = async () => {
+            // @ts-expect-error - should throw error when frameOption is invalid
             return await embeddingContext.embedConsole('5');
         };
-        expect(embedExperienceWrapper).rejects.toThrow('embedConsole is called with non-object frameOptions');
+        await expect(embedExperienceWrapper).rejects.toThrow('embedConsole is called with non-object frameOptions');
     });
 
     it('should throw error if frameOptions is not provided for embedQSearchBar method', async () => {
@@ -89,7 +85,7 @@ describe('createEmbeddingContext', () => {
         const embedExperienceWrapper = async () => {
             return await embeddingContext.embedQSearchBar(undefined);
         };
-        expect(embedExperienceWrapper).rejects.toThrow('embedQSearchBar is called without frameOptions');
+        await expect(embedExperienceWrapper).rejects.toThrow('embedQSearchBar is called without frameOptions');
     });
 
     it('should throw error if invalid frameOptions is provided for embedQSearchBar method', async () => {
@@ -97,8 +93,9 @@ describe('createEmbeddingContext', () => {
             onChange: null,
         });
         const embedExperienceWrapper = async () => {
+            // @ts-expect-error - should throw error when frameOption is invalid
             return await embeddingContext.embedQSearchBar(true);
         };
-        expect(embedExperienceWrapper).rejects.toThrow('embedQSearchBar is called with non-object frameOptions');
+        await expect(embedExperienceWrapper).rejects.toThrow('embedQSearchBar is called with non-object frameOptions');
     });
 });

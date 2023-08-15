@@ -1,4 +1,5 @@
 import eventManagerBuilder from '../src/eventManager';
+import {ExperienceType} from '../src/enums';
 
 describe('eventManagerBuilder', () => {
     const TEST_EXPERIENCE_IDENTIFIER_1 = 'testExperienceIdentifier1';
@@ -19,7 +20,13 @@ describe('eventManagerBuilder', () => {
         const mockListener2 = jest.fn();
         eventManager.addEventListener(TEST_EXPERIENCE_IDENTIFIER_1, mockListener1);
         eventManager.addEventListener(TEST_EXPERIENCE_IDENTIFIER_2, mockListener2);
-        eventManager.invokeEventListener(TEST_EXPERIENCE_IDENTIFIER_1, TEST_DATA);
+        eventManager.invokeEventListener(TEST_EXPERIENCE_IDENTIFIER_1, {
+            message: TEST_DATA, eventTarget: {
+                contextId: '',
+                experienceType: ExperienceType.CONSOLE
+            },
+            eventName: 'EXPERIENCE_INITIALIZED'
+        });
         expect(mockListener1).toHaveBeenCalledTimes(1);
         expect(mockListener2).toHaveBeenCalledTimes(0);
     });
@@ -33,7 +40,13 @@ describe('eventManagerBuilder', () => {
         eventManager.addEventListener(TEST_EXPERIENCE_IDENTIFIER_1, mockListener2);
         eventManager.addEventListener(TEST_EXPERIENCE_IDENTIFIER_1, mockListener3);
         eventManager.removeEventListener(TEST_EXPERIENCE_IDENTIFIER_1, mockListener2);
-        eventManager.invokeEventListener(TEST_EXPERIENCE_IDENTIFIER_1, TEST_DATA);
+        eventManager.invokeEventListener(TEST_EXPERIENCE_IDENTIFIER_1, {
+            message: TEST_DATA, eventTarget: {
+                contextId: '',
+                experienceType: ExperienceType.CONSOLE
+            },
+            eventName: 'EXPERIENCE_INITIALIZED'
+        });
         expect(mockListener1).toHaveBeenCalledTimes(1);
         expect(mockListener2).toHaveBeenCalledTimes(0);
         expect(mockListener3).toHaveBeenCalledTimes(1);

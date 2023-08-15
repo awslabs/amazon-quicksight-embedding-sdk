@@ -1,15 +1,17 @@
+import {expect, jest, it} from '@jest/globals';
+
 import eventManagerBuilder from '../../src/eventManager';
 import {ChangeEventLevel, ExperienceType, ChangeEventName} from '../../src/enums';
-import createExperienceFrame from '../../src/experiences/createExperienceFrame';
-import {EventManager, InternalControlExperience} from '../../src/types';
+import {
+    EventManager,
+    InternalControlExperience
+} from '../../src/types';
 import createIframe from '../../src/commons/createIframe';
+import createExperienceFrame from '../../src/experiences/createExperienceFrame';
 
-jest.mock('../../src/commons/createIframe', () => ({
-    __esModule: true,
-    default: jest.fn(() => {
-        return true;
-    }),
-}));
+jest.mock('../../src/commons/createIframe');
+
+const createIframeMock = jest.mocked(createIframe, true);
 
 describe('createExperienceFrame', () => {
     const TEST_URL = 'https://test.amazon.com/embed/guid/dashboards/dashboardId';
@@ -64,8 +66,8 @@ describe('createExperienceFrame', () => {
             internalExperience: TEST_INTERNAL_EXPERIENCE,
             experienceIdentifier: TEST_EXPERIENCE_IDENTIFIER,
         });
-        expect(createIframe).toHaveBeenCalled();
-        const createFrameArguments = createIframe.mock.calls[0][0];
+        expect(createIframeMock).toHaveBeenCalled();
+        const createFrameArguments = createIframeMock.mock.calls[0][0];
         expect(createFrameArguments.src.startsWith(TEST_URL)).toBe(true);
         expect(createFrameArguments.container).toEqual(TEST_CONTAINER);
         expect(createFrameArguments.width).toEqual('100%');
@@ -102,8 +104,8 @@ describe('createExperienceFrame', () => {
             internalExperience: TEST_INTERNAL_EXPERIENCE,
             experienceIdentifier: TEST_EXPERIENCE_IDENTIFIER,
         });
-        expect(createIframe).toHaveBeenCalled();
-        const createFrameArguments = createIframe.mock.calls[0][0];
+        expect(createIframeMock).toHaveBeenCalled();
+        const createFrameArguments = createIframeMock.mock.calls[0][0];
         expect(createFrameArguments.src.startsWith(TEST_URL)).toBe(true);
         expect(createFrameArguments.container).toEqual(TEST_CONTAINER);
         expect(createFrameArguments.width).toEqual(TEST_WIDTH);
@@ -133,8 +135,8 @@ describe('createExperienceFrame', () => {
             internalExperience: TEST_INTERNAL_EXPERIENCE,
             experienceIdentifier: TEST_EXPERIENCE_IDENTIFIER,
         });
-        expect(createIframe).toHaveBeenCalled();
-        const createFrameArguments = createIframe.mock.calls[0][0];
+        expect(createIframeMock).toHaveBeenCalled();
+        const createFrameArguments = createIframeMock.mock.calls[0][0];
         expect(createFrameArguments.src.startsWith(TEST_URL)).toBe(true);
         expect(createFrameArguments.container).toEqual(TEST_CONTAINER);
         expect(createFrameArguments.width).toEqual(TEST_WIDTH);
@@ -145,6 +147,7 @@ describe('createExperienceFrame', () => {
     it('should not create experience frame without container', () => {
         const frameOptions = {
             url: TEST_URL,
+            // @ts-expect-error - should throw error if frame options does not have a container
             container: undefined,
             onChange: onChangeSpy,
         };
@@ -173,7 +176,7 @@ describe('createExperienceFrame', () => {
                 experience: TEST_INTERNAL_EXPERIENCE,
             },
         }, {frame: null});
-        expect(createIframe).not.toHaveBeenCalled();
+        expect(createIframeMock).not.toHaveBeenCalled();
     });
 
     it('should not create experience frame with invalid container', () => {
@@ -208,11 +211,12 @@ describe('createExperienceFrame', () => {
                 experience: TEST_INTERNAL_EXPERIENCE,
             },
         }, {frame: null});
-        expect(createIframe).not.toHaveBeenCalled();
+        expect(createIframeMock).not.toHaveBeenCalled();
     });
 
     it('should not create experience frame without url', () => {
         const frameOptions = {
+            // @ts-expect-error - should throw error if url is not provided
             url: undefined,
             container: TEST_CONTAINER,
             onChange: onChangeSpy,
@@ -242,6 +246,6 @@ describe('createExperienceFrame', () => {
                 experience: TEST_INTERNAL_EXPERIENCE,
             },
         }, {frame: null});
-        expect(createIframe).not.toHaveBeenCalled();
+        expect(createIframeMock).not.toHaveBeenCalled();
     });
 });

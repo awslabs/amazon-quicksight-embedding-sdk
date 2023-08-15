@@ -1,21 +1,26 @@
 import eventManagerBuilder from '../../../src/eventManager';
-import {ChangeEventLevel, ChangeEventName} from '../../../src/enums';
+import {ChangeEventLevel, ChangeEventName, MessageEventName} from '../../../src/enums';
 import {createDashboardFrame} from '../../../src/experiences/dashboard';
-import {EventManager} from '../../../src/types';
+import {DashboardFrame, EventManager, TransformedDashboardContentOptions} from '../../../src/types';
 import createExperienceFrame from '../../../src/experiences/createExperienceFrame';
+
+const mockSend = jest.fn();
 
 jest.mock('../../../src/experiences/createExperienceFrame', () => ({
     __esModule: true,
     default: jest.fn(() => ({
         internalAddEventListener: jest.fn(),
-        internalSend: jest.fn(),
+        internalSend: mockSend,
     })),
 }));
+
+const createExperienceFrameMock = jest.mocked(createExperienceFrame, true);
 
 describe('createDashboardFrame', () => {
     const TEST_CONTAINER: HTMLElement = window.document.createElement('div');
     const TEST_DASHBOARD_ID = 'testDashboardId';
     const TEST_CONTEXT_ID = 'testContextId';
+    const TEST_GUID = 'testGuid';
     const TEST_DASHBOARD_URL = `https://test.amazon.com/embed/guid/dashboards/${TEST_DASHBOARD_ID}`;
     const TEST_OTHER_URL = 'https://test.amazon.com/embedding/guid/start/dashboards';
     const TEST_UNRECOGNIZED_CONTENT_OPTION = 'testUnrecognizedContentOption';
@@ -39,7 +44,7 @@ describe('createDashboardFrame', () => {
 
     afterEach(() => {
         onChangeSpy.mockRestore();
-        createExperienceFrame.mockClear();
+        createExperienceFrameMock.mockClear();
     });
 
     it('should create dashboard frame', () => {
@@ -58,7 +63,7 @@ describe('createDashboardFrame', () => {
         expect(typeof dashboardFrame.initiatePrint).toEqual('function');
         const iFrame = TEST_CONTAINER.querySelector('iframe');
         expect(iFrame).not.toEqual(undefined);
-        const transformedContentOptions = createExperienceFrame.mock.calls[0][0].transformedContentOptions;
+        const transformedContentOptions: TransformedDashboardContentOptions = createExperienceFrameMock.mock.calls[0][0].transformedContentOptions;
         expect(transformedContentOptions.undoRedoDisabled).toBe(true);
         expect(transformedContentOptions.resetDisabled).toBe(true);
         expect(transformedContentOptions.printEnabled).toBe(undefined);
@@ -86,7 +91,7 @@ describe('createDashboardFrame', () => {
         expect(typeof dashboardFrame.initiatePrint).toEqual('function');
         const iFrame = TEST_CONTAINER.querySelector('iframe');
         expect(iFrame).not.toEqual(undefined);
-        const transformedContentOptions = createExperienceFrame.mock.calls[0][0].transformedContentOptions;
+        const transformedContentOptions: TransformedDashboardContentOptions = createExperienceFrameMock.mock.calls[0][0].transformedContentOptions;
         expect(transformedContentOptions.undoRedoDisabled).toBe(undefined);
         expect(transformedContentOptions.resetDisabled).toBe(undefined);
         expect(transformedContentOptions.printEnabled).toBe(true);
@@ -95,15 +100,14 @@ describe('createDashboardFrame', () => {
 
     it('should throw error if no url', () => {
         const frameOptions = {
+            // @ts-expect-error - Validate that error is thrown when url is omitted from frameOptions
             url: undefined,
             container: TEST_CONTAINER,
             width: '800px',
         };
-        const contentOptions = {
-            fitToIframeWidth: true,
-        };
+
         const createDashboardFrameWrapper = () => {
-            createDashboardFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+            createDashboardFrame(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
         };
         expect(createDashboardFrameWrapper).toThrowError('Url is required for the experience');
     });
@@ -133,6 +137,8 @@ describe('createDashboardFrame', () => {
         const contentOptions = {
             [TEST_UNRECOGNIZED_CONTENT_OPTION]: 'some value',
         };
+
+        // @ts-expect-error - Validate that warning is emitted for invalid content option
         const dashboardFrame = createDashboardFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
         expect(typeof dashboardFrame.send).toEqual('function');
         expect(typeof dashboardFrame.setParameters).toEqual('function');
@@ -144,5 +150,67 @@ describe('createDashboardFrame', () => {
                 unrecognizedContentOptions: [TEST_UNRECOGNIZED_CONTENT_OPTION],
             },
         }, {frame: null});
+    });
+    
+    describe('Actions', () => {
+        let dashboardFrame: DashboardFrame;
+        const frameOptions = {
+            url: TEST_DASHBOARD_URL,
+            container: TEST_CONTAINER,
+            width: '800px'
+        };
+
+        beforeEach(() => {
+            dashboardFrame = createDashboardFrame(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
+        });
+
+        it('should emit ADD_VISUAL_ACTIONS event when addVisualActions is called', () => {
+            dashboardFrame.addVisualActions(TEST_GUID, TEST_GUID, [{
+                CustomActionId: TEST_GUID,
+                ActionOperations: [{CallbackOperation: {EmbeddingMessage: {}}}],
+                Status: 'ENABLED',
+                Name: 'Custom-Action',
+                Trigger: 'DATA_POINT_CLICK'
+            }]);
+
+            expect(mockSend).toBeCalledWith(expect.objectContaining({
+                eventName: MessageEventName.ADD_VISUAL_ACTIONS
+            }));
+        });
+
+        it('should emit SET_VISUAL_ACTIONS event when setVisualActions is called', () => {
+            dashboardFrame.setVisualActions(TEST_GUID, TEST_GUID, [{
+                CustomActionId: TEST_GUID,
+                ActionOperations: [{CallbackOperation: {EmbeddingMessage: {}}}],
+                Status: 'ENABLED',
+                Name: 'Custom-Action',
+                Trigger: 'DATA_POINT_CLICK'
+            }]);
+
+            expect(mockSend).toBeCalledWith(expect.objectContaining({
+                eventName: MessageEventName.SET_VISUAL_ACTIONS
+            }));
+        });
+
+        it('should emit GET_VISUAL_ACTIONS event when getVisualActions is called', () => {
+            dashboardFrame.getVisualActions(TEST_GUID, TEST_GUID);
+            expect(mockSend).toBeCalledWith(expect.objectContaining({
+                eventName: MessageEventName.GET_VISUAL_ACTIONS
+            }));
+        });
+
+        it('should emit REMOVE_VISUAL_ACTIONS event when removeVisualActions is called', () => {
+            dashboardFrame.removeVisualActions(TEST_GUID, TEST_GUID, [{
+                CustomActionId: TEST_GUID,
+                ActionOperations: [{CallbackOperation: {EmbeddingMessage: {}}}],
+                Status: 'ENABLED',
+                Name: 'Custom-Action',
+                Trigger: 'DATA_POINT_CLICK'
+            }]);
+
+            expect(mockSend).toBeCalledWith(expect.objectContaining({
+                eventName: MessageEventName.REMOVE_VISUAL_ACTIONS
+            }));
+        });
     });
 });

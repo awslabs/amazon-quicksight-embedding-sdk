@@ -44,10 +44,8 @@ describe('createConsoleFrame', () => {
             width: '800px',
             onChange: onChangeSpy,
         };
-        const contentOptions = {
-            fitToIframeWidth: true,
-        };
-        const qsearchFrame = createConsoleFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+
+        const qsearchFrame = createConsoleFrame(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
         expect(typeof qsearchFrame.send).toEqual('function');
         expect(onChangeSpy).toHaveBeenCalledWith({
             eventName: ChangeEventName.FRAME_STARTED,
@@ -67,11 +65,9 @@ describe('createConsoleFrame', () => {
             container: TEST_CONTAINER,
             width: '800px',
         };
-        const contentOptions = {
-            fitToIframeWidth: true,
-        };
+
         const createConsoleFrameWrapper = () => {
-            createConsoleFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+            createConsoleFrame(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
         };
         expect(createConsoleFrameWrapper).toThrowError('Invalid console experience url');
     });
@@ -82,11 +78,9 @@ describe('createConsoleFrame', () => {
             container: TEST_CONTAINER,
             width: '800px',
         };
-        const contentOptions = {
-            fitToIframeWidth: true,
-        };
+
         const createConsoleFrameWrapper = () => {
-            createConsoleFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+            createConsoleFrame(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
         };
         expect(createConsoleFrameWrapper).toThrowError('Invalid console experience url');
     });
@@ -101,6 +95,7 @@ describe('createConsoleFrame', () => {
         const contentOptions = {
             [TEST_UNRECOGNIZED_CONTENT_OPTION]: 'some value',
         };
+        // @ts-expect-error - should throw error when content option has unrecognized properties
         const qsearchFrame = createConsoleFrame(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
         expect(typeof qsearchFrame.send).toEqual('function');
         expect(onChangeSpy).toHaveBeenCalledWith({

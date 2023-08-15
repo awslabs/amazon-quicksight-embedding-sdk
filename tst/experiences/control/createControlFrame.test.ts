@@ -1,16 +1,17 @@
 import eventManagerBuilder from '../../../src/eventManager';
 import {ChangeEventLevel, ExperienceType, ChangeEventName} from '../../../src/enums';
 import {createControlFrame} from '../../../src/experiences/control';
+import {ControlOptions, EventManager} from '../../../src/types';
 
 describe('createControlFrame', () => {
-    const TEST_CONTAINER: HTMLBodyElement = window.document.body;
+    const TEST_CONTAINER: HTMLBodyElement = window.document.body as HTMLBodyElement;
     const TEST_CONTEXT_ID = 'testContextId';
 
     const eventManager: EventManager = eventManagerBuilder();
 
     const onChangeSpy = jest.fn();
 
-    const TEST_CONTROL_OPTIONS = {
+    const TEST_CONTROL_OPTIONS: ControlOptions = {
         eventManager,
         contextId: TEST_CONTEXT_ID,
         urlInfo: {

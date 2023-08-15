@@ -1,4 +1,5 @@
 import {buildExperienceUrl, getUrlInfo} from '../../src/commons';
+import {ExperienceType} from '../../src/enums';
 
 describe('commons', () => {
     const TEST_HOST = 'https://test.amazon.com';
@@ -21,7 +22,11 @@ describe('commons', () => {
             const contentOptions = {
                 parameters: TEST_PARAMETERS,
             };
-            const experienceUrl = buildExperienceUrl(TEST_BASE_URL, contentOptions, {});
+            const experienceUrl = buildExperienceUrl(TEST_BASE_URL, contentOptions, {
+                contextId: TEST_GUID,
+                dashboardId: TEST_GUID,
+                experienceType: ExperienceType.DASHBOARD
+            });
             expect(experienceUrl.startsWith(TEST_BASE_URL.toString())).toEqual(true);
             expect(experienceUrl.endsWith('#p.gamma=7&p.delta=eight')).toEqual(true);
         });
@@ -31,7 +36,11 @@ describe('commons', () => {
                 parameters: TEST_PARAMETERS,
                 ...TEST_OTHER_OPTIONS,
             };
-            const experienceUrl = buildExperienceUrl(TEST_BASE_URL, contentOptions, {});
+            const experienceUrl = buildExperienceUrl(TEST_BASE_URL, contentOptions, {
+                contextId: TEST_GUID,
+                dashboardId: TEST_GUID,
+                experienceType: ExperienceType.DASHBOARD
+            });
             expect(experienceUrl.startsWith(TEST_BASE_URL.toString())).toEqual(true);
             expect(experienceUrl.endsWith('#p.gamma=7&p.delta=eight')).toEqual(true);
             expect(experienceUrl.includes(TEST_QUERY_STRING)).toEqual(true);
@@ -41,7 +50,11 @@ describe('commons', () => {
             const contentOptions = {
                 ...TEST_OTHER_OPTIONS,
             };
-            const experienceUrl = buildExperienceUrl(TEST_BASE_URL, contentOptions, {});
+            const experienceUrl = buildExperienceUrl(TEST_BASE_URL, contentOptions, {
+                contextId: TEST_GUID,
+                dashboardId: TEST_GUID,
+                experienceType: ExperienceType.DASHBOARD
+            });
             expect(experienceUrl.startsWith(TEST_BASE_URL.toString())).toEqual(true);
             expect(experienceUrl.includes('#')).toEqual(false);
             expect(experienceUrl.includes(TEST_QUERY_STRING)).toEqual(true);
@@ -54,7 +67,11 @@ describe('commons', () => {
                 parameters: TEST_PARAMETERS,
                 ...TEST_OTHER_OPTIONS,
             };
-            const experienceUrl = buildExperienceUrl(TEST_BASE_URL, contentOptions, {});
+            const experienceUrl = buildExperienceUrl(TEST_BASE_URL, contentOptions, {
+                contextId: TEST_GUID,
+                dashboardId: TEST_GUID,
+                experienceType: ExperienceType.DASHBOARD
+            });
             const urlInfo = getUrlInfo(experienceUrl);
             expect(urlInfo.host).toEqual(TEST_HOST);
             expect(urlInfo.guid).toEqual(TEST_GUID);

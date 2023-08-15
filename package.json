@@ -1,7 +1,7 @@
 {
     "name": "amazon-quicksight-embedding-sdk",
     "description": "JS SDK for embedding Amazon QuickSight",
-    "version": "2.3.0",
+    "version": "2.3.1",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
@@ -46,6 +46,7 @@
         "copy-webpack-plugin": "^10.2.4",
         "eslint": "^8.29.0",
         "expose-loader": "^3.1.0",
+        "fork-ts-checker-webpack-plugin": "^8.0.0",
         "jest": "^27.5.1",
         "jsdom": "^19.0.0",
         "prettier": "^2.8.1",
