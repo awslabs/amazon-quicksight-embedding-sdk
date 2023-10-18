@@ -1,3 +1,8 @@
+**2.4.0**
+* Refactor to improve typing
+* Minor bug fixes
+* Update build to use rollup
+
 **2.3.1**
 * Minor bug fixes
 

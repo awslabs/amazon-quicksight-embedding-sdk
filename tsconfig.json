@@ -5,6 +5,8 @@
             "dom.iterable",
             "esnext"
         ],
+        "target": "ES5",
+        "module": "esnext",
         "allowJs": true,
         "skipLibCheck": true,
         "esModuleInterop": true,
@@ -16,8 +18,21 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noFallthroughCasesInSwitch": true,
-        "strictNullChecks": false,
-        "outDir": "dist"
+        "strictNullChecks": true,
+        "outDir": "dist",
+        "paths": {
+            "@common/embedding-context/*": ["./src/common/embedding-context/*"],
+            "@common/event-manager/*": ["./src/common/event-manager/*"],
+            "@common/events/*": ["./src/common/events/*"],
+            "@common/iframe/*": ["./src/common/iframe/*"],
+            "@experience/base-experience/*": ["./src/experiences/base-experience/*"],
+            "@experience/console-experience/*": ["./src/experiences/console-experience/*"],
+            "@experience/control-experience/*": ["./src/experiences/control-experience/*"],
+            "@experience/dashboard-experience/*": ["./src/experiences/dashboard-experience/*"],
+            "@experience/q-search-experience/*": ["./src/experiences/q-search-experience/*"],
+            "@experience/visual-experience/*": ["./src/experiences/visual-experience/*"]
+        },
+        "baseUrl": "."
     },
     "include": [
         "src",

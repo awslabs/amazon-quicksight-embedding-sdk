@@ -1,2 +1,8 @@
+build
 node_modules
 dist
+*.iml
+.idea/
+coverage/
+rollup.config-*
+ssl

@@ -19,7 +19,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
 ...
-<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.4.0/dist/quicksight-embedding-js-sdk.min.js"></script>
 <script type="text/javascript">
     const onLoad = async () => {
         const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
@@ -66,19 +66,22 @@ Use `createEmbeddingContext` method to create an embedding context. It returns a
 
 ```typescript
 
-export type CreateEmbeddingContext = (frameOptions?: CreateEmbeddingContextFrameOptions) => Promise<EmbeddingContext>;
+export type CreateEmbeddingContext = (frameOptions?: EmbeddingContextFrameOptions) => Promise<EmbeddingContext>
 
-export type SimpleChangeEventHandler = (message: SimpleChangeEvent, metadata?: ExperienceFrameMetadata) => void;
+export type EventListener = (
+        event: EmbeddingEvents,
+        metadata?: ExperienceFrameMetadata
+) => void;
 
-export type CreateEmbeddingContextFrameOptions = {
-    onChange?: SimpleChangeEventHandler;
+export type EmbeddingContextFrameOptions = {
+   onChange?: EventListener;
 };
 
-export type EmbeddingContext = {
-    embedDashboard: EmbedDashboard;
-    embedVisual: EmbedVisual;
-    embedQSearchBar: EmbedQSearch;
-    embedConsole: EmbedConsole;
+export type IEmbeddingContext = {
+   embedDashboard: (frameOptions: FrameOptions, contentOptions?: DashboardContentOptions) => Promise<DashboardExperience>;
+   embedVisual: (frameOptions: FrameOptions, contentOptions?: VisualContentOptions) => Promise<VisualExperience>;
+   embedQSearchBar: (frameOptions: FrameOptions, contentOptions?: QSearchContentOptions) => Promise<QSearchExperience>;
+   embedConsole: (frameOptions: FrameOptions, contentOptions?: ConsoleContentOptions) => Promise<ConsoleExperience>;
 };
 ```
 
@@ -225,7 +228,7 @@ You can customize style of the iframe that holds your embedded experience by one
 }
 ```
 ```javascript
-    className: "your-own-class",
+    const option = { className: "your-own-class" }
 ```
 
 We've overridden the border and padding of the iframe to be 0px, because setting border and padding on the iframe might cause unexpected issues. If you have to set border and padding on the embedded QuickSight session, set it on the container div that contains the iframe.
@@ -234,22 +237,22 @@ We've overridden the border and padding of the iframe to be 0px, because setting
 
 It renders a simple spinner in the embedded experience container while the contents of the embedding experience iframe is being loaded.
 
-#### 🔹 onChange: *SimpleChangeEventHandler* *(optional)*
+#### 🔹 onChange: *EventListener* *(optional)*
 
 This callback is invoked when there is a change in the SDK code status.
 
 ```
-export type SimpleChangeEventHandler = (message: SimpleChangeEvent, metadata?: ExperienceFrameMetadata) => void;
+export type EventListener = (event: EmbeddingEvents, metadata?: ExperienceFrameMetadata) => void;
 
-export interface SimpleChangeEvent {
-    eventName: ChangeEventName;
-    eventLevel: ChangeEventLevel;
-    message?: string;
-    data?: any;
+export interface ChangeEvent {
+    eventName: EventName,
+    eventLevel: ChangeEventLevel,
+    message?: EventMessageValue,
+    data?: EventData
 }
 
 export type ExperienceFrameMetadata = {
-    frame: EmbeddingIFrameElement;
+    frame: EmbeddingIFrameElement | null;
 };
 ```
 
@@ -277,6 +280,7 @@ Supported `eventLevel`s:
     FRAME_STARTED: invoked just before the iframe is created
     FRAME_MOUNTED: invoked after the iframe is appended into the experience container
     FRAME_LOADED: invoked after iframe element emited the `load` event
+    FRAME_REMOVED: invoked after iframe element is removed from the DOM
 
 `WarnChangeEventName`s
 
@@ -288,7 +292,7 @@ Supported `eventLevel`s:
 ```javascript
 const frameOptions = {
     //...
-    onChange: (changeEvent, metadata) => {
+    onChange: (changeEvent: EmbeddingEvents, metadata: ExperienceFrameMetadata) => {
         if (changeEvent.eventLevel === 'ERROR') {
             console.log(`Do something when embedding experience failed with "${changeEvent.eventName}"`);
             return;
@@ -300,6 +304,10 @@ const frameOptions = {
             }
             case 'FRAME_LOADED': {
                 console.log("Do something when the experience frame is loaded.");
+                break;
+            }
+            case 'FRAME_REMOVED': {
+                console.log("Do something when the experience frame is removed.");
                 break;
             }
             //...
@@ -317,7 +325,7 @@ const frameOptions = {
 
 You can set locale for the embedded QuickSight session:
 ```javascript
-    locale: "en-US",
+    const option = { locale: "en-US" }; 
 ```
 Available locale options are:
 ```
@@ -342,20 +350,22 @@ zh-TW (中文 (繁體))
 For a more updated list of locales, please refer to https://docs.aws.amazon.com/quicksight/latest/user/choosing-a-language-in-quicksight.html. Any unsupported locale value will fallback to using `en-US`.
 
 
-#### 🔹 onMessage: *SimpleMessageEventHandler* *(optional)*
+#### 🔹 onMessage: *EventListener* *(optional)*
 
 You can add `onMessage` callback into the `contentOptions` of all embedding experiences. 
 
 ```typescript
-export type SimpleMessageEventHandler = (message: SimpleMessageEvent, metadata?: ExperienceFrameMetadata) => void;
+export type EventListener = (event: EmbeddingEvents, metadata?: ExperienceFrameMetadata) => void;
 
 export interface SimpleMessageEvent {
-    eventName: MessageEventName;
-    message?: any;
+   eventName: EventName;
+   message?: EventMessageValue;
+   data?: EventData;
+   eventTarget?: InternalExperiences;
 }
 
 export type ExperienceFrameMetadata = {
-    frame: EmbeddingIFrameElement;
+    frame: EmbeddingIFrameElement | null;
 };
 
 ```
@@ -366,7 +376,7 @@ See the experience specific documentation below for the supported `eventName`s f
 
 const contentOptions = {
     //...
-    onMessage: async (messageEvent, experienceMetadata) => {
+    onMessage: async (messageEvent: EmbeddingEvents, metadata?: ExperienceFrameMetadata) => {
         switch (messageEvent.eventName) {
             case 'CONTENT_LOADED': {
                 console.log("Do something when the embedded experience is fully loaded.");
@@ -399,53 +409,25 @@ For more information, see  [Working with embedded analytics](https://docs.aws.am
 Use `embedDashboard` method to embed a QuickSight dashboard. It returns a promise of `DashboardFrame` type.
 
 ```typescript
-// Getters
-export type GetParameters = () => Promise<Parameter[]>;
-export type GetSheets = () => Promise<Sheet[]>;
-export type GetSheetVisuals = (sheetId: string) => Promise<Visual[]>;
-export type GetVisualActions = (sheetId: string, visualId: string) => Promise<VisualAction[]>;
-export type GetSelectedSheetId = () => Promise<string>;
-
-// Setters
-export type SetParameters = (parameters: Parameter[]) => Promise<ResponseMessage>;
-export type SetSelectedSheetId = (sheetId: string) => Promise<ResponseMessage>;
-export type AddVisualActions = (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<ResponseMessage>;
-export type RemoveVisualActions = (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<ResponseMessage>;
-export type SetVisualActions = (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<ResponseMessage>;
-
-// Invokers
-export type InitiatePrint = () => Promise<ResponseMessage>;
-export type Undo = () => Promise<ResponseMessage>;
-export type Redo = () => Promise<ResponseMessage>;
-export type Reset = () => Promise<ResponseMessage>;
-export type ToggleBookmarksPane = () => Promise<ResponseMessage>;
-export type NavigateToDashboard = (dashboardId: string, options?: NavigateToDashboardOptions) => Promise<ResponseMessage>;
-
-export interface DashboardFrame extends BaseFrame {
-    getParameters: GetParameters;
-    getSheets: GetSheets;
-    getSheetVisuals: GetSheetVisuals;
-    getVisualActions: GetVisualActions;
-    addVisualActions: AddVisualActions;
-    removeVisualActions: RemoveVisualActions;
-    setVisualActions: SetVisualActions;
-    getSelectedSheetId: GetSelectedSheetId;
-    setParameters: SetParameters;
-    setSelectedSheetId: SetSelectedSheetId;
-    initiatePrint: InitiatePrint;
-    undo: Undo;
-    redo: Redo;
-    reset: Reset;
-    toggleBookmarksPane: ToggleBookmarksPane;
-    navigateToDashboard: NavigateToDashboard;
+export class DashboardExperience extends BaseExperience<DashboardContentOptions, InternalDashboardExperience, IDashboardExperience, TransformedDashboardContentOptions, DashboardExperienceFrame> {
+   initiatePrint: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   undo: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   redo: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   toggleBookmarksPane: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   getParameters: () => Promise<Parameter[]>;
+   getSheets: () => Promise<Sheet[]>;
+   getVisualActions: (sheetId: string, visualId: string) => Promise<VisualAction[]>;
+   addVisualActions: (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   setVisualActions: (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   getSelectedSheetId: () => Promise<string>;
+   setSelectedSheetId: (sheetId: string) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   navigateToDashboard: (dashboardId: string, navigateToDashboardOptions?: NavigateToDashboardOptions) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   removeVisualActions: (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   getSheetVisuals: (sheetId: string) => Promise<Visual[]>;
+   setParameters: (parameters: Parameter[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   reset: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   send: <EventMessageValue extends EventMessageValues>(messageEvent: EmbeddingMessageEvent<MessageEventName>) => Promise<ResponseMessage<EventMessageValue>>;
 }
-
-export type Send = (eventName: MessageEventName, message?: any) => void;
-
-export interface BaseFrame {
-    send: Send;
-}
-
 ```
 
 &nbsp;  
@@ -458,7 +440,7 @@ export interface BaseFrame {
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.4.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedDashboard = async() => {
                 const {
@@ -592,9 +574,11 @@ See [Common Properties of `frameOptions` for All Embedding Experiences](#common-
 #### resizeHeightOnSizeChangedEvent: *boolean* *(optional, default: false)*
 
 Use `resizeHeightOnSizeChangedEvent` to allow changing the iframe height when the height of the embedded content changed.
-```javascript
-    height: "300px",
-    resizeHeightOnSizeChangedEvent: true
+```json
+    {
+        "height": "300px",
+        "resizeHeightOnSizeChangedEvent": true
+}
 ```
 
 When the `resizeHeightOnSizeChangedEvent` property is set to true, the value of the `height` property acts as a loading height.
@@ -680,7 +664,7 @@ You can use this in combination with `resizeHeightOnSizeChangedEvent: true` fram
 We add 22 pixels of additional height at the bottom of the layout to provide dedicated space to the "Powered by QuickSight" footer.
 You can set this property to `true` to overlay it with your content.
 
-#### 🔹 onMessage: *SimpleMessageEventHandler* *(optional)*
+#### 🔹 onMessage: *EventListener* *(optional)*
 
 The `eventName`s the dashboard experience receive
 
@@ -711,7 +695,7 @@ Parameters in an embedded experience session can be set by using the following c
             Values: ['United States'],
         },
         {
-            Name: 'states'
+            Name: 'states',
             Values: ['California', 'Washington'],
         }
     ]);
@@ -721,7 +705,7 @@ To reset a parameter so that it includes all values, you can pass the string `AL
 ```javascript
     embeddedExperience.setParameters([
         {
-            Name: 'states'
+            Name: 'states',
             Values: ['ALL_VALUES'],
         }
     ]);
@@ -731,7 +715,7 @@ To reset a parameter so that it includes all values, you can pass the string `AL
 
 To navigate to a different dashboard, use dashboard.navigateToDashboard(options). The input parameter options should contain the dashboardId that you want to navigate to, and also the parameters for that dashboard, for example:
 ```javascript
-    const dashboardId: "37a99f75-8230-4409-ac52-e45c652cc21e",
+    const dashboardId: "37a99f75-8230-4409-ac52-e45c652cc21e";
     const options = {
         parameters: [
             {
@@ -893,7 +877,6 @@ If you want to toggle the visibility state of the bookmarks pane, use the below 
 ```javascript
     embeddedDashboardExperience.toggleBookmarksPane();
 ```
-***
 
 &nbsp;  
 ## Visual Embedding
@@ -910,27 +893,14 @@ For more information, see  [Embedding Amazon QuickSight Visuals](https://docs.aw
 Use `embedVisual` method to embed a QuickSight dashboard. It returns a promise of `VisualFrame` type.
 
 ```typescript
-export type SetParameters = (setParametersOptions: SetParametersOptions) => void;
-export type Reset = () => void;
-
-export type GetActions = () => Promise<any[]>;
-export type AddActions = (actions: VisualAction[]) => Promise<ResponseMessage[]>;
-export type RemoveActions = (actions: VisualAction[]) => Promise<ResponseMessage[]>;
-export type SetActions = (actions: VisualAction[]) => Promise<ResponseMessage[]>;    
-
-export interface VisualFrame extends BaseFrame {
-    setParameters: SetParameters;
-    reset: Reset;
-    getActions: GetActions;
-    addActions: AddActions;
-    removeActions: RemoveActions;
-    setActions: SetActions;
-}
-
-export type Send = (eventName: MessageEventName, message?: any) => void;
-
-export interface BaseFrame {
-    send: Send;
+export class VisualExperience extends BaseExperience<VisualContentOptions, InternalVisualExperience, IVisualExperience, TransformedContentOptions, VisualExperienceFrame> {
+   setParameters: (parameters: Parameter[]) => Promise<import("@common/events/events").ResponseMessage<import("@common/events/types").EventMessageValues>>;
+   reset: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   getActions: () => Promise<VisualAction[]>;
+   addActions: (actions: VisualAction[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   setActions: (actions: VisualAction[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   removeActions: (actions: VisualAction[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   send: <EventMessageValue extends EventMessageValues>(messageEvent: EmbeddingMessageEvent<MessageEventName>) => Promise<ResponseMessage<EventMessageValue>>;
 }
 
 ```
@@ -945,7 +915,7 @@ export interface BaseFrame {
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.4.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedVisual = async() => {    
                 const {
@@ -1053,9 +1023,11 @@ See [Common Properties of `frameOptions` for All Embedding Experiences](#common-
 #### resizeHeightOnSizeChangedEvent: *boolean* *(optional, default: false)*
 
 Use `resizeHeightOnSizeChangedEvent` to allow changing the iframe height when the height of the embedded content changed.
-```javascript
-    height: "300px",
-    resizeHeightOnSizeChangedEvent: true
+```json
+    {
+        "height": "300px",
+        "resizeHeightOnSizeChangedEvent": true
+    }
 ```
 
 When the `resizeHeightOnSizeChangedEvent` property is set to true, the value of the `height` property acts as a loading height.
@@ -1110,7 +1082,7 @@ Parameters in an embedded experience session can be set by using the following c
             Values: ['United States'],
         },
         {
-            Name: 'states'
+            Name: 'states',
             Values: ['California', 'Washington'],
         }
     ]);
@@ -1120,7 +1092,7 @@ To reset a parameter so that it includes all values, you can pass the string `AL
 ```javascript
     embeddedVisualExperience.setParameters([
         {
-            Name: 'states'
+            Name: 'states',
             Values: ['ALL_VALUES'],
         }
     ]);
@@ -1226,10 +1198,8 @@ Use `embedConsole` method to embed a QuickSight dashboard. It returns a promise 
 
 
 ```typescript
-export type Send = (eventName: MessageEventName, message?: any) => void;
-
-export interface BaseFrame {
-    send: Send;
+ export class ConsoleExperience extends BaseExperience<ConsoleContentOptions, InternalConsoleExperience, IConsoleExperience, TransformedConsoleContentOptions, ConsoleExperienceFrame> {
+   send: <EMV extends EventMessageValues = EventMessageValues>(messageEvent: TargetedMessageEvent) => Promise<ResponseMessage<EMV>>;
 }
 ```
 
@@ -1243,7 +1213,7 @@ export interface BaseFrame {
 
     <head>
         <title>Console Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.4.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedConsole = async() => {
                 const {
@@ -1335,20 +1305,10 @@ For more information, see  [Embedding Amazon QuickSight Q Search Bar](https://do
 Use `embedQSearchBar` method to embed a QuickSight dashboard. It returns a promise of `QSearchFrame` type.
 
 ```typescript
-export type SetQuestion = (question: string) => void;
-export type Close = () => void;
-
-export interface QSearchFrame extends BaseFrame {
-    setQuestion: SetQuestion;
-    close: Close;
+export class QSearchExperience extends BaseExperience<QSearchContentOptions, InternalQSearchExperience, IQSearchExperience, TransformedQSearchContentOptions, QSearchExperienceFrame> {
+   close: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   setQuestion: (question: string) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
 }
-
-export type Send = (eventName: MessageEventName, message?: any) => void;
-
-export interface BaseFrame {
-    send: Send;
-}
-
 ```
 
 &nbsp;  
@@ -1361,7 +1321,7 @@ export interface BaseFrame {
 
     <head>
         <title>Q Search Bar Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.3.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.4.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQSearchBar = async() => {    
                 const {
@@ -1501,5 +1461,5 @@ This feature closes the Q popover, returns the iframe to the original Q search b
 &nbsp;  
 ## License
 &nbsp;  
-Copyright 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: Apache-2.0

@@ -1,77 +1,82 @@
 {
     "name": "amazon-quicksight-embedding-sdk",
+    "version": "2.4.0",
     "description": "JS SDK for embedding Amazon QuickSight",
-    "version": "2.3.1",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "files": [
-        "/dist"
+    "keywords": [
+        "Amazon",
+        "AWS",
+        "QuickSight"
     ],
     "homepage": "https://github.com/awslabs/amazon-quicksight-embedding-sdk",
     "repository": {
         "type": "git",
         "url": "git@github.com:awslabs/amazon-quicksight-embedding-sdk.git"
     },
-    "keywords": [
-        "Amazon",
-        "AWS",
-        "QuickSight"
-    ],
+    "license": "Apache-2.0",
     "author": {
         "name": "QuickSight",
-        "email": "",
         "url": "https://aws.amazon.com/quicksight/"
     },
-    "license": "Apache-2.0",
+    "main": "dist/index.cjs.js",
+    "module": "dist/index.esm.js",
+    "browser": "dist/quicksight-embedding-js-sdk.min.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "/dist"
+    ],
+    "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "prepublishOnly": "npm run release",
+        "prettier:check": "prettier --check \"./{.jest,src,tst}/**/*.ts\"",
+        "prettier:write": "prettier --write \"./{.jest,src,tst}/**/*.ts\"",
+        "release": "npm run prettier:check && npm run build:prod",
+        "build:prod": "mode=production rollup -c --bundleConfigAsCjs",
+        "build:dev": "mode=development rollup -c -w --bundleConfigAsCjs",
+        "test": "jest"
+    },
     "dependencies": {
+        "@babel/runtime": "^7.20.6",
         "punycode": "^2.1.1",
         "uuid": "^9.0.0"
     },
     "devDependencies": {
+        "@aws-sdk/client-quicksight": "^3.414.0",
         "@babel/cli": "^7.19.3",
         "@babel/core": "^7.20.5",
         "@babel/plugin-transform-runtime": "^7.19.6",
         "@babel/preset-env": "^7.20.2",
         "@babel/preset-typescript": "^7.18.6",
-        "@babel/runtime": "^7.20.6",
+        "@rollup/plugin-alias": "^5.0.0",
+        "@rollup/plugin-babel": "^6.0.3",
+        "@rollup/plugin-eslint": "^9.0.4",
+        "@rollup/plugin-node-resolve": "^15.2.1",
+        "@rollup/plugin-terser": "^0.4.3",
+        "@rollup/plugin-typescript": "^11.1.3",
         "@testing-library/jest-dom": "^5.16.5",
-        "@types/jest": "^28.1.8",
+        "@types/jest": "^29.5.5",
         "@types/node": "^18.11.15",
         "@types/punycode": "^2.1.0",
         "@types/uuid": "^9.0.0",
         "@typescript-eslint/eslint-plugin": "^5.46.1",
         "@typescript-eslint/parser": "^5.46.1",
-        "babel-jest": "^28.1.3",
-        "babel-loader": "^8.3.0",
-        "copy-webpack-plugin": "^10.2.4",
         "eslint": "^8.29.0",
-        "expose-loader": "^3.1.0",
-        "fork-ts-checker-webpack-plugin": "^8.0.0",
-        "jest": "^27.5.1",
-        "jsdom": "^19.0.0",
+        "eslint-config-prettier": "^9.0.0",
+        "eslint-import-resolver-typescript": "^3.6.0",
+        "eslint-plugin-import": "^2.28.1",
+        "jest": "^29.7.0",
+        "jest-environment-jsdom": "^29.7.0",
+        "jsdom": "^22.1.0",
         "prettier": "^2.8.1",
-        "sinon": "^14.0.2",
-        "ts-jest": "^27.1.5",
-        "ts-node": "10.9.1",
-        "typescript": "^4.9.4",
-        "webpack": "^5.75.0",
-        "webpack-cli": "^4.10.0",
-        "webpack-dev-server": "^4.11.1",
-        "webpack-merge": "^5.8.0"
-    },
-    "scripts": {
-        "clean": "rm -rf dist/",
-        "lint": "eslint .",
-        "prettier:check": "prettier --check \"./{.jest,src,tst}/**/*.ts\"",
-        "prettier:write": "prettier --write \"./{.jest,src,tst}/**/*.ts\"",
-        "test": "jest",
-        "dev": "STAGE=dev webpack --config webpack.config.ts",
-        "prod": "STAGE=prod webpack --config webpack.config.ts",
-        "start": "STAGE=dev webpack server --config webpack.config.ts",
-        "types": "tsc --project tsconfig.types.json",
-        "build:dev": "npm run types && npm run lint && npm run test && npm run dev",
-        "build:prod": "npm run types && npm run lint && npm run test && npm run prod",
-        "release": "npm run build:prod",
-        "prepublishOnly": "npm run clean && npm run build:prod"
+        "rollup": "^3.29.2",
+        "rollup-plugin-analyzer": "^4.0.0",
+        "rollup-plugin-banner": "^0.2.1",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-flat-dts": "^2.3.1",
+        "rollup-plugin-serve": "^2.0.2",
+        "rollup-plugin-sourcemaps": "^0.6.3",
+        "ts-jest": "^29.1.1",
+        "tslib": "^2.6.2",
+        "typescript": "^4.9.4"
     }
 }

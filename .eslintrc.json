@@ -1,0 +1,53 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
+        "prettier"
+    ],
+    "env": {
+        "es6": true,          // es6 global variables
+        "browser": true,      // browser global variables.
+        "node": true        // Node.js global variables and Node.js-specific rules.
+    },
+    "rules": {
+        "curly": "error",                 // specify curly brace conventions for all control statements
+        "no-eval": "error",               // disallow use of eval()
+        "no-extend-native": "error",      // disallow adding to native types
+        "no-new-wrappers": "error",       // disallows creating new instances of String, Number, and Boolean
+        "no-with": "error",               // disallow use of the with statement
+        "no-shadow": "error",               // disallow variable from shadowing variables declared in the outer scope
+        "eqeqeq": ["warn", "smart"],      // https://eslint.org/docs/rules/eqeqeq#smart
+        "prefer-const": "error",
+        "no-array-constructor": "error",             // disallow use of the Array constructor
+        "no-new-object": "error",                    // disallow use of the Object constructor
+        "dot-notation": "error",
+        // when complexity gets to high it's likely a function that needs to be refactored
+        "complexity": ["warn", {"max": 20}], // https://eslint.org/docs/rules/complexity
+        // Debugging
+        "no-alert": "error"
+    },
+    "overrides": [
+        {
+            "files": ["*.test.ts"],
+            "rules": {
+                "@typescript-eslint/no-non-null-assertion": 0
+            }
+        }
+    ],
+    "settings": {
+        "import/resolver": {
+            "typescript": true,
+            "node": true
+        }
+    }
+}

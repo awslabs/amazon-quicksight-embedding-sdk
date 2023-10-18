@@ -1,2 +1,3 @@
 examples/**/*
 dist/**/*
+jest.config.js
