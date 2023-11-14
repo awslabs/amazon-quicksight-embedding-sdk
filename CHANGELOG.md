@@ -1,7 +1,23 @@
+**2.5.0**
+* Support setting, adding, removing filters on runtime
+* Support setting and overriding theme on runtime
+* Minor bug fixes
+
 **2.4.0**
 * Refactor to improve typing
 * Minor bug fixes
 * Update build to use rollup
+
+### Breaking changes
+
+* type imports changed from `amazon-quicksight-embedding-sdk/dist/types` to `amazon-quicksight-embedding-sdk`.
+* changed the name on several types to avoid conflicts
+  * `DashboardFrame` to `DashboardExperience`
+  * `VisualFrame` to `VisualExperience`
+  * `ConsoleFrame` to `ConsoleExperience`
+  * `QSearchFrame` to `QSearchExperience`
+  * `SimpleChangeEvent` to `EmbeddingEvents`
+  * `SimpleMessageEvent` to `EmbeddingEvents`
 
 **2.3.1**
 * Minor bug fixes

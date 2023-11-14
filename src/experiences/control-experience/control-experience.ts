@@ -10,7 +10,7 @@ import {ChangeEvent, TargetedMessageEvent} from '@common/events/events';
 import {ChangeEventLevel, ChangeEventName, EmbeddingEvents, MessageEventName} from '@common/events/types';
 import {BaseExperience} from '@experience/base-experience/base-experience';
 import {EventListener} from '@common/event-manager/types';
-import {LogProvider} from '../../common/log-provider/log-provider';
+import {LogProvider} from '../../common';
 
 export class ControlExperience {
     static FRAME_TIMEOUT = 60000;

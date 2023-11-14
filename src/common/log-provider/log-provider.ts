@@ -6,8 +6,9 @@ export interface LogProvider {
     info: typeof console.info;
 }
 
-/*
+/**
  * Temporary abstraction for customer provided logger
+ *
  */
 export class DefaultLogger implements LogProvider {
     log = console.log;

@@ -1,7 +1,7 @@
 // Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import {Parameter, ParametersAsObject} from '../../common/types';
+import {Parameter, ParametersAsObject, ThemeOptions} from '../../common/types';
 import {BaseContentOptions, ExperienceType, IBaseExperience} from '../base-experience';
 
 export interface IVisualExperience extends IBaseExperience {
@@ -19,10 +19,12 @@ export interface VisualContentOptions extends BaseContentOptions {
     locale?: string;
     parameters?: Parameter[];
     fitToIframeWidth?: boolean;
+    themeOptions?: ThemeOptions;
 }
 
 export interface TransformedVisualContentOptions extends BaseContentOptions {
     locale?: string;
     fitToIframeWidth?: boolean;
     parameters?: ParametersAsObject;
+    themeArn?: string;
 }

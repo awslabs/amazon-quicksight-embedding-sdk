@@ -29,8 +29,8 @@ describe('IFrame', () => {
         expect(createElementSpy).not.toHaveBeenCalledWith('div');
         expect(createElementSpy).toHaveBeenCalledWith('iframe');
         expect(appendChildSpy).toHaveBeenCalledTimes(1);
-        expect(iframe.getIframe().width).toEqual('0px');
-        expect(iframe.getIframe().height).toEqual('0px');
+        expect(iframe.getIframe().width).toEqual('100%');
+        expect(iframe.getIframe().height).toEqual('100%');
     });
 
     it('should create iframe placeholder and trigger remove when load event is fired', () => {
@@ -44,7 +44,7 @@ describe('IFrame', () => {
         expect(createElementSpy).toHaveBeenCalledWith('div');
         expect(createElementSpy).toHaveBeenCalledWith('iframe');
         expect(appendChildSpy).toHaveBeenCalledTimes(2);
-        expect(iframe.getIframe().width).toEqual('0px');
+        expect(iframe.getIframe().width).toEqual('100%');
         expect(iframe.getIframe().height).toEqual('500');
         expect(iframe.getIframe().style.opacity).toEqual('0');
 
@@ -74,7 +74,7 @@ describe('IFrame', () => {
         expect(createElementSpy).toHaveBeenCalledWith('div');
         expect(createElementSpy).toHaveBeenCalledWith('iframe');
         expect(appendChildSpy).toHaveBeenCalledTimes(2);
-        expect(iframe.getIframe().width).toEqual('0px');
+        expect(iframe.getIframe().width).toEqual('100%');
         expect(iframe.getIframe().height).toEqual('500px');
 
         const placeholder = TEST_CONTAINER.querySelector('div');
@@ -91,7 +91,7 @@ describe('IFrame', () => {
 
         const iframe = new Iframe(options);
         expect(iframe.getIframe().width).toEqual(TEST_WIDTH);
-        expect(iframe.getIframe().height).toEqual('0px');
+        expect(iframe.getIframe().height).toEqual('100%');
     });
 
     it('should create iframe with user defined classname', () => {

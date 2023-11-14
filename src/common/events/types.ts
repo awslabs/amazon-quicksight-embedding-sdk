@@ -19,6 +19,7 @@ import {
     InfoMessageEvents,
     InvokerMessageEvents,
 } from './messages';
+import type {FilterGroup, ThemeConfiguration} from '@aws-sdk/client-quicksight';
 
 export const ChangeEventName = {
     ...InfoChangeEventName,
@@ -49,6 +50,7 @@ export type EventNames = MessageEventName | ChangeEventName;
 
 export type EventMessageValues =
     | string
+    | string[]
     | {height?: string}
     | Visual[]
     | number
@@ -57,9 +59,11 @@ export type EventMessageValues =
     | Record<string, unknown>
     | Parameter[]
     | VisualAction[]
+    | FilterGroup[]
     | Sheet[]
     | undefined
-    | {success?: boolean};
+    | {success?: boolean}
+    | ThemeConfiguration;
 
 export type EventData = Record<
     string,

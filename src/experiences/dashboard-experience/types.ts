@@ -1,7 +1,7 @@
 // Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import {Parameter, ParametersAsObject} from '../../common/types';
+import {Parameter, ParametersAsObject, ThemeOptions} from '../../common';
 import {BaseContentOptions, ExperienceType, IBaseExperience} from '../base-experience';
 import type {
     ColumnIdentifier,
@@ -26,6 +26,7 @@ export interface DashboardContentOptions extends BaseContentOptions {
     attributionOptions?: AttributionOptions;
     toolbarOptions?: ToolbarOptions;
     sheetOptions?: SheetOptions;
+    themeOptions?: ThemeOptions;
 }
 
 export interface TransformedDashboardContentOptions extends BaseContentOptions {
@@ -36,10 +37,10 @@ export interface TransformedDashboardContentOptions extends BaseContentOptions {
     undoRedoDisabled?: boolean;
     printEnabled?: boolean;
     showBookmarksIcon?: boolean;
-    hideAutoRefresh?: boolean;
     resetDisabled?: boolean;
     sheetTabsDisabled?: boolean;
     resizeOnSheetChange?: boolean;
+    themeArn?: string;
 }
 
 export interface ToolbarOption {

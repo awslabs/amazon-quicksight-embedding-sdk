@@ -1,6 +1,3 @@
-import {createEmbeddingContext} from '@common/embedding-context/embedding-context';
-import {SDK_VERSION} from '@experience/base-experience/frame/experience-frame';
-
 import * as EventMessages from '@common/events/messages';
 import * as EventTypes from '@common/events/types';
 import * as EventManagerTypes from '@common/event-manager/types';
@@ -15,7 +12,15 @@ import * as ControlExperienceTypes from '@experience/control-experience/types';
 import * as QSearchExperienceTypes from '@experience/q-search-experience/types';
 import * as VisualExperienceTypes from '@experience/visual-experience/types';
 
-const QSE = {
+export * from './common';
+export * from './experiences';
+
+/**
+ * Namespaces enums under one import for convenience
+ *
+ * @deprecated - Enums can be imported directly
+ */
+export const QSE = {
     ...CommonTypes,
     ...EventMessages,
     ...EventTypes,
@@ -29,5 +34,3 @@ const QSE = {
     ...ControlExperienceTypes,
     ...VisualExperienceTypes,
 };
-
-export {createEmbeddingContext, SDK_VERSION, QSE};

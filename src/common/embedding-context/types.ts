@@ -1,11 +1,11 @@
 // Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import {ExperienceType, FrameOptions, IBaseExperience} from '../../experiences/base-experience';
-import {DashboardContentOptions} from '../../experiences/dashboard-experience';
-import {VisualContentOptions} from '../../experiences/visual-experience';
-import {QSearchContentOptions} from '../../experiences/q-search-experience';
-import {ConsoleContentOptions} from '../../experiences/console-experience';
+import {ExperienceType, FrameOptions, IBaseExperience} from '@experience/base-experience/types';
+import {DashboardContentOptions} from '@experience/dashboard-experience/types';
+import {VisualContentOptions} from '@experience/visual-experience/types';
+import {QSearchContentOptions} from '@experience/q-search-experience/types';
+import {ConsoleContentOptions} from '@experience/console-experience/types';
 import {EmbeddingIFrameElement} from '../iframe';
 import {EventListener} from '../event-manager';
 import {DashboardExperience} from '@experience/dashboard-experience/dashboard-experience';

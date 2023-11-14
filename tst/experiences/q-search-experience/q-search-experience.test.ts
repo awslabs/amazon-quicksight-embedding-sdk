@@ -4,6 +4,7 @@ import {ControlOptions} from '@experience/control-experience/types';
 import {EventManager} from '@common/event-manager/event-manager';
 import {QSearchExperience} from '@experience/q-search-experience/q-search-experience';
 import {ControlExperience} from '@experience/control-experience/control-experience';
+import {SDK_VERSION} from '@experience/base-experience/frame/experience-frame';
 
 describe('QSearchExperience', () => {
     let TEST_CONTAINER: HTMLElement;
@@ -97,7 +98,7 @@ describe('QSearchExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            'https://test.amazon.com/embedding/guid/q/search?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&contextId=testContextId&discriminator=0'
+            `https://test.amazon.com/embedding/guid/q/search?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&contextId=testContextId&discriminator=0`
         );
     });
 
@@ -232,7 +233,7 @@ describe('QSearchExperience', () => {
 
             const iFrame = TEST_CONTAINER.querySelector('iframe');
 
-            expect(iFrame?.height).toEqual('0px');
+            expect(iFrame?.height).toEqual('100%');
 
             controlExperience.controlFrameMessageListener(
                 new MessageEvent('message', {

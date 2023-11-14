@@ -19,7 +19,6 @@
         "isolatedModules": true,
         "noFallthroughCasesInSwitch": true,
         "strictNullChecks": true,
-        "outDir": "dist",
         "paths": {
             "@common/embedding-context/*": ["./src/common/embedding-context/*"],
             "@common/event-manager/*": ["./src/common/event-manager/*"],

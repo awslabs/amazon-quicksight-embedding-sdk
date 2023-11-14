@@ -3,6 +3,7 @@ import {ExperienceType} from '@experience/base-experience/types';
 import {ChangeEventLevel, ChangeEventName, InfoMessageEventName} from '../../../src/common/events';
 import {ControlExperience} from '@experience/control-experience/control-experience';
 import {ControlOptions} from '@experience/control-experience/types';
+import {SDK_VERSION} from '@experience/base-experience/frame/experience-frame';
 
 describe('ControlExperience', () => {
     const TEST_CONTAINER: HTMLBodyElement = window.document.body as HTMLBodyElement;
@@ -48,6 +49,9 @@ describe('ControlExperience', () => {
         );
         const iFrame = TEST_CONTAINER.querySelector('iframe');
         expect(iFrame).toBeDefined();
+        expect(iFrame?.src).toEqual(
+            `https://test.amazon.com/embed//embedControl?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&contextId=testContextId&discriminator=0`
+        );
     });
 
     it('should call addEventListener when onMessage is provided', () => {

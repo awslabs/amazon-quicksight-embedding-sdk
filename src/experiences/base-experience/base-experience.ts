@@ -15,7 +15,7 @@ import {ControlOptions} from '../control-experience';
 import {ChangeEventLevel, ChangeEventName, EventMessageValues, MessageEventName} from '@common/events/types';
 import {ChangeEvent, EmbeddingMessageEvent, ResponseMessage, TargetedMessageEvent} from '@common/events/events';
 import {EventListener} from '@common/event-manager/types';
-import {LogProvider} from '../../common/log-provider/log-provider';
+import {LogProvider} from '../../common';
 
 export abstract class BaseExperience<
     ExperienceContentOptions extends ContentOptions,

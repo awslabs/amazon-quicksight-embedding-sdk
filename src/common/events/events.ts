@@ -80,7 +80,7 @@ export class PostMessageEvent<
 }
 
 export abstract class ResponseMessage<EventMessageValue extends EventMessageValues = EventMessageValues> {
-    public success?: boolean;
+    public abstract success: boolean;
     public message?: EventMessageValue;
 }
 
@@ -88,14 +88,18 @@ export class SuccessResponse implements ResponseMessage {
     public success = true;
 }
 
-export class ErrorResponse implements ResponseMessage {
+export class ErrorResponse<EventMessageValue extends EventMessageValues = EventMessageValues>
+    implements ResponseMessage<EventMessageValue>
+{
     public success = false;
     public error?: string;
+    public message?: EventMessageValue;
     public errorCode: string;
 
-    constructor(message: ErrorResponse) {
-        this.errorCode = message.errorCode;
-        this.error = message?.error;
+    constructor(errorResponse: ErrorResponse) {
+        this.errorCode = errorResponse.errorCode;
+        this.error = errorResponse.error;
+        this.message = errorResponse.message as EventMessageValue;
     }
 }
 

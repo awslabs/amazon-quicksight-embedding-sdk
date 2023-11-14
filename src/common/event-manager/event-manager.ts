@@ -5,6 +5,9 @@ import {ExperienceIdentifier, EventListener} from './types';
 import {EmbeddingEvents} from '../events';
 import {CleanUpCallback} from '../types';
 
+/**
+ * Manages the event listeners for the experiences within an embedding context
+ */
 export class EventManager {
     private eventListeners: Map<ExperienceIdentifier, EventListener[]>;
     private cleanUpCallbacks: Map<ExperienceIdentifier, CleanUpCallback[]>;

@@ -23,8 +23,8 @@ export class Iframe {
         const {
             id,
             src,
-            width = '0px',
-            height = '0px',
+            width = '100%',
+            height = '100%',
             container,
             onLoad,
             loading,

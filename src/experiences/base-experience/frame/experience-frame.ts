@@ -4,8 +4,8 @@
 import {v4} from 'uuid';
 import {encode} from 'punycode';
 import {ContentOptions, FrameOptions, InternalExperiences, TransformedContentOptions} from '../types';
-import {ParametersAsObject} from '../../../common/types';
-import {ControlOptions} from '../../control-experience';
+import {ParametersAsObject} from '../../../common';
+import {ControlOptions} from '@experience/control-experience/types';
 import {ExperienceFrameMetadata} from '@common/embedding-context/types';
 import {EmbeddingIFrameElement} from '@common/iframe/types';
 import {EventListener} from '@common/event-manager/types';
@@ -26,7 +26,7 @@ import {
 } from '@common/events/events';
 import {Iframe} from '@common/iframe/iframe';
 
-export const SDK_VERSION = '2.4.0';
+export const SDK_VERSION = '2.5.0';
 
 export abstract class BaseExperienceFrame<
     ExperienceContentOptions extends ContentOptions,
@@ -72,9 +72,9 @@ export abstract class BaseExperienceFrame<
         this.initializeMutationObserver();
     }
 
-    public send = async <EMV extends EventMessageValues = EventMessageValues>(
+    public send = async <EventMessageValue extends EventMessageValues = EventMessageValues>(
         messageEvent: TargetedMessageEvent
-    ): Promise<SuccessResponse | ErrorResponse | DataResponse<EMV>> => {
+    ): Promise<SuccessResponse | ErrorResponse<EventMessageValue> | DataResponse<EventMessageValue>> => {
         if (!this.iframe) {
             throw new Error(`Cannot send ${messageEvent.eventName}: No experience frame found`);
         }
@@ -163,7 +163,10 @@ export abstract class BaseExperienceFrame<
                 }
                 return memoizedOptions;
             },
-            {punyCodeEmbedOrigin: encode(`${window.location.origin}/`)}
+            {
+                punyCodeEmbedOrigin: encode(`${window.location.origin}/`),
+                sdkVersion: SDK_VERSION,
+            }
         );
 
         return new URLSearchParams(filteredOptions).toString();

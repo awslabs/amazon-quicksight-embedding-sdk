@@ -24,3 +24,9 @@ export interface Parameter {
 export type ParametersAsObject = Record<string, Primitives | Primitives[]>;
 
 export type CleanUpCallback = () => void;
+
+export interface ThemeOptionsWithThemeArn {
+    themeArn: string;
+}
+
+export type ThemeOptions = ThemeOptionsWithThemeArn;

@@ -6,6 +6,7 @@ import {ChangeEventLevel, ChangeEventName, MessageEventName} from '@common/event
 import {VisualExperience} from '@experience/visual-experience/visual-experience';
 import {ControlExperience} from '@experience/control-experience/control-experience';
 import {InfoMessageEventName} from '@common/events/messages';
+import {SDK_VERSION} from '@experience/base-experience/frame/experience-frame';
 
 describe('VisualExperience', () => {
     let TEST_CONTAINER: HTMLElement;
@@ -14,6 +15,7 @@ describe('VisualExperience', () => {
     const TEST_VISUAL_ID = 'testVisualId';
     const TEST_CONTEXT_ID = 'testContextId';
     const TEST_GUID = 'testGuid';
+    const TEST_THEME_ARN = 'arn:aws:quicksight::aws:theme/MIDNIGHT';
     const TEST_VISUAL_URL = `https://test.amazon.com/embed/guid/dashboards/${TEST_DASHBOARD_ID}/sheets/${TEST_SHEET_ID}/visuals/${TEST_VISUAL_ID}`;
     const TEST_OTHER_URL = `https://test.amazon.com/embed/guid/dashboards/${TEST_DASHBOARD_ID}`;
     const TEST_INTERNAL_EXPERIENCE = {
@@ -125,7 +127,48 @@ describe('VisualExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            'https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&fitToIframeWidth=true&contextId=testContextId&discriminator=0#'
+            'https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=2.5.0&fitToIframeWidth=true&contextId=testContextId&discriminator=0#'
+        );
+    });
+
+    it('should create visual experience with themeArn and format experience URL', () => {
+        const frameOptions = {
+            url: `${TEST_VISUAL_URL}?test=test`,
+            container: TEST_CONTAINER,
+            width: '800px',
+            onChange: onChangeSpy,
+        };
+
+        const contentOptions = {
+            themeOptions: {themeArn: TEST_THEME_ARN},
+        };
+
+        const visualExperience = new VisualExperience(
+            frameOptions,
+            contentOptions,
+            TEST_CONTROL_OPTIONS,
+            new Set<string>()
+        );
+
+        expect(typeof visualExperience.send).toEqual('function');
+        expect(typeof visualExperience.setParameters).toEqual('function');
+        expect(onChangeSpy).toHaveBeenCalledWith(
+            {
+                eventName: ChangeEventName.FRAME_STARTED,
+                eventLevel: ChangeEventLevel.INFO,
+                message: 'Creating the frame',
+                data: {
+                    experience: TEST_INTERNAL_EXPERIENCE,
+                },
+            },
+            {frame: null}
+        );
+
+        const iFrame = TEST_CONTAINER.querySelector('iframe');
+        expect(iFrame).toBeDefined();
+
+        expect(iFrame?.src).toEqual(
+            `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitToIframeWidth=true&themeArn=arn%3Aaws%3Aquicksight%3A%3Aaws%3Atheme%2FMIDNIGHT&contextId=testContextId&discriminator=0#`
         );
     });
 
@@ -173,7 +216,7 @@ describe('VisualExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            'https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&fitToIframeWidth=true&contextId=testContextId&discriminator=0#p.State=CT'
+            `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitToIframeWidth=true&contextId=testContextId&discriminator=0#p.State=CT`
         );
     });
 
@@ -304,10 +347,10 @@ describe('VisualExperience', () => {
             const iframe = TEST_CONTAINER.querySelector('iframe');
             expect(iframe).toBeDefined();
             expect(iframe?.src).toEqual(
-                'https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&fitToIframeWidth=true&contextId=testContextId&discriminator=0#p.State=CT'
+                `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitToIframeWidth=true&contextId=testContextId&discriminator=0#p.State=CT`
             );
 
-            expect(iframe?.height).toEqual('0px');
+            expect(iframe?.height).toEqual('100%');
 
             controlExperience.controlFrameMessageListener(
                 new MessageEvent('message', {
@@ -329,6 +372,19 @@ describe('VisualExperience', () => {
         let visualExperience: VisualExperience;
         const mockSend = jest.fn();
         const ACTIONS_TEST_CONTAINER = window.document.createElement('div');
+
+        const FILTER_GROUPS = [
+            {
+                FilterGroupId: '123',
+                Filters: [],
+                ScopeConfiguration: {
+                    AllSheets: true,
+                },
+                CrossDataset: 'ALL_DATASETS',
+                Status: 'ENABLED,',
+            },
+        ];
+
         const frameOptions = {
             url: TEST_VISUAL_URL,
             container: ACTIONS_TEST_CONTAINER,
@@ -338,10 +394,69 @@ describe('VisualExperience', () => {
 
         beforeEach(() => {
             visualExperience = new VisualExperience(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
-
             ACTIONS_TEST_CONTAINER.querySelector('iframe')?.dispatchEvent(new Event('load'));
-
+            mockSend.mockClear();
             jest.spyOn(visualExperience, 'send').mockImplementation(mockSend);
+        });
+
+        it('should emit ADD_FILTER_GROUPS event when addFilterGroups is called', () => {
+            visualExperience.addFilterGroups(FILTER_GROUPS);
+
+            expect(visualExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.ADD_FILTER_GROUPS,
+                })
+            );
+        });
+
+        it('should emit UPDATE_FILTER_GROUPS event when updateFilterGroups is called', () => {
+            visualExperience.updateFilterGroups(FILTER_GROUPS);
+
+            expect(visualExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.UPDATE_FILTER_GROUPS,
+                })
+            );
+        });
+
+        it('should emit REMOVE_FILTER_GROUPS event when removeFilterGroups is called with models', () => {
+            visualExperience.removeFilterGroups(FILTER_GROUPS);
+
+            expect(visualExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.REMOVE_FILTER_GROUPS,
+                })
+            );
+        });
+
+        it('should emit REMOVE_FILTER_GROUPS event when removeFilterGroups is called with ids', () => {
+            visualExperience.removeFilterGroups(FILTER_GROUPS.map(filterGroup => filterGroup.FilterGroupId));
+
+            expect(visualExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.REMOVE_FILTER_GROUPS,
+                })
+            );
+        });
+
+        it('should emit GET_FILTER_GROUPS_FOR_VISUAL event when getFilterGroups is called', () => {
+            mockSend.mockResolvedValue({message: []});
+            visualExperience.getFilterGroups();
+
+            expect(visualExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.GET_FILTER_GROUPS_FOR_VISUAL,
+                })
+            );
+        });
+
+        it('should throw error when getFilterGroups returns undefined message', async () => {
+            mockSend.mockResolvedValue({});
+            const wrapper = async () => {
+                return await visualExperience.getFilterGroups();
+            };
+
+            await expect(wrapper).rejects.toThrowError('Failed to retrieve filter groups for the visual');
         });
 
         it('should emit ADD_VISUAL_ACTIONS event when addVisualActions is called', () => {
@@ -381,7 +496,7 @@ describe('VisualExperience', () => {
         });
 
         it('should emit GET_VISUAL_ACTIONS event when getVisualActions is called and return empty list if message is undefined', async () => {
-            mockSend.mockResolvedValue(undefined);
+            mockSend.mockResolvedValue({message: []});
             const val = await visualExperience.getActions();
 
             expect(visualExperience.send).toBeCalledWith(
@@ -391,6 +506,15 @@ describe('VisualExperience', () => {
             );
 
             expect(val).toEqual([]);
+        });
+
+        it('should throw error when getActions returns undefined message', async () => {
+            mockSend.mockResolvedValue({});
+            const wrapper = async () => {
+                return await visualExperience.getActions();
+            };
+
+            await expect(wrapper).rejects.toThrowError('Failed to retrieve the actions');
         });
 
         it('should emit REMOVE_VISUAL_ACTIONS event when removeVisualActions is called', () => {
@@ -411,6 +535,15 @@ describe('VisualExperience', () => {
             );
         });
 
+        it('should emit SET_THEME event when setTheme is called', () => {
+            visualExperience.setTheme(TEST_THEME_ARN);
+            expect(visualExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.SET_THEME,
+                })
+            );
+        });
+
         it('should emit RESET event when reset action is called', () => {
             visualExperience.reset();
 
@@ -427,6 +560,25 @@ describe('VisualExperience', () => {
                 eventName: MessageEventName.SET_PARAMETERS,
                 message: params,
             });
+        });
+
+        it('should throw error when getActions returns undefined message', async () => {
+            mockSend.mockResolvedValue({});
+            const wrapper = async () => {
+                return await visualExperience.getActions();
+            };
+
+            await expect(wrapper).rejects.toThrowError('Failed to retrieve the actions');
+        });
+
+        it('should emit SET_THEME_OVERRIDE event when setThemeOverride is called', () => {
+            visualExperience.setThemeOverride({});
+
+            expect(visualExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.SET_THEME_OVERRIDE,
+                })
+            );
         });
     });
 });

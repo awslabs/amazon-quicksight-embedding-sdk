@@ -2,3 +2,5 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export * from './types';
+export * from './q-search-experience';
+export * from './frame/q-search-experience-frame';

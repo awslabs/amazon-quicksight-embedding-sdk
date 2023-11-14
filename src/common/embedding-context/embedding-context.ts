@@ -7,7 +7,7 @@ import {
     ExperienceFrameMetadata,
     IEmbeddingContext,
 } from '@common/embedding-context/types';
-import {FrameOptions} from '../../experiences/base-experience';
+import {FrameOptions} from '@experience/base-experience/types';
 import {ControlOptions} from '@experience/control-experience/types';
 import {VisualContentOptions} from '@experience/visual-experience/types';
 import {VisualExperience} from '@experience/visual-experience/visual-experience';
@@ -23,6 +23,9 @@ import {ControlExperience} from '@experience/control-experience/control-experien
 import {EventManager} from '@common/event-manager/event-manager';
 import {DefaultLogger, LogProvider} from '../log-provider/log-provider';
 
+/**
+ * The embedding context creates an additional zero-pixel iframe and appends it into the body element on the page to centralize communication between the SDK and the embedded QuickSight content
+ */
 export class EmbeddingContext implements IEmbeddingContext {
     private readonly experienceIdentifiers: Set<string>;
     private readonly eventManager: EventManager;

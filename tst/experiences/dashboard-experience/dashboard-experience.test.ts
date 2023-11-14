@@ -5,12 +5,14 @@ import {DashboardExperience} from '@experience/dashboard-experience/dashboard-ex
 import {ControlExperience} from '@experience/control-experience/control-experience';
 import {ChangeEventLevel, ChangeEventName, MessageEventName} from '@common/events/types';
 import {InfoMessageEventName} from '@common/events/messages';
+import {SDK_VERSION} from '@experience/base-experience/frame/experience-frame';
 
 describe('DashboardExperience', () => {
     let TEST_CONTAINER: HTMLElement;
     const TEST_DASHBOARD_ID = 'testDashboardId';
     const TEST_CONTEXT_ID = 'testContextId';
     const TEST_GUID = 'testGuid';
+    const TEST_THEME_ARN = 'arn:aws:quicksight::aws:theme/MIDNIGHT';
     const TEST_DASHBOARD_URL = `https://test.amazon.com/embed/guid/dashboards/${TEST_DASHBOARD_ID}`;
     const TEST_OTHER_URL = 'https://test.amazon.com/embedding/guid/start/dashboards';
     const TEST_UNRECOGNIZED_CONTENT_OPTION = 'testUnrecognizedContentOption';
@@ -91,7 +93,7 @@ describe('DashboardExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            'https://test.amazon.com/embed/guid/dashboards/testDashboardId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&footerPaddingEnabled=true&printEnabled=true&undoRedoDisabled=true&resetDisabled=true&contextId=testContextId&discriminator=0#'
+            `https://test.amazon.com/embed/guid/dashboards/testDashboardId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&footerPaddingEnabled=true&printEnabled=true&undoRedoDisabled=true&resetDisabled=true&contextId=testContextId&discriminator=0#`
         );
     });
 
@@ -203,6 +205,36 @@ describe('DashboardExperience', () => {
         expect(url.searchParams.has('sheetTabsDisabled')).toBeTruthy();
         expect(url.searchParams.has('resizeOnSheetChange')).toBeTruthy();
         expect(url.searchParams.has('footerPaddingEnabled')).toBeFalsy();
+    });
+
+    it('should create dashboard frame with themeArn options', () => {
+        const frameOptions = {
+            url: TEST_DASHBOARD_URL,
+            container: TEST_CONTAINER,
+            width: '800px',
+            onChange: onChangeSpy,
+        };
+        const contentOptions: DashboardContentOptions = {
+            themeOptions: {themeArn: TEST_THEME_ARN},
+            attributionOptions: {
+                overlayContent: true,
+            },
+        };
+        const dashboardFrame = new DashboardExperience(
+            frameOptions,
+            contentOptions,
+            TEST_CONTROL_OPTIONS,
+            new Set<string>()
+        );
+
+        expect(typeof dashboardFrame.send).toEqual('function');
+        expect(typeof dashboardFrame.setParameters).toEqual('function');
+        expect(typeof dashboardFrame.initiatePrint).toEqual('function');
+        const iFrame = TEST_CONTAINER.querySelector('iframe');
+        expect(iFrame).toBeDefined();
+
+        const url = new URL(iFrame!.src);
+        expect(url.searchParams.has('themeArn')).toBeTruthy();
     });
 
     it('should create dashboard frame with attribution options', () => {
@@ -337,7 +369,7 @@ describe('DashboardExperience', () => {
             const iFrame = TEST_CONTAINER.querySelector('iframe');
             expect(iFrame).toBeDefined();
 
-            expect(iFrame?.height).toEqual('0px');
+            expect(iFrame?.height).toEqual('100%');
 
             controlExperience.controlFrameMessageListener(
                 new MessageEvent('message', {
@@ -359,10 +391,23 @@ describe('DashboardExperience', () => {
             expect(iFrame?.height).toEqual('500px');
         });
     });
+
     describe('Actions', () => {
         let dashboardExperience: DashboardExperience;
         const mockSend = jest.fn();
         const ACTIONS_TEST_CONTAINER = window.document.createElement('div');
+
+        const FILTER_GROUPS = [
+            {
+                FilterGroupId: '123',
+                Filters: [],
+                ScopeConfiguration: {
+                    AllSheets: true,
+                },
+                CrossDataset: 'ALL_DATASETS',
+                Status: 'ENABLED,',
+            },
+        ];
 
         const frameOptions = {
             url: TEST_DASHBOARD_URL,
@@ -373,7 +418,88 @@ describe('DashboardExperience', () => {
         beforeEach(() => {
             dashboardExperience = new DashboardExperience(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
             ACTIONS_TEST_CONTAINER.querySelector('iframe')?.dispatchEvent(new Event('load'));
+            mockSend.mockClear();
             jest.spyOn(dashboardExperience, 'send').mockImplementation(mockSend);
+        });
+
+        it('should emit ADD_FILTER_GROUPS event when addFilterGroups is called', () => {
+            dashboardExperience.addFilterGroups(FILTER_GROUPS);
+
+            expect(dashboardExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.ADD_FILTER_GROUPS,
+                })
+            );
+        });
+
+        it('should emit UPDATE_FILTER_GROUPS event when updateFilterGroups is called', () => {
+            dashboardExperience.updateFilterGroups(FILTER_GROUPS);
+
+            expect(dashboardExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.UPDATE_FILTER_GROUPS,
+                })
+            );
+        });
+
+        it('should emit REMOVE_FILTER_GROUPS event when removeFilterGroups is called with models', () => {
+            dashboardExperience.removeFilterGroups(FILTER_GROUPS);
+
+            expect(dashboardExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.REMOVE_FILTER_GROUPS,
+                })
+            );
+        });
+
+        it('should emit REMOVE_FILTER_GROUPS event when removeFilterGroups is called with ids', () => {
+            dashboardExperience.removeFilterGroups(FILTER_GROUPS.map(filterGroup => filterGroup.FilterGroupId));
+
+            expect(dashboardExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.REMOVE_FILTER_GROUPS,
+                })
+            );
+        });
+
+        it('should emit GET_FILTER_GROUPS_FOR_SHEET event when getFilterGroupsForSheet is called', () => {
+            mockSend.mockResolvedValue({message: []});
+            dashboardExperience.getFilterGroupsForSheet(TEST_GUID);
+
+            expect(dashboardExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.GET_FILTER_GROUPS_FOR_SHEET,
+                })
+            );
+        });
+
+        it('should throw error when getFilterGroupsForSheet returns undefined message', async () => {
+            mockSend.mockResolvedValue({});
+            const wrapper = async () => {
+                return await dashboardExperience.getFilterGroupsForSheet(TEST_GUID);
+            };
+
+            await expect(wrapper).rejects.toThrowError('Failed to retrieve filter groups for the sheet');
+        });
+
+        it('should emit GET_FILTER_GROUPS_FOR_VISUAL event when getFilterGroupsForVisual is called', () => {
+            mockSend.mockResolvedValue({message: []});
+            dashboardExperience.getFilterGroupsForVisual(TEST_GUID, TEST_GUID);
+
+            expect(dashboardExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.GET_FILTER_GROUPS_FOR_VISUAL,
+                })
+            );
+        });
+
+        it('should throw error when getFilterGroupsForVisual returns undefined message', async () => {
+            mockSend.mockResolvedValue({});
+            const wrapper = async () => {
+                return await dashboardExperience.getFilterGroupsForVisual(TEST_GUID, TEST_GUID);
+            };
+
+            await expect(wrapper).rejects.toThrowError('Failed to retrieve filter groups for the visual');
         });
 
         it('should emit ADD_VISUAL_ACTIONS event when addVisualActions is called', () => {
@@ -413,12 +539,22 @@ describe('DashboardExperience', () => {
         });
 
         it('should emit GET_VISUAL_ACTIONS event when getVisualActions is called', () => {
+            mockSend.mockResolvedValue({message: []});
             dashboardExperience.getVisualActions(TEST_GUID, TEST_GUID);
             expect(dashboardExperience.send).toBeCalledWith(
                 expect.objectContaining({
                     eventName: MessageEventName.GET_VISUAL_ACTIONS,
                 })
             );
+        });
+
+        it('should throw error when getVisualActions returns undefined message', async () => {
+            mockSend.mockResolvedValue({});
+            const wrapper = async () => {
+                return await dashboardExperience.getVisualActions(TEST_GUID, TEST_GUID);
+            };
+
+            await expect(wrapper).rejects.toThrowError('Failed to retrieve the visual actions');
         });
 
         it('should emit REMOVE_VISUAL_ACTIONS event when removeVisualActions is called', () => {
@@ -435,6 +571,15 @@ describe('DashboardExperience', () => {
             expect(dashboardExperience.send).toBeCalledWith(
                 expect.objectContaining({
                     eventName: MessageEventName.REMOVE_VISUAL_ACTIONS,
+                })
+            );
+        });
+
+        it('should emit SET_THEME event when setTheme is called', () => {
+            dashboardExperience.setTheme(TEST_THEME_ARN);
+            expect(dashboardExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.SET_THEME,
                 })
             );
         });
@@ -468,7 +613,7 @@ describe('DashboardExperience', () => {
         });
 
         it('should emit GET_PARAMETERS event when getParameters is called', async () => {
-            mockSend.mockResolvedValue(undefined);
+            mockSend.mockResolvedValue({message: []});
 
             const val = await dashboardExperience.getParameters();
             expect(dashboardExperience.send).toBeCalledWith({
@@ -477,8 +622,17 @@ describe('DashboardExperience', () => {
             expect(val).toEqual([]);
         });
 
+        it('should throw error when getParameters returns undefined message', async () => {
+            mockSend.mockResolvedValue({});
+            const wrapper = async () => {
+                return await dashboardExperience.getParameters();
+            };
+
+            await expect(wrapper).rejects.toThrowError('Failed to retrieve the parameters');
+        });
+
         it('should emit GET_SHEETS event when getSheets is called', async () => {
-            mockSend.mockResolvedValue(undefined);
+            mockSend.mockResolvedValue({message: []});
 
             const val = await dashboardExperience.getSheets();
             expect(dashboardExperience.send).toBeCalledWith({
@@ -487,14 +641,31 @@ describe('DashboardExperience', () => {
             expect(val).toEqual([]);
         });
 
+        it('should throw error when getSheets returns undefined message', async () => {
+            mockSend.mockResolvedValue({});
+            const wrapper = async () => {
+                return await dashboardExperience.getSheets();
+            };
+
+            await expect(wrapper).rejects.toThrowError('Failed to retrieve the sheets');
+        });
+
         it('should emit GET_SELECTED_SHEET_ID event when getSelectedSheetId is called', async () => {
-            mockSend.mockResolvedValue(undefined);
+            mockSend.mockResolvedValue({message: TEST_GUID});
             const val = await dashboardExperience.getSelectedSheetId();
             expect(dashboardExperience.send).toBeCalledWith({
                 eventName: MessageEventName.GET_SELECTED_SHEET_ID,
             });
+            expect(val).toEqual(TEST_GUID);
+        });
 
-            expect(val).toEqual('');
+        it('should throw error when getSelectedSheetId returns undefined message', async () => {
+            mockSend.mockResolvedValue({});
+            const wrapper = async () => {
+                return await dashboardExperience.getSelectedSheetId();
+            };
+
+            await expect(wrapper).rejects.toThrowError('Failed to retrieve the selected sheet id');
         });
 
         it('should emit SET_SELECTED_SHEET_ID event when getSelectedSheetId is called', () => {
@@ -527,17 +698,25 @@ describe('DashboardExperience', () => {
         });
 
         it('should emit GET_SHEET_VISUALS event when getSheetVisuals is called', async () => {
-            mockSend.mockResolvedValue(undefined);
+            mockSend.mockResolvedValue({message: []});
 
-            const val = await dashboardExperience.getSheetVisuals('1234');
+            const val = await dashboardExperience.getSheetVisuals(TEST_GUID);
             expect(dashboardExperience.send).toBeCalledWith({
                 eventName: MessageEventName.GET_SHEET_VISUALS,
                 message: {
-                    SheetId: '1234',
+                    SheetId: TEST_GUID,
                 },
             });
-
             expect(val).toEqual([]);
+        });
+
+        it('should throw error when getSheetVisuals returns undefined message', async () => {
+            mockSend.mockResolvedValue({});
+            const wrapper = async () => {
+                return await dashboardExperience.getSheetVisuals(TEST_GUID);
+            };
+
+            await expect(wrapper).rejects.toThrowError('Failed to retrieve the sheet visuals');
         });
 
         it('should emit RESET event when reset is called', () => {
@@ -545,6 +724,16 @@ describe('DashboardExperience', () => {
             expect(dashboardExperience.send).toBeCalledWith({
                 eventName: MessageEventName.RESET,
             });
+        });
+
+        it('should emit SET_THEME_OVERRIDE event when setThemeOverride is called', () => {
+            dashboardExperience.setThemeOverride({});
+
+            expect(dashboardExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.SET_THEME_OVERRIDE,
+                })
+            );
         });
     });
 });

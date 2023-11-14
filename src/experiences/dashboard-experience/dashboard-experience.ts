@@ -1,7 +1,7 @@
 // Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import {Parameter, ParametersAsObject} from '../../common/types';
+import {Parameter, ParametersAsObject} from '../../common';
 import {DashboardExperienceFrame} from './frame/dashboard-experience-frame';
 import {
     DashboardContentOptions,
@@ -21,6 +21,7 @@ import {ExperienceFrameMetadata} from '../../common/embedding-context';
 import {BaseExperience} from '@experience/base-experience/base-experience';
 import {ChangeEvent, EmbeddingMessageEvent, ResponseMessage} from '@common/events/events';
 import {ChangeEventLevel, ChangeEventName, EmbeddingEvents, MessageEventName} from '@common/events/types';
+import type {FilterGroup, ThemeConfiguration} from '@aws-sdk/client-quicksight';
 
 export class DashboardExperience extends BaseExperience<
     DashboardContentOptions,
@@ -82,13 +83,62 @@ export class DashboardExperience extends BaseExperience<
     getParameters = async (): Promise<Parameter[]> => {
         const response = await this.send<Parameter[]>(new EmbeddingMessageEvent(MessageEventName.GET_PARAMETERS));
 
-        return response?.message ?? [];
+        if (!Array.isArray(response?.message)) {
+            throw new Error('Failed to retrieve the parameters');
+        }
+
+        return response.message;
     };
 
     getSheets = async (): Promise<Sheet[]> => {
         const response = await this.send<Sheet[]>(new EmbeddingMessageEvent(MessageEventName.GET_SHEETS));
 
-        return response?.message ?? [];
+        if (!Array.isArray(response?.message)) {
+            throw new Error('Failed to retrieve the sheets');
+        }
+
+        return response.message;
+    };
+
+    addFilterGroups = async (filterGroups: FilterGroup[]): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.ADD_FILTER_GROUPS, filterGroups));
+    };
+
+    updateFilterGroups = async (filterGroups: FilterGroup[]): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.UPDATE_FILTER_GROUPS, filterGroups));
+    };
+
+    removeFilterGroups = async (filterGroups: FilterGroup[] | string[]): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.REMOVE_FILTER_GROUPS, filterGroups));
+    };
+
+    getFilterGroupsForSheet = async (sheetId: string): Promise<FilterGroup[]> => {
+        const response = await this.send<FilterGroup[]>(
+            new EmbeddingMessageEvent(MessageEventName.GET_FILTER_GROUPS_FOR_SHEET, {
+                SheetId: sheetId,
+            })
+        );
+
+        if (!Array.isArray(response?.message)) {
+            throw new Error('Failed to retrieve filter groups for the sheet');
+        }
+
+        return response.message;
+    };
+
+    getFilterGroupsForVisual = async (sheetId: string, visualId: string): Promise<FilterGroup[]> => {
+        const response = await this.send<FilterGroup[]>(
+            new EmbeddingMessageEvent(MessageEventName.GET_FILTER_GROUPS_FOR_VISUAL, {
+                SheetId: sheetId,
+                VisualId: visualId,
+            })
+        );
+
+        if (!Array.isArray(response?.message)) {
+            throw new Error('Failed to retrieve filter groups for the visual');
+        }
+
+        return response.message;
     };
 
     getVisualActions = async (sheetId: string, visualId: string): Promise<VisualAction[]> => {
@@ -99,7 +149,11 @@ export class DashboardExperience extends BaseExperience<
             })
         );
 
-        return response?.message ?? [];
+        if (!Array.isArray(response?.message)) {
+            throw new Error('Failed to retrieve the visual actions');
+        }
+
+        return response.message;
     };
 
     addVisualActions = async (sheetId: string, visualId: string, actions: VisualAction[]): Promise<ResponseMessage> => {
@@ -125,13 +179,25 @@ export class DashboardExperience extends BaseExperience<
     getSelectedSheetId = async (): Promise<string> => {
         const response = await this.send<string>(new EmbeddingMessageEvent(MessageEventName.GET_SELECTED_SHEET_ID));
 
-        return response?.message ?? '';
+        if (!response?.message) {
+            throw new Error('Failed to retrieve the selected sheet id');
+        }
+
+        return response.message;
     };
 
     setSelectedSheetId = async (sheetId: string): Promise<ResponseMessage> => {
         return this.send(
             new EmbeddingMessageEvent(MessageEventName.SET_SELECTED_SHEET_ID, {
                 SheetId: sheetId,
+            })
+        );
+    };
+
+    setTheme = async (themeArn: string): Promise<ResponseMessage> => {
+        return this.send(
+            new EmbeddingMessageEvent(MessageEventName.SET_THEME, {
+                ThemeArn: themeArn,
             })
         );
     };
@@ -169,7 +235,11 @@ export class DashboardExperience extends BaseExperience<
             })
         );
 
-        return response?.message ?? [];
+        if (!Array.isArray(response?.message)) {
+            throw new Error('Failed to retrieve the sheet visuals');
+        }
+
+        return response.message;
     };
 
     setParameters = async (parameters: Parameter[]): Promise<ResponseMessage> => {
@@ -178,6 +248,14 @@ export class DashboardExperience extends BaseExperience<
 
     reset = async (): Promise<ResponseMessage> => {
         return this.send(new EmbeddingMessageEvent(MessageEventName.RESET));
+    };
+
+    setThemeOverride = async (themeOverride: ThemeConfiguration): Promise<ResponseMessage> => {
+        return this.send(
+            new EmbeddingMessageEvent(MessageEventName.SET_THEME_OVERRIDE, {
+                ThemeOverride: themeOverride,
+            })
+        );
     };
 
     protected extractExperienceFromUrl = (url: string): IDashboardExperience => {
@@ -223,6 +301,7 @@ export class DashboardExperience extends BaseExperience<
             attributionOptions,
             sheetOptions,
             toolbarOptions,
+            themeOptions,
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onMessage,
             ...unrecognizedContentOptions
@@ -277,6 +356,10 @@ export class DashboardExperience extends BaseExperience<
 
         if (sheetOptions?.emitSizeChangedEventOnSheetChange) {
             transformedContentOptions.resizeOnSheetChange = true;
+        }
+
+        if (themeOptions?.themeArn) {
+            transformedContentOptions.themeArn = themeOptions.themeArn;
         }
 
         return transformedContentOptions;

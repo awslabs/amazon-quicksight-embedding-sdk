@@ -8,7 +8,7 @@ import {
     IVisualExperience,
     VisualContentOptions,
 } from './types';
-import {Parameter, ParametersAsObject} from '../../common/types';
+import {Parameter, ParametersAsObject} from '../../common';
 import {VisualExperienceFrame} from './frame/visual-experience-frame';
 import {ControlOptions} from '../control-experience';
 import {VisualAction} from '../dashboard-experience';
@@ -16,6 +16,7 @@ import {BaseExperience} from '@experience/base-experience/base-experience';
 import {ChangeEvent, EmbeddingMessageEvent, ResponseMessage} from '@common/events/events';
 import {ChangeEventLevel, ChangeEventName, EmbeddingEvents, MessageEventName} from '@common/events/types';
 import {ExperienceFrameMetadata} from '@common/embedding-context/types';
+import type {FilterGroup, ThemeConfiguration} from '@aws-sdk/client-quicksight';
 
 export class VisualExperience extends BaseExperience<
     VisualContentOptions,
@@ -66,12 +67,40 @@ export class VisualExperience extends BaseExperience<
         return this.send(new EmbeddingMessageEvent(MessageEventName.RESET));
     };
 
+    addFilterGroups = async (filterGroups: FilterGroup[]): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.ADD_FILTER_GROUPS, filterGroups));
+    };
+
+    updateFilterGroups = async (filterGroups: FilterGroup[]): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.UPDATE_FILTER_GROUPS, filterGroups));
+    };
+
+    removeFilterGroups = async (filterGroups: FilterGroup[] | string[]): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.REMOVE_FILTER_GROUPS, filterGroups));
+    };
+
+    getFilterGroups = async (): Promise<FilterGroup[]> => {
+        const response = await this.send<FilterGroup[]>(
+            new EmbeddingMessageEvent(MessageEventName.GET_FILTER_GROUPS_FOR_VISUAL)
+        );
+
+        if (!Array.isArray(response?.message)) {
+            throw new Error('Failed to retrieve filter groups for the visual');
+        }
+
+        return response.message;
+    };
+
     getActions = async (): Promise<VisualAction[]> => {
         const response = await this.send<VisualAction[]>(
             new EmbeddingMessageEvent(MessageEventName.GET_VISUAL_ACTIONS)
         );
 
-        return response?.message ?? [];
+        if (!Array.isArray(response?.message)) {
+            throw new Error('Failed to retrieve the actions');
+        }
+
+        return response.message;
     };
 
     addActions = async (actions: VisualAction[]): Promise<ResponseMessage> => {
@@ -94,6 +123,18 @@ export class VisualExperience extends BaseExperience<
         return this.send(
             new EmbeddingMessageEvent(MessageEventName.REMOVE_VISUAL_ACTIONS, {
                 Actions: actions,
+            })
+        );
+    };
+
+    setTheme = async (themeArn: string): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.SET_THEME, {ThemeArn: themeArn}));
+    };
+
+    setThemeOverride = async (themeOverride: ThemeConfiguration): Promise<ResponseMessage> => {
+        return this.send(
+            new EmbeddingMessageEvent(MessageEventName.SET_THEME_OVERRIDE, {
+                ThemeOverride: themeOverride,
             })
         );
     };
@@ -139,6 +180,7 @@ export class VisualExperience extends BaseExperience<
             fitToIframeWidth,
             locale,
             parameters,
+            themeOptions,
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onMessage,
             ...unrecognizedContentOptions
@@ -162,6 +204,10 @@ export class VisualExperience extends BaseExperience<
                 },
                 {}
             );
+        }
+
+        if (themeOptions?.themeArn) {
+            transformedContentOptions.themeArn = themeOptions.themeArn;
         }
 
         return transformedContentOptions;

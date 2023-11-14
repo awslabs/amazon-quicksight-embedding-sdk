@@ -19,7 +19,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
 ...
-<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.4.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.5.0/dist/quicksight-embedding-js-sdk.min.js"></script>
 <script type="text/javascript">
     const onLoad = async () => {
         const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
@@ -419,6 +419,13 @@ export class DashboardExperience extends BaseExperience<DashboardContentOptions,
    getVisualActions: (sheetId: string, visualId: string) => Promise<VisualAction[]>;
    addVisualActions: (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
    setVisualActions: (sheetId: string, visualId: string, actions: VisualAction[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   getFilterGroupsForSheet: (sheetId: string) => Promise<FilterGroup[]>;
+   getFilterGroupsForVisual: (sheetId: string, visualId: string) => Promise<FilterGroup[]>;
+   addFilterGroups: (filterGroups: FilterGroup[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   updateFilterGroups: (filterGroups: FilterGroup[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   removeFilterGroups: (filterGroupsOrIds: FilterGroup[] | string[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   setTheme:(themeArn: string) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   setThemeOverride: (themeOverride: ThemeConfiguration) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
    getSelectedSheetId: () => Promise<string>;
    setSelectedSheetId: (sheetId: string) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
    navigateToDashboard: (dashboardId: string, navigateToDashboardOptions?: NavigateToDashboardOptions) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
@@ -440,7 +447,7 @@ export class DashboardExperience extends BaseExperience<DashboardContentOptions,
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.4.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.5.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedDashboard = async() => {
                 const {
@@ -831,6 +838,148 @@ If you want to set actions of a visual of the Amazon quicksight dashboard, use t
 
 This method replaces all existing actions of the visual with the new actions provided in the request
 
+
+#### 🔹 getFilterGroupsForSheet *(sheetId: string) => Promise&lt;FilterGroup[]&gt;*
+
+If you want to get the list of filter groups for a sheet from the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    embeddedDashboardExperience.getFilterGroupsForSheet('<YOUR_SHEET_ID>');
+```
+
+#### 🔹 getFilterGroupsForVisual *(sheetId: string, visualId: string) => Promise&lt;FilterGroup[]&gt;*
+
+If you want to get the list of filter groups for a visual from the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    embeddedDashboardExperience.getFilterGroupsForVisual('<YOUR_SHEET_ID>', '<YOUR_VISUAL_ID>');
+```
+
+#### 🔹 addFilterGroups *(filterGroups: FilterGroup[]) => Promise&lt;ResponseMessage&gt;*
+
+If you want to add filter groups to the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    embeddedDashboardExperience.addFilterGroups([
+        {
+            FilterGroupId: '<NEW_FILTER_GROUP_ID>',
+            Filters: [
+                {
+                    CategoryFilter: {
+                        Column: {
+                            ColumnName: '<YOUR_COLUMN_NAME>',
+                            DataSetIdentifier: '<YOUR_DATASET_IDENTIFIER>'
+                        },
+                        FilterId: '<NEW_FILTER_GROUP_ID>',
+                        Configuration: {
+                            FilterListConfiguration: {
+                                MatchOperator: 'CONTAINS',
+                                NullOption: 'NON_NULLS_ONLY',
+                                CategoryValues: [
+                                    '<A_VALUE_IN_THE_COLUMN>'
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            ScopeConfiguration: {
+                SelectedSheets: {
+                    SheetVisualScopingConfigurations: [
+                        {
+                            Scope: 'SELECTED_VISUALS',
+                            VisualIds: [
+                                '<A_VISUAL_ID_IN_DASHBOARD>'
+                            ],
+                            SheetId: '<YOUR_SHEET_ID>' // Only the selected sheet id is supported
+                        }
+                    ]
+                }
+            },
+            CrossDataset: 'SINGLE_DATASET',
+            Status: 'ENABLED'
+        }
+    ]);
+```
+
+Filter groups can only be added to the currently selected sheet.
+
+#### 🔹 updateFilterGroups *(filterGroups: FilterGroup[]) => Promise&lt;ResponseMessage&gt;*
+
+If you want to update filter groups of the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    embeddedDashboardExperience.updateFilterGroups([
+        {
+            FilterGroupId: '<EXISTING_FILTER_GROUP_ID>',
+            Filters: [
+                {
+                    NumericEqualityFilter: {
+                        Column: {
+                            ColumnName: '<YOUR_COLUMN_NAME>',
+                            DataSetIdentifier: '<YOUR_DATASET_IDENTIFIER>'
+                        },
+                        FilterId: '<FILTER_GROUP_ID>',
+                        MatchOperator: 'EQUALS',
+                        NullOption: 'ALL_VALUES',
+                        Value: <SOME_NUMERIC_VALUE_IN_THE_COLUMN>
+                    }
+                }
+            ],
+            ScopeConfiguration: {
+                SelectedSheets: {
+                    SheetVisualScopingConfigurations: [
+                        {
+                            Scope: 'ALL_VISUALS',
+                            SheetId: '<YOUR_SHEET_ID>' // Only the selected sheet id is supported
+                        }
+                    ]
+                }
+            },
+            CrossDataset: 'SINGLE_DATASET',
+            Status: 'ENABLED'
+        }
+    ]);
+```
+
+Only the filter groups of the currently selected sheet can be updated.
+
+#### 🔹 removeFilterGroups *(filterGroups: FilterGroup[]) => Promise&lt;ResponseMessage&gt;*
+
+If you want to remove filter groups of the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    embeddedDashboardExperience.removeFilterGroups([
+        '<EXISTING_FILTER_GROUP_ID>',
+        // ...
+    ]);
+```
+
+Only the filter groups of the currently selected sheet can be removed.
+
+#### 🔹 setTheme *(themeArn: string) => Promise&lt;ResponseMessage&gt;*
+
+If you want to set theme for the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    embeddedDashboardExperience.setTheme('<YOUR_THEME_ARN>');
+```
+
+#### 🔹 setThemeOverride *(themeOverride: ThemeConfiguration) => Promise&lt;ResponseMessage&gt;*
+
+If you want to override the current theme configuration for the Amazon quicksight dashboard, use the below method:
+
+```javascript
+    embeddedDashboardExperience.setThemeOverride({
+        UIColorPalette: {
+            PrimaryForeground: '#FFCCCC',
+            PrimaryBackground: '#555555',
+            //...
+        },
+        // ...
+    });
+```
+
 #### 🔹 initiatePrint *() => Promise&lt;ResponseMessage&gt;*
 
 This feature allows you to initiate dashboard print, from parent website, without a navbar print icon, in the dashboard. To initiate a dashboard print from parent website, use dashboard.initiatePrint(), for example:
@@ -877,6 +1026,7 @@ If you want to toggle the visibility state of the bookmarks pane, use the below 
 ```javascript
     embeddedDashboardExperience.toggleBookmarksPane();
 ```
+***
 
 &nbsp;  
 ## Visual Embedding
@@ -900,6 +1050,12 @@ export class VisualExperience extends BaseExperience<VisualContentOptions, Inter
    addActions: (actions: VisualAction[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
    setActions: (actions: VisualAction[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
    removeActions: (actions: VisualAction[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   getFilterGroups: () => Promise<FilterGroup[]>;
+   addFilterGroups: (filterGroups: FilterGroup[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   updateFilterGroups: (filterGroups: FilterGroup[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   removeFilterGroups: (filterGroupsOrIds: FilterGroup[] | string[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   setTheme: (themeArn: string) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   setThemeOverride: (themeOverride: ThemeConfiguration) => Promise<SuccessResponseMessage | ErrorResponseMessage>
    send: <EventMessageValue extends EventMessageValues>(messageEvent: EmbeddingMessageEvent<MessageEventName>) => Promise<ResponseMessage<EventMessageValue>>;
 }
 
@@ -915,7 +1071,7 @@ export class VisualExperience extends BaseExperience<VisualContentOptions, Inter
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.4.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.5.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedVisual = async() => {    
                 const {
@@ -1170,6 +1326,141 @@ If you want to set actions of the visual, use the below method:
 
 This method replaces all existing actions of the visual with the new actions provided in the request
 
+#### 🔹 getFilterGroups *() => Promise&lt;VisualAction[]&gt;*
+
+If you want to get the list of filter groups for the visual, use the below method:
+
+```javascript
+    embeddedVisualExperience.getFilterGroups();
+```
+
+#### 🔹 addFilterGroups *(filterGroups: FilterGroup[]) => Promise&lt;ResponseMessage&gt;*
+
+If you want to add filter groups to the visual, use the below method:
+
+```javascript
+    embeddedVisualExperience.addFilterGroups([
+        {
+            FilterGroupId: '<NEW_FILTER_GROUP_ID>',
+            Filters: [
+                {
+                    NumericRangeFilter: {
+                        Column: {
+                            ColumnName: '<YOUR_COLUMN_NAME>',
+                            DataSetIdentifier: '<YOUR_DATASET_IDENTIFIER>'
+                        },
+                        FilterId: '<NEW_FILTER_GROUP_ID>',
+                        NullOption: 'ALL_VALUES',
+                        IncludeMaximum: true,
+                        IncludeMinimum: true,
+                        RangeMaximum: {
+                            StaticValue: <SOME_NUMERIC_VALUE_IN_THE_COLUMN>
+                        },
+                        RangeMinimum: {
+                            StaticValue: <SOME_NUMERIC_VALUE_IN_THE_COLUMN>
+                        }
+                    }
+                }
+            ],
+            ScopeConfiguration: {
+                SelectedSheets: {
+                    SheetVisualScopingConfigurations: [
+                        {
+                            Scope: 'SELECTED_VISUALS',
+                            VisualIds: [
+                                '<THE_EMBEDDED_VISUAL_ID>' // Only the embedded visual's id is supported
+                            ],
+                            SheetId: '<YOUR_SHEET_ID>' // Only the id of the sheet the embedded visual is on is supported
+                        }
+                    ]
+                }
+            },
+            CrossDataset: 'SINGLE_DATASET',
+            Status: 'ENABLED'
+        }
+    ]);
+```
+
+#### 🔹 updateFilterGroups *(filterGroups: FilterGroup[]) => Promise&lt;ResponseMessage&gt;*
+
+If you want to update filter groups of the visual, use the below method:
+
+```javascript
+    embeddedVisualExperience.updateFilterGroups([
+        {
+            FilterGroupId: '<EXISTING_FILTER_GROUP_ID>',
+            Filters: [
+                {
+                    RelativeDatesFilter: {
+                        Column: {
+                            ColumnName: '<YOUR_COLUMN_NAME>',
+                            DataSetIdentifier: '<YOUR_DATASET_IDENTIFIER>'
+                        },
+                        FilterId: '<FILTER_GROUP_ID>',
+                        AnchorDateConfiguration: {
+                            AnchorOption: 'NOW'
+                        },
+                        TimeGranularity: 'YEAR',
+                        RelativeDateType: 'LAST',
+                        NullOption: 'NON_NULLS_ONLY',
+                        MinimumGranularity: 'DAY',
+                        RelativeDateValue: 3
+                    }
+                }
+            ],
+            ScopeConfiguration: {
+                SelectedSheets: {
+                    SheetVisualScopingConfigurations: [
+                        {
+                            Scope: 'SELECTED_VISUALS',
+                            VisualIds: [
+                                '<THE_EMBEDDED_VISUAL_ID>' // Only the embedded visual's id is supported
+                            ],
+                            SheetId: '<YOUR_SHEET_ID>' // Only the selected sheet id is supported
+                        }
+                    ]
+                }
+            },
+            CrossDataset: 'SINGLE_DATASET',
+            Status: 'ENABLED'
+        }
+    ]);
+```
+
+#### 🔹 removeFilterGroups *(filterGroups: FilterGroup[]) => Promise&lt;ResponseMessage&gt;*
+
+If you want to remove filter groups from the visual, use the below method:
+
+```javascript
+    embeddedVisualExperience.removeFilterGroups([
+        '<EXISTING_FILTER_GROUP_ID>',
+        // ...
+    ]);
+```
+
+#### 🔹 setTheme *(themeArn: string) => Promise&lt;ResponseMessage&gt;*
+
+If you want to set theme for the visual, use the below method:
+
+```javascript
+    embeddedVisualExperience.setTheme('<YOUR_THEME_ARN>');
+```
+
+#### 🔹 setThemeOverride *(themeOverride: ThemeConfiguration) => Promise&lt;ResponseMessage&gt;*
+
+If you want to override the current theme configuration for the visual, use the below method:
+
+```javascript
+    embeddedVisualExperience.setThemeOverride({
+        UIColorPalette: {
+            PrimaryForeground: '#FFCCCC',
+            PrimaryBackground: '#555555',
+            //...
+        },
+        // ...
+    });
+```
+
 #### 🔹 reset *() => Promise&lt;ResponseMessage&gt;*
 
 If you want to reset the changes, use the below method:
@@ -1213,7 +1504,7 @@ Use `embedConsole` method to embed a QuickSight dashboard. It returns a promise 
 
     <head>
         <title>Console Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.4.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.5.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedConsole = async() => {
                 const {
@@ -1321,7 +1612,7 @@ export class QSearchExperience extends BaseExperience<QSearchContentOptions, Int
 
     <head>
         <title>Q Search Bar Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.4.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.5.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQSearchBar = async() => {    
                 const {

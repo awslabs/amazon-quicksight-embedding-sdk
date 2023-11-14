@@ -2,7 +2,6 @@ import resolve from '@rollup/plugin-node-resolve';
 import pkg from './package.json';
 import typescript from '@rollup/plugin-typescript';
 import {babel} from '@rollup/plugin-babel';
-import flatDts from 'rollup-plugin-flat-dts';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 import analyze from 'rollup-plugin-analyzer';
 import terser from '@rollup/plugin-terser';
@@ -60,8 +59,7 @@ const productionPlugins = [
         summaryOnly: true,
     }),
     terser(),
-    sourcemaps(),
-    flatDts(),
+    sourcemaps()
 ];
 
 export default [
@@ -90,9 +88,9 @@ export default [
         ],
         plugins:
             mode === 'production'
-                ? [del({targets: 'dist/*'}), ...productionPlugins]
+                ? [del({targets: ['dist/*', 'types/*']}), ...productionPlugins]
                 : [
-                      del({targets: 'dist/*'}),
+                      del({targets: ['dist/*', 'types/*']}),
                       ...commonPlugins,
                       serve({
                           contentBase: 'dist',
