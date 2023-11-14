@@ -80,6 +80,18 @@ export class DashboardExperience extends BaseExperience<
         return this.send(new EmbeddingMessageEvent(MessageEventName.TOGGLE_BOOKMARKS_PANE));
     };
 
+    toggleThresholdAlertsPane = async (): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.TOGGLE_THRESHOLD_ALERTS_PANE));
+    };
+
+    toggleSchedulingPane = async (): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.TOGGLE_SCHEDULING_PANE));
+    };
+
+    toggleRecentSnapshotsPane = async (): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.TOGGLE_RECENT_SNAPSHOTS_PANE));
+    };
+
     getParameters = async (): Promise<Parameter[]> => {
         const response = await this.send<Parameter[]>(new EmbeddingMessageEvent(MessageEventName.GET_PARAMETERS));
 
@@ -366,6 +378,18 @@ export class DashboardExperience extends BaseExperience<
 
         if (toolbarOptions?.bookmarks === true) {
             transformedContentOptions.showBookmarksIcon = true;
+        }
+
+        if (toolbarOptions?.thresholdAlerts === true) {
+            transformedContentOptions.showThresholdAlertsIcon = true;
+        }
+
+        if (toolbarOptions?.scheduling === true) {
+            transformedContentOptions.showSchedulingIcon = true;
+        }
+
+        if (toolbarOptions?.recentSnapshots === true) {
+            transformedContentOptions.showRecentSnapshotsIcon = true;
         }
 
         if (sheetOptions?.initialSheetId) {

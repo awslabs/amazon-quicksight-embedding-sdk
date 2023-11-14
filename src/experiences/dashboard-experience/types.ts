@@ -39,6 +39,10 @@ export interface TransformedDashboardContentOptions extends BaseContentOptions {
     undoRedoDisabled?: boolean;
     printEnabled?: boolean;
     showBookmarksIcon?: boolean;
+    showThresholdAlertsIcon?: boolean;
+    showSchedulingIcon?: boolean;
+    showRecentSnapshotsIcon?: boolean;
+    hideAutoRefresh?: boolean;
     resetDisabled?: boolean;
     sheetTabsDisabled?: boolean;
     resizeOnSheetChange?: boolean;
@@ -59,6 +63,9 @@ export interface ToolbarOptions {
     undoRedo?: boolean | ToolbarOption;
     reset?: boolean | ToolbarOption;
     bookmarks?: boolean | ToolbarOption;
+    thresholdAlerts?: boolean | ToolbarOption;
+    scheduling?: boolean | ToolbarOption;
+    recentSnapshots?: boolean | ToolbarOption;
 }
 
 export interface AttributionOptions {

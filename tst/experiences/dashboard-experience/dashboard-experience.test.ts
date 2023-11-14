@@ -139,6 +139,9 @@ describe('DashboardExperience', () => {
                 reset: true,
                 export: true,
                 bookmarks: true,
+                scheduling: true,
+                recentSnapshots: true,
+                thresholdAlerts: true,
             },
         };
         const dashboardFrame = new DashboardExperience(
@@ -160,6 +163,9 @@ describe('DashboardExperience', () => {
         expect(url.searchParams.has('resetDisabled')).toBeFalsy();
         expect(url.searchParams.has('printEnabled')).toBeTruthy();
         expect(url.searchParams.has('showBookmarksIcon')).toBeTruthy();
+        expect(url.searchParams.has('showThresholdAlertsIcon')).toBeTruthy();
+        expect(url.searchParams.has('showSchedulingIcon')).toBeTruthy();
+        expect(url.searchParams.has('showRecentSnapshotsIcon')).toBeTruthy();
     });
 
     it('should create dashboard frame with toolbar options disabled', () => {
@@ -175,6 +181,9 @@ describe('DashboardExperience', () => {
                 reset: false,
                 export: false,
                 bookmarks: false,
+                scheduling: false,
+                recentSnapshots: false,
+                thresholdAlerts: false,
             },
         };
         const dashboardFrame = new DashboardExperience(
@@ -196,6 +205,9 @@ describe('DashboardExperience', () => {
         expect(url.searchParams.has('resetDisabled')).toBeTruthy();
         expect(url.searchParams.has('printEnabled')).toBeFalsy();
         expect(url.searchParams.has('showBookmarksIcon')).toBeFalsy();
+        expect(url.searchParams.has('showThresholdAlertsIcon')).toBeFalsy();
+        expect(url.searchParams.has('showSchedulingIcon')).toBeFalsy();
+        expect(url.searchParams.has('showRecentSnapshotsIcon')).toBeFalsy();
     });
 
     it('should create dashboard frame with sheet options', () => {
@@ -700,6 +712,27 @@ describe('DashboardExperience', () => {
             dashboardExperience.toggleBookmarksPane();
             expect(dashboardExperience.send).toBeCalledWith({
                 eventName: MessageEventName.TOGGLE_BOOKMARKS_PANE,
+            });
+        });
+
+        it('should emit TOGGLE_THRESHOLD_ALERTS_PANE event when toggleThresholdAlertsPane is called', () => {
+            dashboardExperience.toggleThresholdAlertsPane();
+            expect(dashboardExperience.send).toBeCalledWith({
+                eventName: MessageEventName.TOGGLE_THRESHOLD_ALERTS_PANE,
+            });
+        });
+
+        it('should emit TOGGLE_SCHEDULING_PANE event when toggleSchedulingPane is called', () => {
+            dashboardExperience.toggleSchedulingPane();
+            expect(dashboardExperience.send).toBeCalledWith({
+                eventName: MessageEventName.TOGGLE_SCHEDULING_PANE,
+            });
+        });
+
+        it('should emit TOGGLE_RECENT_SNAPSHOTS_PANE event when toggleRecentSnapshotsPane is called', () => {
+            dashboardExperience.toggleRecentSnapshotsPane();
+            expect(dashboardExperience.send).toBeCalledWith({
+                eventName: MessageEventName.TOGGLE_RECENT_SNAPSHOTS_PANE,
             });
         });
 

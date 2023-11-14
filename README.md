@@ -416,6 +416,9 @@ export class DashboardExperience extends BaseExperience<DashboardContentOptions,
    undo: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
    redo: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
    toggleBookmarksPane: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   toggleThresholdAlertsPane: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   toggleSchedulingPane: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   toggleRecentSnapshotsPane: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
    getParameters: () => Promise<Parameter[]>;
    getSheets: () => Promise<Sheet[]>;
    getVisualActions: (sheetId: string, visualId: string) => Promise<VisualAction[]>;
@@ -1038,6 +1041,31 @@ If you want to toggle the visibility state of the bookmarks pane, use the below 
 
 ```javascript
     embeddedDashboardExperience.toggleBookmarksPane();
+```
+
+#### 🔹 toggleSchedulingPane *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to toggle the visibility state of the scheduling pane, use the below method:
+
+```javascript
+    embeddedDashboardExperience.toggleSchedulingPane();
+```
+
+#### 🔹 toggleThresholdAlertsPane *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to toggle the visibility state of the thresholdAlerts pane, use the below method:
+
+```javascript
+    embeddedDashboardExperience.toggleThresholdAlertsPane();
+```
+***
+
+#### 🔹 toggleRecentSnapshotsPane *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to toggle the visibility state of the recentSnapshots pane, use the below method:
+
+```javascript
+    embeddedDashboardExperience.toggleRecentSnapshotsPane();
 ```
 ***
 

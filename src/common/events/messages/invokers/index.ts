@@ -10,6 +10,9 @@ export const InvokerMessageEventName = {
     REDO: 'REDO',
     RESET: 'RESET',
     TOGGLE_BOOKMARKS_PANE: 'TOGGLE_BOOKMARKS_PANE',
+    TOGGLE_THRESHOLD_ALERTS_PANE: 'TOGGLE_THRESHOLD_ALERTS_PANE',
+    TOGGLE_SCHEDULING_PANE: 'TOGGLE_SCHEDULING_PANE',
+    TOGGLE_RECENT_SNAPSHOTS_PANE: 'TOGGLE_RECENT_SNAPSHOTS_PANE',
 } as const;
 
 export type InvokerMessageEventName = (typeof InvokerMessageEventName)[keyof typeof InvokerMessageEventName];
