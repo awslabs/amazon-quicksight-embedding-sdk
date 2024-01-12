@@ -127,7 +127,7 @@ describe('VisualExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            'https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=2.5.0&fitToIframeWidth=true&contextId=testContextId&discriminator=0#'
+            'https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=2.6.0&fitToIframeWidth=true&contextId=testContextId&discriminator=0#'
         );
     });
 
@@ -169,6 +169,58 @@ describe('VisualExperience', () => {
 
         expect(iFrame?.src).toEqual(
             `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitToIframeWidth=true&themeArn=arn%3Aaws%3Aquicksight%3A%3Aaws%3Atheme%2FMIDNIGHT&contextId=testContextId&discriminator=0#`
+        );
+    });
+
+    it('should create visual experience with themeOverride', () => {
+        let controlExperience: ControlExperience;
+        const body = window.document.querySelector('body');
+        controlExperience = new ControlExperience(body!, TEST_CONTROL_OPTIONS);
+
+        const mockSend = jest.fn();
+        const frameOptions = {
+            url: `${TEST_VISUAL_URL}?test=test`,
+            container: TEST_CONTAINER,
+            width: '800px',
+            onChange: onChangeSpy,
+        };
+        const contentOptions = {
+            themeOptions: {
+                themeOverride: {Typography: {FontFamilies: [{FontFamily: 'Comic Neue'}]}},
+                preloadThemes: ['arn:aws:quicksight::aws:theme/RAINIER', 'arn:aws:quicksight::aws:theme/MIDNIGHT'],
+            },
+        };
+        const visualExperience = new VisualExperience(
+            frameOptions,
+            contentOptions,
+            TEST_CONTROL_OPTIONS,
+            new Set<string>()
+        );
+        jest.spyOn(visualExperience, 'send').mockImplementation(mockSend);
+
+        expect(typeof visualExperience.setThemeOverride).toEqual('function');
+        expect(typeof visualExperience.setPreloadThemes).toEqual('function');
+
+        controlExperience.controlFrameMessageListener(
+            new MessageEvent('message', {
+                data: {
+                    eventTarget: TEST_INTERNAL_EXPERIENCE,
+                    eventName: InfoMessageEventName.EXPERIENCE_INITIALIZED,
+                    message: {},
+                },
+            })
+        );
+
+        expect(visualExperience.send).toBeCalledWith(
+            expect.objectContaining({
+                eventName: MessageEventName.SET_THEME_OVERRIDE,
+            })
+        );
+
+        expect(visualExperience.send).toBeCalledWith(
+            expect.objectContaining({
+                eventName: MessageEventName.PRELOAD_THEMES,
+            })
         );
     });
 
@@ -577,6 +629,15 @@ describe('VisualExperience', () => {
             expect(visualExperience.send).toBeCalledWith(
                 expect.objectContaining({
                     eventName: MessageEventName.SET_THEME_OVERRIDE,
+                })
+            );
+        });
+        it('should emit PRELOAD_THEMES event when setPreloadThemes is called', () => {
+            visualExperience.setPreloadThemes(['']);
+
+            expect(visualExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.PRELOAD_THEMES,
                 })
             );
         });

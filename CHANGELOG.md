@@ -1,3 +1,8 @@
+**2.6.0**
+* Support preloading themes on load
+* Support setting theme override on load
+* Minor bug fixes
+
 **2.5.0**
 * Support setting, adding, removing filters on runtime
 * Support setting and overriding theme on runtime

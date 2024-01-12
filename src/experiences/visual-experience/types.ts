@@ -1,6 +1,7 @@
 // Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import type {ThemeConfiguration} from '@aws-sdk/client-quicksight';
 import {Parameter, ParametersAsObject, ThemeOptions} from '../../common/types';
 import {BaseContentOptions, ExperienceType, IBaseExperience} from '../base-experience';
 
@@ -27,4 +28,5 @@ export interface TransformedVisualContentOptions extends BaseContentOptions {
     fitToIframeWidth?: boolean;
     parameters?: ParametersAsObject;
     themeArn?: string;
+    themeOverride?: ThemeConfiguration;
 }

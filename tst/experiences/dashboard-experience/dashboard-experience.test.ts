@@ -237,6 +237,68 @@ describe('DashboardExperience', () => {
         expect(url.searchParams.has('themeArn')).toBeTruthy();
     });
 
+    it('should create dashboard frame with themeOverride', () => {
+        let controlExperience: ControlExperience;
+        const body = window.document.querySelector('body');
+        controlExperience = new ControlExperience(body!, TEST_CONTROL_OPTIONS);
+
+        const mockSend = jest.fn();
+        const frameOptions = {
+            url: TEST_DASHBOARD_URL,
+            container: TEST_CONTAINER,
+            width: '800px',
+            onChange: onChangeSpy,
+        };
+        const contentOptions: DashboardContentOptions = {
+            themeOptions: {
+                themeOverride: {Typography: {FontFamilies: [{FontFamily: 'Comic Neue'}]}},
+                preloadThemes: ['arn:aws:quicksight::aws:theme/RAINIER', 'arn:aws:quicksight::aws:theme/MIDNIGHT'],
+            },
+            attributionOptions: {
+                overlayContent: true,
+            },
+        };
+        const dashboardFrame = new DashboardExperience(
+            frameOptions,
+            contentOptions,
+            TEST_CONTROL_OPTIONS,
+            new Set<string>()
+        );
+        jest.spyOn(dashboardFrame, 'send').mockImplementation(mockSend);
+
+        expect(typeof dashboardFrame.setParameters).toEqual('function');
+        expect(typeof dashboardFrame.initiatePrint).toEqual('function');
+        expect(typeof dashboardFrame.setThemeOverride).toEqual('function');
+        expect(typeof dashboardFrame.setPreloadThemes).toEqual('function');
+
+        controlExperience.controlFrameMessageListener(
+            new MessageEvent('message', {
+                data: {
+                    eventTarget: {
+                        experienceType: ExperienceType.DASHBOARD,
+                        discriminator: 0,
+                        contextId: TEST_CONTEXT_ID,
+                        dashboardId: TEST_DASHBOARD_ID,
+                    },
+                    eventName: InfoMessageEventName.EXPERIENCE_INITIALIZED,
+                    message: {},
+                },
+            })
+        );
+
+        expect(dashboardFrame.send).toBeCalledWith(
+            expect.objectContaining({
+                eventName: MessageEventName.SET_THEME_OVERRIDE,
+            })
+        );
+
+        expect(dashboardFrame.send).toBeCalledWith(
+            expect.objectContaining({
+                eventName: MessageEventName.PRELOAD_THEMES,
+            })
+        );
+    });
+
     it('should create dashboard frame with attribution options', () => {
         const frameOptions = {
             url: TEST_DASHBOARD_URL,
@@ -732,6 +794,15 @@ describe('DashboardExperience', () => {
             expect(dashboardExperience.send).toBeCalledWith(
                 expect.objectContaining({
                     eventName: MessageEventName.SET_THEME_OVERRIDE,
+                })
+            );
+        });
+        it('should emit PRELOAD_THEMES event when setPreloadThemes is called', () => {
+            dashboardExperience.setPreloadThemes(['']);
+
+            expect(dashboardExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.PRELOAD_THEMES,
                 })
             );
         });

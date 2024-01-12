@@ -9,6 +9,7 @@ import type {
     DateDimensionField,
     VisualCustomActionOperation,
     VisualCustomAction,
+    ThemeConfiguration,
 } from '@aws-sdk/client-quicksight';
 
 export interface IDashboardExperience extends IBaseExperience {
@@ -41,6 +42,7 @@ export interface TransformedDashboardContentOptions extends BaseContentOptions {
     sheetTabsDisabled?: boolean;
     resizeOnSheetChange?: boolean;
     themeArn?: string;
+    themeOverride?: ThemeConfiguration;
 }
 
 export interface ToolbarOption {

@@ -139,6 +139,14 @@ export class VisualExperience extends BaseExperience<
         );
     };
 
+    setPreloadThemes = async (preloadThemes: string[]): Promise<ResponseMessage> => {
+        return this.send(
+            new EmbeddingMessageEvent(MessageEventName.PRELOAD_THEMES, {
+                PreloadThemes: preloadThemes,
+            })
+        );
+    };
+
     protected extractExperienceFromUrl = (url: string): IVisualExperience => {
         const matches: Array<string> =
             /^https:\/\/[^/]+\/embed\/[^/]+\/dashboards\/([\w-]+)\/sheets\/([\w-]+)\/visuals\/([\w-]+)(\?|$)/i.exec(
@@ -169,6 +177,12 @@ export class VisualExperience extends BaseExperience<
         // if the resizeHeightOnSizeChangedEvent is true, upon receiving SIZE_CHANGED message, update the height of the iframe
         if (messageEvent.eventName === 'SIZE_CHANGED' && this.frameOptions.resizeHeightOnSizeChangedEvent) {
             metadata?.frame?.setAttribute?.('height', `${messageEvent.message?.height}px`);
+        }
+        if (messageEvent.eventName === 'EXPERIENCE_INITIALIZED' && this.contentOptions?.themeOptions?.themeOverride) {
+            this.setThemeOverride(this.contentOptions.themeOptions.themeOverride);
+        }
+        if (messageEvent.eventName === 'EXPERIENCE_INITIALIZED' && this.contentOptions?.themeOptions?.preloadThemes) {
+            this.setPreloadThemes(this.contentOptions.themeOptions.preloadThemes);
         }
     };
 

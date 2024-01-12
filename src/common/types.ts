@@ -1,5 +1,6 @@
 // Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type {ThemeConfiguration} from '@aws-sdk/client-quicksight';
 
 export type Primitives = string | number | boolean;
 
@@ -25,8 +26,8 @@ export type ParametersAsObject = Record<string, Primitives | Primitives[]>;
 
 export type CleanUpCallback = () => void;
 
-export interface ThemeOptionsWithThemeArn {
-    themeArn: string;
-}
-
-export type ThemeOptions = ThemeOptionsWithThemeArn;
+export type ThemeOptions = {
+    themeArn?: string;
+    themeOverride?: ThemeConfiguration;
+    preloadThemes?: string[];
+};

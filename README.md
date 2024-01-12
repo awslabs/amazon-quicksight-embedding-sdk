@@ -19,7 +19,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
 ...
-<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.5.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.6.0/dist/quicksight-embedding-js-sdk.min.js"></script>
 <script type="text/javascript">
     const onLoad = async () => {
         const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
@@ -447,7 +447,7 @@ export class DashboardExperience extends BaseExperience<DashboardContentOptions,
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.5.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.6.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedDashboard = async() => {
                 const {
@@ -965,6 +965,8 @@ If you want to set theme for the Amazon quicksight dashboard, use the below meth
     embeddedDashboardExperience.setTheme('<YOUR_THEME_ARN>');
 ```
 
+Make sure that the user has access to the theme that you want to use. You can make a call to the [ListThemes](https://docs.aws.amazon.com/quicksight/latest/APIReference/API_ListThemes.html) API operation to obtain a list of the themes and theme ARNs that the user has access to.
+
 #### 🔹 setThemeOverride *(themeOverride: ThemeConfiguration) => Promise&lt;ResponseMessage&gt;*
 
 If you want to override the current theme configuration for the Amazon quicksight dashboard, use the below method:
@@ -1071,7 +1073,7 @@ export class VisualExperience extends BaseExperience<VisualContentOptions, Inter
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.5.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.6.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedVisual = async() => {    
                 const {
@@ -1446,6 +1448,8 @@ If you want to set theme for the visual, use the below method:
     embeddedVisualExperience.setTheme('<YOUR_THEME_ARN>');
 ```
 
+Make sure that the user has access to the theme that you want to use. You can make a call to the [ListThemes](https://docs.aws.amazon.com/quicksight/latest/APIReference/API_ListThemes.html) API operation to obtain a list of the themes and theme ARNs that the user has access to.
+
 #### 🔹 setThemeOverride *(themeOverride: ThemeConfiguration) => Promise&lt;ResponseMessage&gt;*
 
 If you want to override the current theme configuration for the visual, use the below method:
@@ -1504,7 +1508,7 @@ Use `embedConsole` method to embed a QuickSight dashboard. It returns a promise 
 
     <head>
         <title>Console Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.5.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.6.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedConsole = async() => {
                 const {
@@ -1612,7 +1616,7 @@ export class QSearchExperience extends BaseExperience<QSearchContentOptions, Int
 
     <head>
         <title>Q Search Bar Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.5.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.6.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQSearchBar = async() => {    
                 const {
