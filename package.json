@@ -37,12 +37,12 @@
         "test": "jest"
     },
     "dependencies": {
+        "@aws-sdk/client-quicksight": "^3.414.0",
         "@babel/runtime": "^7.20.6",
         "punycode": "^2.1.1",
         "uuid": "^9.0.0"
     },
     "devDependencies": {
-        "@aws-sdk/client-quicksight": "^3.414.0",
         "@babel/cli": "^7.19.3",
         "@babel/core": "^7.20.5",
         "@babel/plugin-transform-runtime": "^7.19.6",
