@@ -57,9 +57,9 @@ describe('ControlExperience', () => {
     it('should call addEventListener when onMessage is provided', () => {
         jest.spyOn(eventManager, 'addEventListener');
 
-        new ControlExperience(TEST_CONTAINER, {...TEST_CONTROL_OPTIONS, contextId: 'TEST2'}, onChangeSpy, jest.fn());
+        new ControlExperience(TEST_CONTAINER, {...TEST_CONTROL_OPTIONS, contextId: 'TEST2'}, onChangeSpy);
 
-        expect(eventManager.addEventListener).toBeCalledTimes(2);
+        expect(eventManager.addEventListener).toHaveBeenCalledTimes(1);
     });
 
     it('should emit error if send is called before experience frame has been initialized', () => {

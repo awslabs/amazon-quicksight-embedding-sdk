@@ -2,10 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {ControlExperienceFrame} from './frame/control-experience-frame';
-import {ControlOptions, IControlExperience, InternalControlExperience, InternalSend, UrlInfo} from './types';
+import {ControlOptions, IControlExperience, InternalControlExperience, UrlInfo} from './types';
 import {ExperienceType} from '../base-experience';
 import {EventManager} from '@common/event-manager/event-manager';
-import {EmbeddingIFrameElement} from '@common/iframe/types';
 import {ChangeEvent, TargetedMessageEvent} from '@common/events/events';
 import {ChangeEventLevel, ChangeEventName, EmbeddingEvents, MessageEventName} from '@common/events/types';
 import {BaseExperience} from '@experience/base-experience/base-experience';
@@ -18,24 +17,24 @@ export class ControlExperience {
     private readonly urlInfo: UrlInfo;
     private readonly internalExperience: InternalControlExperience;
     private readonly eventManager: EventManager;
-    private readonly onMessage?: EventListener;
     private readonly onChange?: EventListener;
     private readonly experience: IControlExperience = {
         experienceType: ExperienceType.CONTROL,
     };
-    private internalSend?: InternalSend;
-    private iframe: EmbeddingIFrameElement | null = null;
-    private logger?: LogProvider;
+    private readonly logger?: LogProvider;
+    private readonly controlExperienceFrame: ControlExperienceFrame;
 
     constructor(
         container: HTMLBodyElement,
         controlOptions: ControlOptions,
         onChange?: EventListener,
-        onMessage?: EventListener
+        logger?: LogProvider
     ) {
         this.container = container;
         this.eventManager = controlOptions.eventManager;
         this.urlInfo = controlOptions.urlInfo;
+        this.onChange = onChange;
+        this.logger = logger;
 
         this.internalExperience = {
             ...this.experience,
@@ -43,14 +42,36 @@ export class ControlExperience {
             discriminator: 0,
         };
 
-        this.onMessage = onMessage;
-        this.onChange = onChange;
+        const controlExperienceId = this.getControlExperienceId();
 
-        this.initializeFrame();
+        this.controlExperienceFrame = new ControlExperienceFrame(
+            {
+                url: this.getControlExperienceBaseUrl(),
+                container: this.container,
+                width: '0px',
+                height: '0px',
+                onChange: this.onChange,
+            },
+            {
+                eventManager: this.eventManager,
+                contextId: this.internalExperience.contextId,
+                timeout: ControlExperience.FRAME_TIMEOUT,
+                urlInfo: this.urlInfo,
+            },
+            {},
+            {},
+            this.internalExperience,
+            controlExperienceId
+        );
+
+        window.addEventListener('message', this.controlFrameMessageListener);
+        this.eventManager.addEventListenerForCleanup(controlExperienceId, () =>
+            window.removeEventListener('message', this.controlFrameMessageListener)
+        );
     }
 
     public send = (messageEvent: TargetedMessageEvent) => {
-        return this.internalSend?.(messageEvent);
+        return this.controlExperienceFrame.send(messageEvent);
     };
 
     public controlFrameMessageListener = (event: MessageEvent<EmbeddingEvents>) => {
@@ -76,55 +97,11 @@ export class ControlExperience {
                             eventTarget: messageEvent.eventTarget,
                         }
                     ),
-                    {frame: this.iframe}
+                    {frame: this.controlExperienceFrame.iframe}
                 );
                 this.logger?.warn('Message with unrecognized event target received');
             }
         }
-    };
-
-    public setLogger = (logger: LogProvider) => {
-        this.logger = logger;
-        return this;
-    };
-
-    private initializeFrame = () => {
-        const controlUrl = this.getControlExperienceBaseUrl();
-        const controlExperienceId = this.getControlExperienceId();
-
-        if (this.onMessage) {
-            this.eventManager.addEventListener(controlExperienceId, this.onMessage, true);
-        }
-
-        const controlExperienceFrame = new ControlExperienceFrame(
-            {
-                url: controlUrl,
-                container: this.container,
-                width: '0px',
-                height: '0px',
-                onChange: this.onChange,
-            },
-            {
-                eventManager: this.eventManager,
-                contextId: this.internalExperience.contextId,
-                timeout: ControlExperience.FRAME_TIMEOUT,
-                urlInfo: this.urlInfo,
-            },
-            {
-                onMessage: this.onMessage,
-            },
-            {},
-            this.internalExperience,
-            controlExperienceId
-        );
-
-        this.internalSend = controlExperienceFrame.send;
-        this.iframe = controlExperienceFrame.iframe;
-
-        window.addEventListener('message', this.controlFrameMessageListener);
-        this.eventManager.addEventListenerForCleanup(controlExperienceId, () =>
-            window.removeEventListener('message', this.controlFrameMessageListener)
-        );
     };
 
     private sendAcknowledgment = (messageEvent: EmbeddingEvents) => {

@@ -3,7 +3,7 @@
 
 import {BaseContentOptions, ExperienceType, IBaseExperience} from '../base-experience';
 import {EventManager} from '@common/event-manager/event-manager';
-import {TargetedMessageEvent} from '@common/events/events';
+import {DataResponse, ErrorResponse, SuccessResponse, TargetedMessageEvent} from '@common/events/events';
 
 export interface IControlExperience extends IBaseExperience {
     experienceType: typeof ExperienceType.CONTROL;
@@ -21,7 +21,9 @@ export type ControlOptions = {
     areCookiesDisabled?: boolean;
     urlInfo: UrlInfo;
     timeout?: number;
-    sendToControlFrame?: InternalSend;
+    sendToControlFrame?: (
+        messageEvent: TargetedMessageEvent
+    ) => Promise<SuccessResponse | ErrorResponse | DataResponse>;
     onChange?: EventListener;
 };
 
@@ -30,5 +32,3 @@ export type UrlInfo = {
     host: string;
     urlSearchParams?: URLSearchParams;
 };
-
-export type InternalSend = (messageEvent: TargetedMessageEvent) => void;

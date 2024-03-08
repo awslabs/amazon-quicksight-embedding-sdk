@@ -7,6 +7,7 @@ import {VisualExperience} from '@experience/visual-experience/visual-experience'
 import {ControlExperience} from '@experience/control-experience/control-experience';
 import {InfoMessageEventName} from '@common/events/messages';
 import {SDK_VERSION} from '@experience/base-experience/frame/experience-frame';
+import type {CrossDatasetTypes, WidgetStatus} from '@aws-sdk/client-quicksight';
 
 describe('VisualExperience', () => {
     let TEST_CONTAINER: HTMLElement;
@@ -432,8 +433,8 @@ describe('VisualExperience', () => {
                 ScopeConfiguration: {
                     AllSheets: true,
                 },
-                CrossDataset: 'ALL_DATASETS',
-                Status: 'ENABLED,',
+                CrossDataset: 'ALL_DATASETS' as CrossDatasetTypes,
+                Status: 'ENABLED' as WidgetStatus,
             },
         ];
 

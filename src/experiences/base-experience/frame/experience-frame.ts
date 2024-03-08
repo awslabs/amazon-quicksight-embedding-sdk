@@ -75,6 +75,10 @@ export abstract class BaseExperienceFrame<
     public send = async <EventMessageValue extends EventMessageValues = EventMessageValues>(
         messageEvent: TargetedMessageEvent
     ): Promise<SuccessResponse | ErrorResponse<EventMessageValue> | DataResponse<EventMessageValue>> => {
+        if (this.controlOptions.sendToControlFrame) {
+            return this.controlOptions.sendToControlFrame(messageEvent);
+        }
+
         if (!this.iframe) {
             throw new Error(`Cannot send ${messageEvent.eventName}: No experience frame found`);
         }

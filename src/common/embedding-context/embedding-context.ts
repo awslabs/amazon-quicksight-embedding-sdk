@@ -173,8 +173,9 @@ export class EmbeddingContext implements IEmbeddingContext {
                     urlInfo,
                     contextId: this.contextId,
                 },
-                this.onChange
-            ).setLogger(this.logger);
+                this.onChange,
+                this.logger
+            );
 
             this.controlOptions = {
                 eventManager: this.eventManager,

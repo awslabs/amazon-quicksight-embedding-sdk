@@ -6,6 +6,7 @@ import {ControlExperience} from '@experience/control-experience/control-experien
 import {ChangeEventLevel, ChangeEventName, MessageEventName} from '@common/events/types';
 import {InfoMessageEventName} from '@common/events/messages';
 import {SDK_VERSION} from '@experience/base-experience/frame/experience-frame';
+import type {CrossDatasetTypes, WidgetStatus} from '@aws-sdk/client-quicksight';
 
 describe('DashboardExperience', () => {
     let TEST_CONTAINER: HTMLElement;
@@ -466,8 +467,8 @@ describe('DashboardExperience', () => {
                 ScopeConfiguration: {
                     AllSheets: true,
                 },
-                CrossDataset: 'ALL_DATASETS',
-                Status: 'ENABLED,',
+                CrossDataset: 'ALL_DATASETS' as CrossDatasetTypes,
+                Status: 'ENABLED' as WidgetStatus,
             },
         ];
 
