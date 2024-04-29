@@ -239,9 +239,8 @@ describe('DashboardExperience', () => {
     });
 
     it('should create dashboard frame with themeOverride', () => {
-        let controlExperience: ControlExperience;
         const body = window.document.querySelector('body');
-        controlExperience = new ControlExperience(body!, TEST_CONTROL_OPTIONS);
+        const controlExperience = new ControlExperience(body!, TEST_CONTROL_OPTIONS);
 
         const mockSend = jest.fn();
         const frameOptions = {

@@ -4,3 +4,5 @@ export * from './visual-experience';
 export * from './console-experience';
 export * from './control-experience';
 export * from './base-experience';
+export * from './generative-qna-experience';
+export * from './internal-q-base-experience';

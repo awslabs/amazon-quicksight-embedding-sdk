@@ -1,6 +1,6 @@
 {
     "name": "amazon-quicksight-embedding-sdk",
-    "version": "2.6.0",
+    "version": "2.7.0",
     "description": "JS SDK for embedding Amazon QuickSight",
     "keywords": [
         "Amazon",

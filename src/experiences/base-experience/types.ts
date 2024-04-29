@@ -1,4 +1,4 @@
-// Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 import {
@@ -25,6 +25,12 @@ import {
     InternalConsoleExperience,
     TransformedConsoleContentOptions,
 } from '../console-experience';
+import {
+    GenerativeQnAContentOptions,
+    IGenerativeQnAExperience,
+    InternalGenerativeQnAExperience,
+    TransformedGenerativeQnAContentOptions,
+} from '../generative-qna-experience';
 import {ControlContentOptions, IControlExperience, InternalControlExperience} from '../control-experience';
 import {IContextExperience, InternalContextExperience} from '../../common/embedding-context';
 import {EventListener} from '../../common/event-manager';
@@ -34,7 +40,8 @@ export type ContentOptions =
     | DashboardContentOptions
     | QSearchContentOptions
     | ConsoleContentOptions
-    | ControlContentOptions;
+    | ControlContentOptions
+    | GenerativeQnAContentOptions;
 
 export type FrameOptions = {
     url: string;
@@ -52,6 +59,7 @@ export type TransformedContentOptions =
     | TransformedDashboardContentOptions
     | TransformedQSearchContentOptions
     | TransformedVisualContentOptions
+    | TransformedGenerativeQnAContentOptions
     | object;
 
 export type Experiences =
@@ -60,7 +68,8 @@ export type Experiences =
     | IControlExperience
     | IVisualExperience
     | IDashboardExperience
-    | IQSearchExperience;
+    | IQSearchExperience
+    | IGenerativeQnAExperience;
 
 export type InternalExperiences =
     | InternalConsoleExperience
@@ -68,7 +77,8 @@ export type InternalExperiences =
     | InternalControlExperience
     | InternalVisualExperience
     | InternalDashboardExperience
-    | InternalQSearchExperience;
+    | InternalQSearchExperience
+    | InternalGenerativeQnAExperience;
 
 export interface InternalExperienceInfo<InternalExperience extends InternalExperiences> {
     experienceIdentifier: string;
@@ -82,6 +92,7 @@ export const ExperienceType = {
     VISUAL: 'VISUAL',
     DASHBOARD: 'DASHBOARD',
     QSEARCH: 'QSEARCH',
+    GENERATIVEQNA: 'QSEARCH', // Internal experience type unchanged from QSEARCH
 } as const;
 
 export type ExperienceType = (typeof ExperienceType)[keyof typeof ExperienceType];

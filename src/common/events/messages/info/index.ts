@@ -13,9 +13,12 @@ export const InfoMessageEventName = {
     MODAL_OPENED: 'MODAL_OPENED',
     Q_SEARCH_CLOSED: 'Q_SEARCH_CLOSED',
     Q_SEARCH_OPENED: 'Q_SEARCH_OPENED',
+    Q_SEARCH_FOCUSED: 'Q_SEARCH_FOCUSED',
     Q_SEARCH_SIZE_CHANGED: 'Q_SEARCH_SIZE_CHANGED',
     Q_SEARCH_ENTERED_FULLSCREEN: 'Q_SEARCH_ENTERED_FULLSCREEN',
     Q_SEARCH_EXITED_FULLSCREEN: 'Q_SEARCH_EXITED_FULLSCREEN',
+    Q_PANEL_ENTERED_FULLSCREEN: 'Q_PANEL_ENTERED_FULLSCREEN',
+    Q_PANEL_EXITED_FULLSCREEN: 'Q_PANEL_EXITED_FULLSCREEN',
 } as const;
 
 export type InfoMessageEventName = (typeof InfoMessageEventName)[keyof typeof InfoMessageEventName];
@@ -47,7 +50,10 @@ export type InfoMessageEvents =
           {selectedSheet: {Name?: string; SheetId: string}}
       >
     | EmbeddingEvent<typeof InfoMessageEventName.Q_SEARCH_CLOSED, {height?: string}>
-    | EmbeddingEvent<typeof InfoMessageEventName.Q_SEARCH_ENTERED_FULLSCREEN, undefined>
     | EmbeddingEvent<typeof InfoMessageEventName.Q_SEARCH_OPENED, {height?: string}>
+    | EmbeddingEvent<typeof InfoMessageEventName.Q_SEARCH_FOCUSED, {height?: string}>
+    | EmbeddingEvent<typeof InfoMessageEventName.Q_SEARCH_SIZE_CHANGED, {height?: number}>
+    | EmbeddingEvent<typeof InfoMessageEventName.Q_SEARCH_ENTERED_FULLSCREEN, undefined>
     | EmbeddingEvent<typeof InfoMessageEventName.Q_SEARCH_EXITED_FULLSCREEN, undefined>
-    | EmbeddingEvent<typeof InfoMessageEventName.Q_SEARCH_SIZE_CHANGED, {height?: number}>;
+    | EmbeddingEvent<typeof InfoMessageEventName.Q_PANEL_ENTERED_FULLSCREEN, undefined>
+    | EmbeddingEvent<typeof InfoMessageEventName.Q_PANEL_EXITED_FULLSCREEN, undefined>;

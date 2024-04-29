@@ -10,7 +10,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 * [Visual Embedding](#visual-embedding)
 * [Console Embedding](#console-embedding)
 * [QSearchBar Embedding](#qsearchbar-embedding)
-
+* [Generative Q&A Embedding](#generative-qa-embedding)
 
 &nbsp;  
 ## Installation
@@ -19,7 +19,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
 ...
-<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.6.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.0/dist/quicksight-embedding-js-sdk.min.js"></script>
 <script type="text/javascript">
     const onLoad = async () => {
         const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
@@ -80,8 +80,9 @@ export type EmbeddingContextFrameOptions = {
 export type IEmbeddingContext = {
    embedDashboard: (frameOptions: FrameOptions, contentOptions?: DashboardContentOptions) => Promise<DashboardExperience>;
    embedVisual: (frameOptions: FrameOptions, contentOptions?: VisualContentOptions) => Promise<VisualExperience>;
-   embedQSearchBar: (frameOptions: FrameOptions, contentOptions?: QSearchContentOptions) => Promise<QSearchExperience>;
    embedConsole: (frameOptions: FrameOptions, contentOptions?: ConsoleContentOptions) => Promise<ConsoleExperience>;
+   embedQSearchBar: (frameOptions: FrameOptions, contentOptions?: QSearchContentOptions) => Promise<QSearchExperience>;
+   embedGenerativeQnA: (frameOptions: FrameOptions, contentOptions?: GenerativeQnAContentOptions) => Promise<GenerativeQnAContentOptions>;
 };
 ```
 
@@ -115,8 +116,9 @@ An `EmbeddingContext` instance exposes 4 experience methods
 
 * embedDashboard
 * embedVisual
-* embedQSearchBar
 * embedConsole
+* embedQSearchBar
+* embedGenerativeQnA
 
 These methods take 2 parameters:
 
@@ -406,7 +408,7 @@ For more information, see  [Working with embedded analytics](https://docs.aws.am
 ### Getting Started
 &nbsp;  
 
-Use `embedDashboard` method to embed a QuickSight dashboard. It returns a promise of `DashboardFrame` type.
+Use `embedDashboard` method to embed a QuickSight dashboard. It returns a promise of `DashboardExperience` type.
 
 ```typescript
 export class DashboardExperience extends BaseExperience<DashboardContentOptions, InternalDashboardExperience, IDashboardExperience, TransformedDashboardContentOptions, DashboardExperienceFrame> {
@@ -447,7 +449,7 @@ export class DashboardExperience extends BaseExperience<DashboardContentOptions,
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.6.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedDashboard = async() => {
                 const {
@@ -673,7 +675,7 @@ You can set this property to `true` to overlay it with your content.
 
 #### 🔹 onMessage: *EventListener* *(optional)*
 
-The `eventName`s the dashboard experience receive
+The `eventName`s the dashboard experience receives
 
     CONTENT_LOADED: Received when the visuals of the Amazon QuickSight dashboard are fully loaded
     ERROR_OCCURRED: Received when an error occurred while rendering the visuals of the Amazon QuickSight dashboard. The message contains `errorCode`. The error codes are:
@@ -1042,7 +1044,7 @@ For more information, see  [Embedding Amazon QuickSight Visuals](https://docs.aw
 ### Getting Started
 &nbsp;  
 
-Use `embedVisual` method to embed a QuickSight dashboard. It returns a promise of `VisualFrame` type.
+Use `embedVisual` method to embed a dashboard visual. It returns a promise of `VisualExperience` type.
 
 ```typescript
 export class VisualExperience extends BaseExperience<VisualContentOptions, InternalVisualExperience, IVisualExperience, TransformedContentOptions, VisualExperienceFrame> {
@@ -1073,7 +1075,7 @@ export class VisualExperience extends BaseExperience<VisualContentOptions, Inter
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.6.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedVisual = async() => {    
                 const {
@@ -1213,7 +1215,7 @@ In Classic layout, the width is responsive. Since the visual already fits to the
 
 #### 🔹 onMessage: *SimpleMessageEventHandler* *(optional)*
 
-The `eventName`s the dashboard experience receive
+The `eventName`s the visual experience receives
 
     CONTENT_LOADED: Received when the visuals of the Amazon QuickSight dashboard are fully loaded
     ERROR_OCCURRED: Received when an error occurred while rendering the Amazon QuickSight visual. The message contains `errorCode`. The error codes are:
@@ -1489,8 +1491,7 @@ Console embedding provides the QuickSight authoring experience.
 ### Getting Started
 &nbsp;  
 
-Use `embedConsole` method to embed a QuickSight dashboard. It returns a promise of `ConsoleFrame` type.
-
+Use `embedConsole` method to embed a QuickSight console. It returns a promise of `ConsoleExperience` type.
 
 ```typescript
  export class ConsoleExperience extends BaseExperience<ConsoleContentOptions, InternalConsoleExperience, IConsoleExperience, TransformedConsoleContentOptions, ConsoleExperienceFrame> {
@@ -1508,7 +1509,7 @@ Use `embedConsole` method to embed a QuickSight dashboard. It returns a promise 
 
     <head>
         <title>Console Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.6.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedConsole = async() => {
                 const {
@@ -1576,9 +1577,9 @@ See [Common Properties of `contentOptions` for All Embedding Experiences](#commo
 
 #### 🔹 onMessage: *SimpleMessageEventHandler* *(optional)*
 
-The `eventName`s the dashboard experience receive
+The `eventName`s the console experience receives
 
-    ERROR_OCCURRED: Received when an error occurred while rendering the Amazon QuickSight visual. The message contains `errorCode`. The error codes are:
+    ERROR_OCCURRED: Received when an error occurred while rendering the console. The message contains `errorCode`. The error codes are:
     - `Forbidden` -- the URL's authentication code expired
     - `Unauthorized` -- the session obtained from the authentication code expired
     If you follow the instructions to generate the correct URL, but you still receive these error codes, you need to generate a new URL.
@@ -1597,7 +1598,7 @@ For more information, see  [Embedding Amazon QuickSight Q Search Bar](https://do
 ### Getting Started
 &nbsp;  
 
-Use `embedQSearchBar` method to embed a QuickSight dashboard. It returns a promise of `QSearchFrame` type.
+Use `embedQSearchBar` method to embed a Q search bar. It returns a promise of `QSearchExperience` type.
 
 ```typescript
 export class QSearchExperience extends BaseExperience<QSearchContentOptions, InternalQSearchExperience, IQSearchExperience, TransformedQSearchContentOptions, QSearchExperienceFrame> {
@@ -1616,7 +1617,7 @@ export class QSearchExperience extends BaseExperience<QSearchContentOptions, Int
 
     <head>
         <title>Q Search Bar Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.6.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQSearchBar = async() => {    
                 const {
@@ -1712,7 +1713,7 @@ The `allowTopicSelection` property can be used to customize whether or not the e
 
 #### 🔹 onMessage: *SimpleMessageEventHandler* *(optional)*
 
-The `eventName`s the dashboard experience receive
+The `eventName`s the Q search bar experience receives
 
     Q_SEARCH_CLOSED: Received when the Q search collapsed
     Q_SEARCH_ENTERED_FULLSCREEN: Received when the Q search entered fullscreen
@@ -1726,7 +1727,7 @@ The `eventName`s the dashboard experience receive
 
 #### 🔹 setQuestion
 
-This feature sends a question to the Q search bar and immediately queries the question. It also automatically opens the Q popover.
+This method sends a question to the Q search bar and immediately queries the question. It also automatically opens the Q popover.
 
 ```javascript
     embeddedQBarExperience.setQuestion('show me monthly revenue');
@@ -1734,13 +1735,229 @@ This feature sends a question to the Q search bar and immediately queries the qu
 
 #### 🔹 close
 
-This feature closes the Q popover, returns the iframe to the original Q search bar size.
+This method closes the Q popover, returns the iframe to the original Q search bar size.
 
 ```javascript
     embeddedQBarExperience.close();
 ```
 
 ***
+
+&nbsp;  
+## Generative Q&A Embedding
+&nbsp;  
+
+Generative Q&A Embedding provides the [Amazon Q in QuickSight](https://aws.amazon.com/quicksight/q/) Generative Q&A experience.
+
+For more information, see [Embed Generative Q&A Experience](https://docs.aws.amazon.com/quicksight/latest/user/embedded-analytics-api.html) in the Amazon QuickSight User Guide.
+
+&nbsp;  
+### Getting Started
+&nbsp;  
+
+Use `embedGenerativeQnA` method to embed the Generative Q&A experience. It returns a promise of `GenerativeQnAExperience` type.
+
+```typescript
+export class GenerativeQnAExperience extends BaseExperience<GenerativeQnAContentOptions, InternalGenerativeQnAExperience, IGenerativeQnAExperience, TransformedGenerativeQnAContentOptions, GenerativeQnAExperienceFrame> {
+   close: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   setQuestion: (question: string) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+}
+```
+
+&nbsp;  
+### Example
+&nbsp;  
+
+```html
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Generative Q&A Embedding Example</title>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script type="text/javascript">
+            const embedGenerativeQnA = async() => {    
+                const {
+                    createEmbeddingContext,
+                } = QuickSightEmbedding;
+
+                const embeddingContext = await createEmbeddingContext({
+                    onChange: (changeEvent, metadata) => {
+                        console.log('Context received a change', changeEvent, metadata);
+                    },
+                });
+
+                const frameOptions = {
+                    url: "<YOUR_EMBED_URL>", // replace this value with the url generated via embedding API
+                    container: '#experience-container',
+                    height: "700px",
+                    width: "1000px",
+                    onChange: (changeEvent, metadata) => {
+                        switch (changeEvent.eventName) {
+                            case 'FRAME_MOUNTED': {
+                                console.log("Do something when the experience frame is mounted.");
+                                break;
+                            }
+                            case 'FRAME_LOADED': {
+                                console.log("Do something when the experience frame is loaded.");
+                                break;
+                            }
+                        }
+                    },
+                };
+
+                const contentOptions = {
+                    panelOptions: {
+                        panelType: 'FULL',
+                        title: 'Custom Title',
+                        showQIcon: false,
+                    },
+                    // Uncomment below, if you prefer an experience closer to embedQSearchBar instead of a full panel.
+                    /*
+                    panelOptions: {
+                        panelType: 'SEARCH_BAR',
+                        focusedHeight: '250px',
+                        expandedHeight: '500px',
+                    },
+                    */
+                    showTopicName: false,
+                    showPinboard: false,
+                    allowTopicSelection: false,
+                    allowFullscreen: false,
+                    searchPlaceholderText: 'Custom Search Placeholder',
+                    themeOptions: {
+                        themeArn: 'arn:aws:quicksight:<Region>:<AWS-Account-ID>:theme/<Theme-ID>'
+                    }
+                    onMessage: async (messageEvent, experienceMetadata) => {
+                        switch (messageEvent.eventName) {
+                            case 'Q_SEARCH_OPENED': {
+                                console.log("Do something when SEARCH_BAR type panel is expanded");
+                                break;
+                            }
+                            case 'Q_SEARCH_FOCUSED': {
+                                console.log("Do something when SEARCH_BAR type panel is focused");
+                                break;
+                            }
+                            case 'Q_SEARCH_CLOSED': {
+                                console.log("Do something when SEARCH_BAR type panel is collapsed");
+                                break;
+                            }
+                            case 'Q_PANEL_ENTERED_FULLSCREEN': {
+                                console.log("Do something when the experience enters full screen mode");
+                                break;
+                            }
+                            case 'Q_PANEL_EXITED_FULLSCREEN': {
+                                console.log("Do something when the experience exits full screen mode");
+                                break;
+                            }
+                            case 'CONTENT_LOADED': {
+                                console.log("Do something when the experience is loaded");
+                                break;
+                            }
+                            case 'ERROR_OCCURRED': {
+                                console.log("Do something when an error occurs.");
+                                break;
+                            }
+                        }
+                    }
+                };
+                const embeddedGenerativeQnExperience = await embeddingContext.embedGenerativeQnA(frameOptions, contentOptions);
+            };
+        </script>
+    </head>
+
+    <body onload="embedGenerativeQnA()">
+        <div id="experience-container"></div>
+    </body>
+
+</html>
+```
+
+&nbsp;  
+### `frameOptions`
+&nbsp; 
+
+See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange` properties
+
+Note that while using `SEARCH_BAR` panel type, you'll likely want to use `className` to give the iframe a `position: absolute` so that when expanded it does not shift the contents of your application. If elements in your application are appearing in front of the search bar, you can provide the iframe with a higher z-index as well.
+
+&nbsp;  
+### `contentOptions`
+&nbsp;  
+
+#### 🔹 showTopicName: *boolean* *(optional, default=true)*
+The `showTopicName` property can be used to customize whether or not the QuickSight Q Topic name appears in the experience.
+
+#### 🔹 showPinboard: *boolean* *(optional, default=true)*
+The `showPinboard` property can be used to customize whether or not pinboard button is shown. For more information, see [Pinning visuals in Amazon QuickSight Q](https://docs.aws.amazon.com/quicksight/latest/user/quicksight-q-pin-board.html). This property has no effect for anonymous user embedding, pinboard is usable by registered users only.
+
+#### 🔹 allowTopicSelection: *boolean* *(optional, default=true)*
+The `allowTopicSelection` property can be used to customize whether or not the embedded user can change the selected topic. Note that this can only be set to false if the `initialTopicId` was specified in the embedding API; for more information, see [QuickSight Embedding APIs](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html).
+
+#### 🔹 allowFullscreen: *boolean* *(optional, default=true)*
+The `allowFullscreen` property can be used to customize whether or the experience is allowed to enter into full-screen mode.
+
+#### 🔹 searchPlaceholderText: *string* *(optional)*
+The `searchPlaceholderText` property can be used to customize the placeholder text shown in the search text input field, when there is not a question being asked. Maximum 200 characters are allowed.
+
+#### 🔹 panelOptions: *(optional)*
+The `panelOptions` property can be used to customize additional properties for full panel and search bar panel types.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 panelType: *string*
+The `panelType` property can be used to choose between full panel and search bar panel types. If `panelOptions` object is provided, then this property must also be set to either `FULL` or `SEARCH_BAR`.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 title: *string* *(optional)*
+The `title` property can be used to customize the panel title. Only valid for `FULL` panel type. Maximum 200 characters are allowed.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showQIcon: *boolean* *(optional, default=true)*
+The `showQIcon` property can be used to customize whether Q icon will be shown. Only valid for `FULL` panel type.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 focusedHeight: *string* *(optional)*
+The `focusedHeight` property can be used to customize the height when the search bar is focused. This height is used when question suggestions are shown, or topic selection dropdown is opened. Only valid for `SEARCH_BAR` panel type.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 expandedHeight: *boolean* *(optional, default=true)*
+The `focusedHeight` property can be used to customize the height when the search bar is expanded. This height is used when user gets an answer, or opens the pinboard. Only valid for `SEARCH_BAR` panel type.
+
+#### 🔹 themeOptions
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 themeArn: *string* *(optional)*
+The `themeArn` property can be used to to specify the theme the experience should load with.
+
+#### 🔹 onMessage: *SimpleMessageEventHandler* *(optional)*
+
+The `eventName`s the Generative Q&A experience receives
+
+    Q_SEARCH_OPENED: Received when SEARCH_BAR type panel is expanded
+    Q_SEARCH_FOCUSED: Received when SEARCH_BAR type panel is focused
+    Q_SEARCH_CLOSED: Received when SEARCH_BAR type panel is collapsed
+    Q_PANEL_ENTERED_FULLSCREEN: Received when the experience enters full screen mode
+    Q_PANEL_EXITED_FULLSCREEN: Received when the experience exits full screen mode
+    CONTENT_LOADED: Received when the experience is loaded
+    ERROR_OCCURRED: Received when an error occurs. The message contains `errorCode`. The error codes are:
+    - Q_NO_TOPICS_AVAILABLE: User has no topic created or shared with them they can query with. There will not be any content rendered once this happens.
+    - Q_INITIAL_TOPIC_NOT_FOUND: The topic specified by InitialTopicId is not found.
+    - Q_TOPIC_EXPERIENCE_MISMATCH: Some or all topics do not have the expected user experience version.
+    - Q_TOPIC_NOT_QUERYABLE: Some or all topics are not queryable.
+
+&nbsp;  
+### Actions
+&nbsp;  
+
+#### 🔹 setQuestion
+
+This method sends a question to the experience and immediately queries that question. It also triggers the search bar to open, if using that panel type. 
+
+```javascript
+    embeddedGenerativeQnExperience.setQuestion('show me monthly revenue');
+```
+
+#### 🔹 close
+
+This method closes the search bar, returns the iframe to the original search bar size. It has no effect for `FULL` panel type.
+
+```javascript
+    embeddedGenerativeQnExperience.close();
+```
 
 &nbsp;  
 ## Troubleshooting
@@ -1756,5 +1973,5 @@ This feature closes the Q popover, returns the iframe to the original Q search b
 &nbsp;  
 ## License
 &nbsp;  
-Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: Apache-2.0

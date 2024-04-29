@@ -128,7 +128,7 @@ describe('VisualExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            'https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=2.6.0&fitToIframeWidth=true&contextId=testContextId&discriminator=0#'
+            `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitToIframeWidth=true&contextId=testContextId&discriminator=0#`
         );
     });
 
@@ -174,9 +174,8 @@ describe('VisualExperience', () => {
     });
 
     it('should create visual experience with themeOverride', () => {
-        let controlExperience: ControlExperience;
         const body = window.document.querySelector('body');
-        controlExperience = new ControlExperience(body!, TEST_CONTROL_OPTIONS);
+        const controlExperience = new ControlExperience(body!, TEST_CONTROL_OPTIONS);
 
         const mockSend = jest.fn();
         const frameOptions = {

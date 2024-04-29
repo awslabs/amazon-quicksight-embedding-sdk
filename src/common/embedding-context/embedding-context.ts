@@ -1,4 +1,4 @@
-// Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 import {v4} from 'uuid';
@@ -14,9 +14,11 @@ import {VisualExperience} from '@experience/visual-experience/visual-experience'
 import {DashboardContentOptions} from '@experience/dashboard-experience/types';
 import {ConsoleContentOptions} from '@experience/console-experience/types';
 import {QSearchContentOptions} from '@experience/q-search-experience/types';
+import {GenerativeQnAContentOptions} from '@experience/generative-qna-experience/types';
 import {ConsoleExperience} from '@experience/console-experience/console-experience';
 import {DashboardExperience} from '@experience/dashboard-experience/dashboard-experience';
 import {QSearchExperience} from '@experience/q-search-experience/q-search-experience';
+import {GenerativeQnAExperience} from '@experience/generative-qna-experience/generative-qna-experience';
 import {ChangeEventLevel, ChangeEventName, EmbeddingEvents} from '@common/events/types';
 import {ChangeEvent} from '@common/events/events';
 import {ControlExperience} from '@experience/control-experience/control-experience';
@@ -96,6 +98,20 @@ export class EmbeddingContext implements IEmbeddingContext {
         this.validateFrameOptions(frameOptions, 'embedQSearchBar');
         const controlOptions = this.buildControlOptions(frameOptions);
         return new QSearchExperience(
+            frameOptions,
+            contentOptions,
+            controlOptions,
+            this.experienceIdentifiers
+        ).setLogProvider(this.logger);
+    };
+
+    public embedGenerativeQnA = async (
+        frameOptions: FrameOptions,
+        contentOptions: GenerativeQnAContentOptions = {}
+    ): Promise<GenerativeQnAExperience> => {
+        this.validateFrameOptions(frameOptions, 'embedGenerativeQnA');
+        const controlOptions = this.buildControlOptions(frameOptions);
+        return new GenerativeQnAExperience(
             frameOptions,
             contentOptions,
             controlOptions,

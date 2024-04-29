@@ -1,3 +1,7 @@
+**2.7.0**
+* Add Generative Q&A embedding support with new `embedGenerativeQnA` function
+* Minor bug fixes
+
 **2.6.0**
 * Support preloading themes on load
 * Support setting theme override on load

@@ -15,7 +15,7 @@ const banner = `/*!
 * ${pkg.repository.url}
 * ${pkg.homepage}
 * 
-* Copyright 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+* Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 * SPDX-License-Identifier: ${pkg.license}
 */`;
 

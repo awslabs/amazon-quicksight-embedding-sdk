@@ -1,4 +1,4 @@
-// Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 import {
@@ -63,9 +63,13 @@ export abstract class BaseExperience<
         }
 
         if (
-            [ExperienceType.CONSOLE, ExperienceType.CONTROL, ExperienceType.CONTEXT, ExperienceType.QSEARCH].includes(
-                experience.experienceType
-            )
+            [
+                ExperienceType.CONSOLE,
+                ExperienceType.CONTROL,
+                ExperienceType.CONTEXT,
+                ExperienceType.QSEARCH,
+                ExperienceType.GENERATIVEQNA,
+            ].includes(experience.experienceType)
         ) {
             const {contextId, experienceType, discriminator} = experience;
             return [contextId, experienceType, discriminator].filter(Boolean).join('-');
@@ -128,26 +132,27 @@ export abstract class BaseExperience<
 
     protected transformContentOptions = <TCO extends TransformedContentOptions>(
         filteredOptions: TCO,
-        unrecognizedContentOptions: Partial<TCO>
+        unrecognizedContentOptions: object
     ): TCO => {
-        const unrecognizedContentOptionNames = Object.keys(unrecognizedContentOptions);
-        if (Object.keys(unrecognizedContentOptions).length > 0) {
+        this.warnUnrecognizedContentOptions(Object.keys(unrecognizedContentOptions));
+        return filteredOptions;
+    };
+
+    protected warnUnrecognizedContentOptions = (unrecognizedProperties: string[]) => {
+        if (unrecognizedProperties.length > 0) {
             this.frameOptions.onChange?.(
                 new ChangeEvent(
                     ChangeEventName.UNRECOGNIZED_CONTENT_OPTIONS,
                     ChangeEventLevel.WARN,
                     'Experience content options contain unrecognized properties',
                     {
-                        unrecognizedContentOptions: unrecognizedContentOptionNames,
+                        unrecognizedContentOptions: unrecognizedProperties,
                     }
                 ),
                 {frame: null}
             );
-
             this.logger?.warn('Experience content options contain unrecognized properties');
         }
-
-        return filteredOptions;
     };
 
     protected abstract extractExperienceFromUrl: (url: string) => Experience;

@@ -1,4 +1,4 @@
-// Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 import {BaseContentOptions, ExperienceType, IBaseExperience} from '../base-experience';
@@ -24,12 +24,3 @@ export interface TransformedQSearchContentOptions extends BaseContentOptions {
     themeId?: string;
     allowTopicSelection?: boolean;
 }
-
-export type FrameStyles = {
-    position: string;
-    top: string;
-    left: string;
-    zIndex: string;
-    width: string;
-    height: string;
-};

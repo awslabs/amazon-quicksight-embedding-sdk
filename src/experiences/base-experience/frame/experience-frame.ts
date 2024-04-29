@@ -1,4 +1,4 @@
-// Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 import {v4} from 'uuid';
@@ -26,7 +26,7 @@ import {
 } from '@common/events/events';
 import {Iframe} from '@common/iframe/iframe';
 
-export const SDK_VERSION = '2.6.0';
+export const SDK_VERSION = '2.7.0';
 
 export abstract class BaseExperienceFrame<
     ExperienceContentOptions extends ContentOptions,

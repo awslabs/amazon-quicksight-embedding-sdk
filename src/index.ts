@@ -11,6 +11,8 @@ import * as DashboardExperienceTypes from '@experience/dashboard-experience/type
 import * as ControlExperienceTypes from '@experience/control-experience/types';
 import * as QSearchExperienceTypes from '@experience/q-search-experience/types';
 import * as VisualExperienceTypes from '@experience/visual-experience/types';
+import * as GenerativeQnAExperienceTypes from '@experience/generative-qna-experience/types';
+import * as InternalQBaseExperienceTypes from '@experience/internal-q-base-experience/types';
 
 export * from './common';
 export * from './experiences';
@@ -33,4 +35,6 @@ export const QSE = {
     ...QSearchExperienceTypes,
     ...ControlExperienceTypes,
     ...VisualExperienceTypes,
+    ...GenerativeQnAExperienceTypes,
+    ...InternalQBaseExperienceTypes,
 };
