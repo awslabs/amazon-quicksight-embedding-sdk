@@ -266,6 +266,16 @@ export class DashboardExperience extends BaseExperience<
         );
     };
 
+    createSharedView = async (): Promise<string> => {
+        const response = await this.send<string>(new EmbeddingMessageEvent(MessageEventName.CREATE_SHARED_VIEW));
+
+        if (!response?.message) {
+            throw new Error('Failed to create shared view');
+        }
+
+        return response.message;
+    };
+
     protected extractExperienceFromUrl = (url: string): IDashboardExperience => {
         const matches: Array<string> = /^https:\/\/[^/]+\/embed\/[^/]+\/dashboards\/([\w-]+)(\?|$)/i.exec(url) || [];
 

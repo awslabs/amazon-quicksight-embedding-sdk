@@ -19,7 +19,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
 ...
-<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.1/dist/quicksight-embedding-js-sdk.min.js"></script>
 <script type="text/javascript">
     const onLoad = async () => {
         const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
@@ -428,6 +428,7 @@ export class DashboardExperience extends BaseExperience<DashboardContentOptions,
    removeFilterGroups: (filterGroupsOrIds: FilterGroup[] | string[]) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
    setTheme:(themeArn: string) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
    setThemeOverride: (themeOverride: ThemeConfiguration) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+   createSharedView: () => Promise<SuccessResponseMessage | ErrorResponseMessage>;
    getSelectedSheetId: () => Promise<string>;
    setSelectedSheetId: (sheetId: string) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
    navigateToDashboard: (dashboardId: string, navigateToDashboardOptions?: NavigateToDashboardOptions) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
@@ -449,7 +450,7 @@ export class DashboardExperience extends BaseExperience<DashboardContentOptions,
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedDashboard = async() => {
                 const {
@@ -984,6 +985,14 @@ If you want to override the current theme configuration for the Amazon quicksigh
     });
 ```
 
+#### 🔹 createSharedView *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to share the current view, use the below method: 
+
+```javascript
+    embeddedDashboardExperience.createSharedView();
+```
+
 #### 🔹 initiatePrint *() => Promise&lt;ResponseMessage&gt;*
 
 This feature allows you to initiate dashboard print, from parent website, without a navbar print icon, in the dashboard. To initiate a dashboard print from parent website, use dashboard.initiatePrint(), for example:
@@ -1075,7 +1084,7 @@ export class VisualExperience extends BaseExperience<VisualContentOptions, Inter
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedVisual = async() => {    
                 const {
@@ -1509,7 +1518,7 @@ Use `embedConsole` method to embed a QuickSight console. It returns a promise of
 
     <head>
         <title>Console Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedConsole = async() => {
                 const {
@@ -1583,6 +1592,21 @@ The `eventName`s the console experience receives
     - `Forbidden` -- the URL's authentication code expired
     - `Unauthorized` -- the session obtained from the authentication code expired
     If you follow the instructions to generate the correct URL, but you still receive these error codes, you need to generate a new URL.
+    PAGE_NAVIGATION: Received when the embedded instance navigates to a new route. The message contains `pageType`, which corresponds to the new route.
+
+&nbsp;  
+### Actions
+&nbsp;  
+
+#### 🔹 createSharedView *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to share the current view, use the below method:
+
+```javascript
+    embeddedConsoleExperience.createSharedView();
+```
+
+This method can only be called from the `DASHBOARD` route. 
 
 ***
 
@@ -1617,7 +1641,7 @@ export class QSearchExperience extends BaseExperience<QSearchContentOptions, Int
 
     <head>
         <title>Q Search Bar Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQSearchBar = async() => {    
                 const {
@@ -1774,7 +1798,7 @@ export class GenerativeQnAExperience extends BaseExperience<GenerativeQnAContent
 
     <head>
         <title>Generative Q&A Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.0/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.7.1/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedGenerativeQnA = async() => {    
                 const {

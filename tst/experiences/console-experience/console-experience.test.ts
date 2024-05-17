@@ -1,8 +1,9 @@
 import {ExperienceType} from '@experience/base-experience/types';
-import {ChangeEventLevel, ChangeEventName} from '@common/events/types';
+import {ChangeEventLevel, ChangeEventName, MessageEventName} from '@common/events/types';
 import {EventManager} from '@common/event-manager/event-manager';
 import {ConsoleExperience} from '@experience/console-experience/console-experience';
 import {SDK_VERSION} from '@experience/base-experience/frame/experience-frame';
+import {InfoMessageEventName} from '@common/events/messages';
 
 describe('ConsoleExperience', () => {
     let TEST_CONTAINER: HTMLElement;
@@ -49,6 +50,7 @@ describe('ConsoleExperience', () => {
 
         const consoleExperience = new ConsoleExperience(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
         expect(typeof consoleExperience.send).toEqual('function');
+        expect(typeof consoleExperience.createSharedView).toEqual('function');
         expect(onChangeSpy).toHaveBeenCalledWith(
             {
                 eventName: ChangeEventName.FRAME_STARTED,
@@ -109,6 +111,58 @@ describe('ConsoleExperience', () => {
             );
         };
         expect(createConsoleFrameWrapper).toThrowError('Url is required for the experience');
+    });
+
+    describe('Actions', () => {
+        let consoleExperience: ConsoleExperience;
+        const mockSend = jest.fn();
+        let TEST_CONTAINER: HTMLElement;
+
+        beforeEach(() => {
+            TEST_CONTAINER = window.document.createElement('div');
+            const frameOptions = {
+                url: TEST_CONSOLE_URL,
+                container: TEST_CONTAINER,
+                width: '800px',
+                onChange: onChangeSpy,
+            };
+            consoleExperience = new ConsoleExperience(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
+            jest.spyOn(consoleExperience, 'send').mockImplementation(mockSend);
+        });
+
+        it('should not emit CREATE_SHARED_VIEW event when createSharedView is called on default page', () => {
+            const wrapper = async () => {
+                return await consoleExperience.createSharedView();
+            };
+
+            expect(wrapper).rejects.toThrowError('Cannot call createSharedView from this page');
+        });
+
+        it('should not emit CREATE_SHARED_VIEW event when page is anything but DASHBOARD', async () => {
+            (consoleExperience as any).interceptMessage({
+                eventName: InfoMessageEventName.PAGE_NAVIGATION,
+                message: {pageType: 'FOLDERS'},
+            });
+            const wrapper = async () => {
+                return await consoleExperience.createSharedView();
+            };
+
+            expect(wrapper).rejects.toThrowError('Cannot call createSharedView from this page');
+        });
+
+        it('should call createSharedView if we are on the DASHBOARD page', async () => {
+            (consoleExperience as any).interceptMessage({
+                eventName: InfoMessageEventName.PAGE_NAVIGATION,
+                message: {pageType: 'DASHBOARD'},
+            });
+
+            consoleExperience.createSharedView();
+            expect(consoleExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.CREATE_SHARED_VIEW,
+                })
+            );
+        });
     });
 
     it('should throw error if not console url', () => {

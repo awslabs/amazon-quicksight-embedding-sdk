@@ -11,8 +11,9 @@ import {
 import {ControlOptions} from '../control-experience';
 import {ExperienceType, FrameOptions} from '@experience/base-experience/types';
 import {BaseExperience} from '@experience/base-experience/base-experience';
-import {ChangeEvent} from '@common/events/events';
-import {ChangeEventLevel, ChangeEventName} from '@common/events/types';
+import {ChangeEvent, EmbeddingMessageEvent, ResponseMessage} from '@common/events/events';
+import {ChangeEventLevel, ChangeEventName, EmbeddingEvents, MessageEventName} from '@common/events/types';
+import {ExperienceFrameMetadata} from 'src/common';
 
 export class ConsoleExperience extends BaseExperience<
     ConsoleContentOptions,
@@ -25,6 +26,7 @@ export class ConsoleExperience extends BaseExperience<
     protected internalExperience;
     protected experienceId;
     protected experienceFrame;
+    protected currentPage: string | undefined;
 
     constructor(
         frameOptions: FrameOptions,
@@ -62,9 +64,24 @@ export class ConsoleExperience extends BaseExperience<
             contentOptions,
             transformedContentOptions,
             internalExperience,
-            experienceIdentifier
+            experienceIdentifier,
+            this.interceptMessage
         );
+        this.currentPage = 'START';
     }
+
+    createSharedView = async (): Promise<ResponseMessage> => {
+        if (this.currentPage !== 'DASHBOARD') {
+            throw new Error('Cannot call createSharedView from this page');
+        }
+        return await this.send(new EmbeddingMessageEvent(MessageEventName.CREATE_SHARED_VIEW));
+    };
+
+    private interceptMessage = (messageEvent: EmbeddingEvents, metadata?: ExperienceFrameMetadata) => {
+        if (messageEvent.eventName === MessageEventName.PAGE_NAVIGATION) {
+            this.currentPage = messageEvent?.message?.pageType;
+        }
+    };
 
     protected extractExperienceFromUrl = (url: string): IConsoleExperience => {
         const matches: Array<string> =

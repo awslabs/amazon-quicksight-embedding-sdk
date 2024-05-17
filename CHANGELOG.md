@@ -1,3 +1,7 @@
+**2.7.1**
+* Add `createSharedView` action to console and dashboard experiences
+* Add PAGE_NAVIGATION event to notify SDK of route changes
+
 **2.7.0**
 * Add Generative Q&A embedding support with new `embedGenerativeQnA` function
 * Minor bug fixes

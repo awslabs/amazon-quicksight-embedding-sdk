@@ -16,6 +16,7 @@ export const SetterMessageEventName = {
     REMOVE_VISUAL_ACTIONS: 'REMOVE_VISUAL_ACTIONS',
     SET_THEME_OVERRIDE: 'SET_THEME_OVERRIDE',
     PRELOAD_THEMES: 'PRELOAD_THEMES',
+    CREATE_SHARED_VIEW: 'CREATE_SHARED_VIEW',
 } as const;
 
 export type SetterMessageEventName = (typeof SetterMessageEventName)[keyof typeof SetterMessageEventName];
@@ -32,4 +33,5 @@ export type SetterMessageEvents =
     | EmbeddingMessageEvent<typeof SetterMessageEventName.SET_Q_SEARCH_QUESTION, {question?: string}>
     | EmbeddingMessageEvent<typeof SetterMessageEventName.SET_SELECTED_SHEET_ID, {sheetId?: string}>
     | EmbeddingMessageEvent<typeof SetterMessageEventName.PRELOAD_THEMES, string[]>
-    | EmbeddingMessageEvent<typeof SetterMessageEventName.SET_THEME_OVERRIDE, ThemeConfiguration>;
+    | EmbeddingMessageEvent<typeof SetterMessageEventName.SET_THEME_OVERRIDE, ThemeConfiguration>
+    | EmbeddingMessageEvent<typeof SetterMessageEventName.CREATE_SHARED_VIEW, {viewId?: string}>;

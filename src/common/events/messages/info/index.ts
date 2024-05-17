@@ -19,6 +19,7 @@ export const InfoMessageEventName = {
     Q_SEARCH_EXITED_FULLSCREEN: 'Q_SEARCH_EXITED_FULLSCREEN',
     Q_PANEL_ENTERED_FULLSCREEN: 'Q_PANEL_ENTERED_FULLSCREEN',
     Q_PANEL_EXITED_FULLSCREEN: 'Q_PANEL_EXITED_FULLSCREEN',
+    PAGE_NAVIGATION: 'PAGE_NAVIGATION',
 } as const;
 
 export type InfoMessageEventName = (typeof InfoMessageEventName)[keyof typeof InfoMessageEventName];
@@ -56,4 +57,5 @@ export type InfoMessageEvents =
     | EmbeddingEvent<typeof InfoMessageEventName.Q_SEARCH_ENTERED_FULLSCREEN, undefined>
     | EmbeddingEvent<typeof InfoMessageEventName.Q_SEARCH_EXITED_FULLSCREEN, undefined>
     | EmbeddingEvent<typeof InfoMessageEventName.Q_PANEL_ENTERED_FULLSCREEN, undefined>
-    | EmbeddingEvent<typeof InfoMessageEventName.Q_PANEL_EXITED_FULLSCREEN, undefined>;
+    | EmbeddingEvent<typeof InfoMessageEventName.Q_PANEL_EXITED_FULLSCREEN, undefined>
+    | EmbeddingEvent<typeof InfoMessageEventName.PAGE_NAVIGATION, {pageType?: string}>;

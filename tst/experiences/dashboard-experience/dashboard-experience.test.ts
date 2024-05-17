@@ -269,6 +269,7 @@ describe('DashboardExperience', () => {
         expect(typeof dashboardFrame.setParameters).toEqual('function');
         expect(typeof dashboardFrame.initiatePrint).toEqual('function');
         expect(typeof dashboardFrame.setThemeOverride).toEqual('function');
+        expect(typeof dashboardFrame.createSharedView).toEqual('function');
         expect(typeof dashboardFrame.setPreloadThemes).toEqual('function');
 
         controlExperience.controlFrameMessageListener(
@@ -797,6 +798,26 @@ describe('DashboardExperience', () => {
                 })
             );
         });
+
+        it('should emit CREATE_SHARED_VIEW event when createSharedView is called', async () => {
+            const mockMessage = {success: true, dashboardId: '123', viewId: 'abc'};
+            mockSend.mockResolvedValue({message: mockMessage});
+            const val = await dashboardExperience.createSharedView();
+            expect(dashboardExperience.send).toBeCalledWith({
+                eventName: MessageEventName.CREATE_SHARED_VIEW,
+            });
+            expect(val).toEqual(mockMessage);
+        });
+
+        it('should throw error when createSharedView returns undefined message', async () => {
+            mockSend.mockResolvedValue({});
+            const wrapper = async () => {
+                return await dashboardExperience.createSharedView();
+            };
+
+            await expect(wrapper).rejects.toThrowError('Failed to create shared view');
+        });
+
         it('should emit PRELOAD_THEMES event when setPreloadThemes is called', () => {
             dashboardExperience.setPreloadThemes(['']);
 
