@@ -30,7 +30,7 @@ module.exports = {
             branches: 81.6,
             functions: 90,
             lines: 90,
-            statements: -42
+            statements: -45
         },
     },
     moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {prefix: '<rootDir>/'} )

@@ -98,6 +98,34 @@ describe('DashboardExperience', () => {
         );
     });
 
+    it('should create dashboard experience and add viewId to url', () => {
+        const frameOptions = {
+            url: TEST_DASHBOARD_URL,
+            container: TEST_CONTAINER,
+            width: '800px',
+            onChange: onChangeSpy,
+        };
+        const contentOptions: DashboardContentOptions = {
+            viewId: 'testViewId',
+        };
+        const dashboardExperience = new DashboardExperience(
+            frameOptions,
+            contentOptions,
+            TEST_CONTROL_OPTIONS,
+            new Set<string>()
+        );
+
+        expect(typeof dashboardExperience.send).toEqual('function');
+        expect(typeof dashboardExperience.setParameters).toEqual('function');
+        expect(typeof dashboardExperience.initiatePrint).toEqual('function');
+        const iFrame = TEST_CONTAINER.querySelector('iframe');
+        expect(iFrame).toBeDefined();
+
+        expect(iFrame?.src).toEqual(
+            `https://test.amazon.com/embed/guid/dashboards/testDashboardId/views/testViewId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&footerPaddingEnabled=true&undoRedoDisabled=true&resetDisabled=true&contextId=testContextId&discriminator=0#`
+        );
+    });
+
     it('should create dashboard frame with toolbar options enabled', () => {
         const frameOptions = {
             url: TEST_DASHBOARD_URL,

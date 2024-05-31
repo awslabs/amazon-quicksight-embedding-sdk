@@ -28,6 +28,7 @@ export interface DashboardContentOptions extends BaseContentOptions {
     toolbarOptions?: ToolbarOptions;
     sheetOptions?: SheetOptions;
     themeOptions?: ThemeOptions;
+    viewId?: string;
 }
 
 export interface TransformedDashboardContentOptions extends BaseContentOptions {

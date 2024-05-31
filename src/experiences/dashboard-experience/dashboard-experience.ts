@@ -278,7 +278,6 @@ export class DashboardExperience extends BaseExperience<
 
     protected extractExperienceFromUrl = (url: string): IDashboardExperience => {
         const matches: Array<string> = /^https:\/\/[^/]+\/embed\/[^/]+\/dashboards\/([\w-]+)(\?|$)/i.exec(url) || [];
-
         if (matches.length < 3) {
             this.frameOptions.onChange?.(
                 new ChangeEvent(

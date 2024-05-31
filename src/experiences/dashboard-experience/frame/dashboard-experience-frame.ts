@@ -37,6 +37,14 @@ export class DashboardExperienceFrame extends BaseExperienceFrame<
     buildExperienceUrl = (baseUrl: string) => {
         const {parameters, ...otherOptions} = this.transformedContentOptions;
         const {contextId, discriminator} = this.internalExperience;
+        const {viewId} = this.contentOptions;
+
+        // ViewId was passed as content option, need to override url to include custom view
+        if (viewId) {
+            const url = new URL(baseUrl);
+            url.pathname = url.pathname.concat('/views/' + viewId);
+            baseUrl = url.href;
+        }
 
         const queryString = this.buildQueryString({
             ...otherOptions,
