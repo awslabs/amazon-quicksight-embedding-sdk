@@ -71,10 +71,15 @@ export class ConsoleExperience extends BaseExperience<
     }
 
     createSharedView = async (): Promise<ResponseMessage> => {
-        if (this.currentPage !== 'DASHBOARD') {
+        if (this.currentPage !== 'DASHBOARD' && this.currentPage !== 'DASHBOARD_SHEET') {
             throw new Error('Cannot call createSharedView from this page');
         }
-        return await this.send(new EmbeddingMessageEvent(MessageEventName.CREATE_SHARED_VIEW));
+        const response = await this.send(new EmbeddingMessageEvent(MessageEventName.CREATE_SHARED_VIEW));
+        if (!response?.message) {
+            throw new Error('Failed to create shared view');
+        }
+
+        return response;
     };
 
     private interceptMessage = (messageEvent: EmbeddingEvents, metadata?: ExperienceFrameMetadata) => {

@@ -266,14 +266,13 @@ export class DashboardExperience extends BaseExperience<
         );
     };
 
-    createSharedView = async (): Promise<string> => {
-        const response = await this.send<string>(new EmbeddingMessageEvent(MessageEventName.CREATE_SHARED_VIEW));
-
+    createSharedView = async (): Promise<ResponseMessage> => {
+        const response = await this.send(new EmbeddingMessageEvent(MessageEventName.CREATE_SHARED_VIEW));
         if (!response?.message) {
             throw new Error('Failed to create shared view');
         }
 
-        return response.message;
+        return response;
     };
 
     protected extractExperienceFromUrl = (url: string): IDashboardExperience => {

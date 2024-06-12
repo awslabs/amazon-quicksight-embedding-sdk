@@ -834,7 +834,7 @@ describe('DashboardExperience', () => {
             expect(dashboardExperience.send).toBeCalledWith({
                 eventName: MessageEventName.CREATE_SHARED_VIEW,
             });
-            expect(val).toEqual(mockMessage);
+            expect(val).toEqual({message: mockMessage});
         });
 
         it('should throw error when createSharedView returns undefined message', async () => {

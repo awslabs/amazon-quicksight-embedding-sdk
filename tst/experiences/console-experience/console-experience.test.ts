@@ -138,7 +138,7 @@ describe('ConsoleExperience', () => {
             expect(wrapper).rejects.toThrowError('Cannot call createSharedView from this page');
         });
 
-        it('should not emit CREATE_SHARED_VIEW event when page is anything but DASHBOARD', async () => {
+        it('should not emit CREATE_SHARED_VIEW event when page is anything but DASHBOARD or DASHBOARD_SHEET', async () => {
             (consoleExperience as any).interceptMessage({
                 eventName: InfoMessageEventName.PAGE_NAVIGATION,
                 message: {pageType: 'FOLDERS'},
@@ -150,11 +150,42 @@ describe('ConsoleExperience', () => {
             expect(wrapper).rejects.toThrowError('Cannot call createSharedView from this page');
         });
 
+        it('should throw error when createSharedView returns undefined message', async () => {
+            (consoleExperience as any).interceptMessage({
+                eventName: InfoMessageEventName.PAGE_NAVIGATION,
+                message: {pageType: 'DASHBOARD'},
+            });
+            mockSend.mockResolvedValue({});
+            const wrapper = async () => {
+                return await consoleExperience.createSharedView();
+            };
+
+            await expect(wrapper).rejects.toThrowError('Failed to create shared view');
+        });
+
         it('should call createSharedView if we are on the DASHBOARD page', async () => {
             (consoleExperience as any).interceptMessage({
                 eventName: InfoMessageEventName.PAGE_NAVIGATION,
                 message: {pageType: 'DASHBOARD'},
             });
+            const mockMessage = {success: true, dashboardId: '123', viewId: 'abc'};
+            mockSend.mockResolvedValue({message: mockMessage});
+
+            consoleExperience.createSharedView();
+            expect(consoleExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.CREATE_SHARED_VIEW,
+                })
+            );
+        });
+
+        it('should call createSharedView if we are on the DASHBOARD_SHEET page', async () => {
+            (consoleExperience as any).interceptMessage({
+                eventName: InfoMessageEventName.PAGE_NAVIGATION,
+                message: {pageType: 'DASHBOARD_SHEET'},
+            });
+            const mockMessage = {success: true, dashboardId: '123', viewId: 'abc'};
+            mockSend.mockResolvedValue({message: mockMessage});
 
             consoleExperience.createSharedView();
             expect(consoleExperience.send).toBeCalledWith(
