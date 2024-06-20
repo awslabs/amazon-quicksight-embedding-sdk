@@ -1,4 +1,4 @@
-**2.7.1**
+**2.8.0**
 * Add `createSharedView` action to console and dashboard experiences
 * Add PAGE_NAVIGATION event to notify SDK of route changes
 

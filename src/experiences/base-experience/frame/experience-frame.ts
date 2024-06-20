@@ -26,7 +26,7 @@ import {
 } from '@common/events/events';
 import {Iframe} from '@common/iframe/iframe';
 
-export const SDK_VERSION = '2.7.1';
+export const SDK_VERSION = '2.8.0';
 
 export abstract class BaseExperienceFrame<
     ExperienceContentOptions extends ContentOptions,
