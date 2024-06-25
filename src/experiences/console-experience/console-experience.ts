@@ -71,7 +71,11 @@ export class ConsoleExperience extends BaseExperience<
     }
 
     createSharedView = async (): Promise<ResponseMessage> => {
-        if (this.currentPage !== 'DASHBOARD' && this.currentPage !== 'DASHBOARD_SHEET') {
+        if (
+            this.currentPage !== 'DASHBOARD' &&
+            this.currentPage !== 'DASHBOARD_SHEET' &&
+            this.currentPage !== 'DASHBOARD_VIEW'
+        ) {
             throw new Error('Cannot call createSharedView from this page');
         }
         const response = await this.send(new EmbeddingMessageEvent(MessageEventName.CREATE_SHARED_VIEW));
@@ -90,7 +94,7 @@ export class ConsoleExperience extends BaseExperience<
 
     protected extractExperienceFromUrl = (url: string): IConsoleExperience => {
         const matches: Array<string> =
-            /^https:\/\/[^/]+\/embedding\/[^/]+\/(start(\/(favorites|dashboards|analyses))?|dashboards\/[\w-]+|analyses\/[\w-]+)(\?|$)/i.exec(
+            /^https:\/\/[^/]+\/embedding\/[^/]+\/(start(\/(favorites|dashboards|analyses))?|dashboards\/[\w-]+(\/views\/[\w-]+)?|analyses\/[\w-]+)(\?|$)/i.exec(
                 url
             ) || [];
 

@@ -194,6 +194,22 @@ describe('ConsoleExperience', () => {
                 })
             );
         });
+
+        it('should call createSharedView if we are on the DASHBOARD_VIEW page', async () => {
+            (consoleExperience as any).interceptMessage({
+                eventName: InfoMessageEventName.PAGE_NAVIGATION,
+                message: {pageType: 'DASHBOARD_VIEW'},
+            });
+            const mockMessage = {success: true, dashboardId: '123', viewId: 'abc'};
+            mockSend.mockResolvedValue({message: mockMessage});
+
+            consoleExperience.createSharedView();
+            expect(consoleExperience.send).toBeCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.CREATE_SHARED_VIEW,
+                })
+            );
+        });
     });
 
     it('should throw error if not console url', () => {
