@@ -51,9 +51,17 @@ export abstract class InternalQBaseExperience<
     };
 
     protected trackOutsideClicks = (): void => {
-        const clickHandler = (event: MouseEvent) => {
+        const clickHandler = async (event: MouseEvent) => {
             if (!this.experienceFrame.iframe?.contains(event.target as Node)) {
-                this.close();
+                try {
+                    await this.close();
+                } catch (e) {
+                    if (!this.experienceFrame.iframe) {
+                        // no-op. Edge case when iframe is deleted before response is returned
+                        return;
+                    }
+                    throw e;
+                }
             }
         };
 
