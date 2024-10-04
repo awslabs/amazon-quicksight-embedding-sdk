@@ -708,6 +708,13 @@ describe('DashboardExperience', () => {
             });
         });
 
+        it('should emit TOGGLE_EXECUTIVE_SUMMARY_PANE event when toggleExecutiveSummaryPane is called', () => {
+            dashboardExperience.toggleExecutiveSummaryPane();
+            expect(dashboardExperience.send).toHaveBeenCalledWith({
+                eventName: MessageEventName.TOGGLE_EXECUTIVE_SUMMARY_PANE,
+            });
+        });
+
         it('should emit TOGGLE_BOOKMARKS_PANE event when toggleBookmarksPane is called', () => {
             dashboardExperience.toggleBookmarksPane();
             expect(dashboardExperience.send).toBeCalledWith({

@@ -76,6 +76,10 @@ export class DashboardExperience extends BaseExperience<
         return this.send(new EmbeddingMessageEvent(MessageEventName.REDO));
     };
 
+    toggleExecutiveSummaryPane = async (): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.TOGGLE_EXECUTIVE_SUMMARY_PANE));
+    };
+
     toggleBookmarksPane = async (): Promise<ResponseMessage> => {
         return this.send(new EmbeddingMessageEvent(MessageEventName.TOGGLE_BOOKMARKS_PANE));
     };
