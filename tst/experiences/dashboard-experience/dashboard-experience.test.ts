@@ -142,6 +142,7 @@ describe('DashboardExperience', () => {
                 scheduling: true,
                 recentSnapshots: true,
                 thresholdAlerts: true,
+                executiveSummary: true,
             },
         };
         const dashboardFrame = new DashboardExperience(
@@ -166,6 +167,7 @@ describe('DashboardExperience', () => {
         expect(url.searchParams.has('showThresholdAlertsIcon')).toBeTruthy();
         expect(url.searchParams.has('showSchedulingIcon')).toBeTruthy();
         expect(url.searchParams.has('showRecentSnapshotsIcon')).toBeTruthy();
+        expect(url.searchParams.has('showExecutiveSummaryIcon')).toBeTruthy();
     });
 
     it('should create dashboard frame with toolbar options disabled', () => {
@@ -184,6 +186,7 @@ describe('DashboardExperience', () => {
                 scheduling: false,
                 recentSnapshots: false,
                 thresholdAlerts: false,
+                executiveSummary: false,
             },
         };
         const dashboardFrame = new DashboardExperience(
@@ -208,6 +211,7 @@ describe('DashboardExperience', () => {
         expect(url.searchParams.has('showThresholdAlertsIcon')).toBeFalsy();
         expect(url.searchParams.has('showSchedulingIcon')).toBeFalsy();
         expect(url.searchParams.has('showRecentSnapshotsIcon')).toBeFalsy();
+        expect(url.searchParams.has('showExecutiveSummaryIcon')).toBeFalsy();
     });
 
     it('should create dashboard frame with sheet options', () => {

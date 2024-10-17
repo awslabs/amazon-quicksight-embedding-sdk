@@ -42,6 +42,7 @@ export interface TransformedDashboardContentOptions extends BaseContentOptions {
     showThresholdAlertsIcon?: boolean;
     showSchedulingIcon?: boolean;
     showRecentSnapshotsIcon?: boolean;
+    showExecutiveSummaryIcon?: boolean;
     hideAutoRefresh?: boolean;
     resetDisabled?: boolean;
     sheetTabsDisabled?: boolean;
@@ -66,6 +67,7 @@ export interface ToolbarOptions {
     thresholdAlerts?: boolean | ToolbarOption;
     scheduling?: boolean | ToolbarOption;
     recentSnapshots?: boolean | ToolbarOption;
+    executiveSummary?: boolean | ToolbarOption;
 }
 
 export interface AttributionOptions {

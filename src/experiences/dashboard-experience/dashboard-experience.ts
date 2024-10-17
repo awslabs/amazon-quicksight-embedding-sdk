@@ -392,6 +392,10 @@ export class DashboardExperience extends BaseExperience<
             transformedContentOptions.showSchedulingIcon = true;
         }
 
+        if (toolbarOptions?.executiveSummary === true) {
+            transformedContentOptions.showExecutiveSummaryIcon = true;
+        }
+
         if (toolbarOptions?.recentSnapshots === true) {
             transformedContentOptions.showRecentSnapshotsIcon = true;
         }
