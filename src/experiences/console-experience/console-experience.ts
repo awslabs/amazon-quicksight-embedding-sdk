@@ -86,6 +86,13 @@ export class ConsoleExperience extends BaseExperience<
         return response;
     };
 
+    toggleExecutiveSummaryPane = async (): Promise<ResponseMessage> => {
+        if (this.currentPage !== 'DASHBOARD') {
+            throw new Error('Cannot call toggleExecutiveSummaryPane from this page');
+        }
+        return this.send(new EmbeddingMessageEvent(MessageEventName.TOGGLE_EXECUTIVE_SUMMARY_PANE));
+    };
+
     private interceptMessage = (messageEvent: EmbeddingEvents, metadata?: ExperienceFrameMetadata) => {
         if (messageEvent.eventName === MessageEventName.PAGE_NAVIGATION) {
             this.currentPage = messageEvent?.message?.pageType;
