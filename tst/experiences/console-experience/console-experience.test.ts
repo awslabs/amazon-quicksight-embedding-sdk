@@ -126,7 +126,20 @@ describe('ConsoleExperience', () => {
                 width: '800px',
                 onChange: onChangeSpy,
             };
-            consoleExperience = new ConsoleExperience(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
+
+            const contentOptions = {
+                toolbarOptions: {
+                    executiveSummary: true,
+                    dataQnA: true,
+                },
+            };
+
+            consoleExperience = new ConsoleExperience(
+                frameOptions,
+                contentOptions,
+                TEST_CONTROL_OPTIONS,
+                new Set<string>()
+            );
             jest.spyOn(consoleExperience, 'send').mockImplementation(mockSend);
         });
 
@@ -246,6 +259,42 @@ describe('ConsoleExperience', () => {
                 expect(consoleExperience.send).toBeCalledWith(
                     expect.objectContaining({
                         eventName: MessageEventName.TOGGLE_EXECUTIVE_SUMMARY_PANE,
+                    })
+                );
+            });
+        });
+
+        describe('openDataQnAPane', () => {
+            it('should call openDataQnAPane if we are on the DASHBOARD page', async () => {
+                (consoleExperience as any).interceptMessage({
+                    eventName: InfoMessageEventName.PAGE_NAVIGATION,
+                    message: {pageType: 'DASHBOARD'},
+                });
+                const mockMessage = {success: true};
+                mockSend.mockResolvedValue({message: mockMessage});
+
+                consoleExperience.openDataQnAPane();
+                expect(consoleExperience.send).toBeCalledWith(
+                    expect.objectContaining({
+                        eventName: MessageEventName.OPEN_DATA_QNA_PANE,
+                    })
+                );
+            });
+        });
+
+        describe('openBuildVisualPane', () => {
+            it('should call openBuildVisualPane if we are on the ANALYSIS page', async () => {
+                (consoleExperience as any).interceptMessage({
+                    eventName: InfoMessageEventName.PAGE_NAVIGATION,
+                    message: {pageType: 'ANALYSIS'},
+                });
+                const mockMessage = {success: true};
+                mockSend.mockResolvedValue({message: mockMessage});
+
+                consoleExperience.openBuildVisualPane();
+                expect(consoleExperience.send).toBeCalledWith(
+                    expect.objectContaining({
+                        eventName: MessageEventName.OPEN_BUILD_VISUAL_PANE,
                     })
                 );
             });

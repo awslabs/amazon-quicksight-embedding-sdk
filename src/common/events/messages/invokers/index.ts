@@ -10,6 +10,8 @@ export const InvokerMessageEventName = {
     REDO: 'REDO',
     RESET: 'RESET',
     TOGGLE_EXECUTIVE_SUMMARY_PANE: 'TOGGLE_EXECUTIVE_SUMMARY_PANE',
+    OPEN_BUILD_VISUAL_PANE: 'OPEN_BUILD_VISUAL_PANE',
+    OPEN_DATA_QNA_PANE: 'OPEN_DATA_QNA_PANE',
     TOGGLE_BOOKMARKS_PANE: 'TOGGLE_BOOKMARKS_PANE',
     TOGGLE_THRESHOLD_ALERTS_PANE: 'TOGGLE_THRESHOLD_ALERTS_PANE',
     TOGGLE_SCHEDULING_PANE: 'TOGGLE_SCHEDULING_PANE',
@@ -33,4 +35,6 @@ export type InvokerMessageEvents =
           typeof InvokerMessageEventName.TOGGLE_EXECUTIVE_SUMMARY_PANE,
           SuccessResponse | ErrorResponse
       >
+    | EmbeddingMessageEvent<typeof InvokerMessageEventName.OPEN_BUILD_VISUAL_PANE, SuccessResponse | ErrorResponse>
+    | EmbeddingMessageEvent<typeof InvokerMessageEventName.OPEN_DATA_QNA_PANE, SuccessResponse | ErrorResponse>
     | EmbeddingMessageEvent<typeof InvokerMessageEventName.TOGGLE_BOOKMARKS_PANE, SuccessResponse | ErrorResponse>;

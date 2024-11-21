@@ -50,13 +50,9 @@ export class ConsoleExperience extends BaseExperience<
             locale,
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onMessage,
-            ...unrecognizedContentOptions
         } = contentOptions;
 
-        const transformedContentOptions = this.transformContentOptions<TransformedConsoleContentOptions>(
-            {locale},
-            unrecognizedContentOptions
-        );
+        const transformedContentOptions = this.transformConsoleContentOptions(contentOptions);
 
         this.experienceFrame = new ConsoleExperienceFrame(
             frameOptions,
@@ -93,6 +89,14 @@ export class ConsoleExperience extends BaseExperience<
         return this.send(new EmbeddingMessageEvent(MessageEventName.TOGGLE_EXECUTIVE_SUMMARY_PANE));
     };
 
+    openDataQnAPane = async (): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.OPEN_DATA_QNA_PANE));
+    };
+
+    openBuildVisualPane = async (): Promise<ResponseMessage> => {
+        return this.send(new EmbeddingMessageEvent(MessageEventName.OPEN_BUILD_VISUAL_PANE));
+    };
+
     private interceptMessage = (messageEvent: EmbeddingEvents, metadata?: ExperienceFrameMetadata) => {
         if (messageEvent.eventName === MessageEventName.PAGE_NAVIGATION) {
             this.currentPage = messageEvent?.message?.pageType;
@@ -119,5 +123,35 @@ export class ConsoleExperience extends BaseExperience<
         return {
             experienceType: ExperienceType.CONSOLE,
         };
+    };
+
+    // We add content options into the query string of the iframe url.
+    // Some option names do not match option names that the static content expects
+    // This function converts the property names to the query string parameters that the static content expects
+    private transformConsoleContentOptions = (contentOptions: ConsoleContentOptions) => {
+        const {
+            locale,
+            toolbarOptions,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            onMessage,
+            ...unrecognizedContentOptions
+        } = contentOptions;
+
+        const transformedContentOptions = this.transformContentOptions<TransformedConsoleContentOptions>(
+            {
+                locale,
+            },
+            unrecognizedContentOptions
+        );
+
+        if (toolbarOptions?.executiveSummary === true) {
+            transformedContentOptions.showExecutiveSummaryIcon = true;
+        }
+
+        if (toolbarOptions?.dataQnA === true) {
+            transformedContentOptions.showDataQnAIcon = true;
+        }
+
+        return transformedContentOptions;
     };
 }
