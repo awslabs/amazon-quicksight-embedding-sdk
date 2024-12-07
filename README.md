@@ -334,7 +334,6 @@ Available locale options are:
 en-US (English),
 da-DK (Dansk)
 de-DE (Deutsch),
-ja-JP (日本語),
 es-ES (Español),
 fr-FR (Français),
 it-IT (Italiano),
