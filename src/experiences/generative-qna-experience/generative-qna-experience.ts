@@ -123,11 +123,22 @@ export class GenerativeQnAExperience extends InternalQBaseExperience<
             onMessage, // excluded from unrecognized
             showTopicName,
             showPinboard,
+            showSearchBar,
+            showInterpretedAs,
+            showFeedback,
+            showGeneratedNarrative,
+            showDidYouMean,
+            showComplementaryVisuals,
+            showQBusinessInsights,
+            showSeeWhy,
             allowTopicSelection,
             allowFullscreen,
+            allowReturn,
             searchPlaceholderText,
             panelOptions,
             themeOptions,
+            initialQuestionId,
+            initialAnswerId,
             ...unrecognizedContentOptions
         } = contentOptions;
 
@@ -136,8 +147,19 @@ export class GenerativeQnAExperience extends InternalQBaseExperience<
         const transformedContentOptions: TransformedGenerativeQnAContentOptions = {
             qShowTopicName: showTopicName,
             qShowPinboard: showPinboard,
+            qShowSearchBar: showSearchBar,
+            qShowInterpretedAs: showInterpretedAs,
+            qShowFeedback: showFeedback,
+            qShowGeneratedNarrative: showGeneratedNarrative,
+            qShowDidYouMean: showDidYouMean,
+            qShowComplementaryVisuals: showComplementaryVisuals,
+            qShowQBusinessInsights: showQBusinessInsights,
+            qShowSeeWhy: showSeeWhy,
             qAllowTopicSelection: allowTopicSelection,
             qAllowFullscreen: allowFullscreen,
+            qAllowReturn: allowReturn,
+            questionId: initialQuestionId,
+            answerId: initialAnswerId,
         };
 
         if (typeof searchPlaceholderText === 'string') {

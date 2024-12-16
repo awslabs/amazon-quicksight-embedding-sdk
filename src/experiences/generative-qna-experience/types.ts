@@ -14,18 +14,38 @@ export interface InternalGenerativeQnAExperience extends IGenerativeQnAExperienc
 export interface GenerativeQnAContentOptions extends BaseContentOptions {
     showTopicName?: boolean;
     showPinboard?: boolean;
+    showSearchBar?: boolean;
+    showInterpretedAs?: boolean;
+    showFeedback?: boolean;
+    showGeneratedNarrative?: boolean;
+    showDidYouMean?: boolean;
+    showComplementaryVisuals?: boolean;
+    showQBusinessInsights?: boolean;
+    showSeeWhy?: boolean;
     allowTopicSelection?: boolean;
     allowFullscreen?: boolean;
+    allowReturn?: boolean;
     searchPlaceholderText?: string;
     panelOptions?: GenerativeQnAPanelOptions;
     themeOptions?: QThemeOptions;
+    initialQuestionId?: string;
+    initialAnswerId?: string;
 }
 
 export interface TransformedGenerativeQnAContentOptions extends BaseContentOptions {
     qShowTopicName?: boolean;
     qShowPinboard?: boolean;
+    qShowSearchBar?: boolean;
+    qShowInterpretedAs?: boolean;
+    qShowFeedback?: boolean;
+    qShowGeneratedNarrative?: boolean;
+    qShowDidYouMean?: boolean;
+    qShowComplementaryVisuals?: boolean;
+    qShowQBusinessInsights?: boolean;
+    qShowSeeWhy?: boolean;
     qAllowTopicSelection?: boolean;
     qAllowFullscreen?: boolean;
+    qAllowReturn?: boolean;
     qSearchPlaceholderText?: string;
     qPanelType?: string;
     qPanelTitle?: string;
@@ -33,6 +53,8 @@ export interface TransformedGenerativeQnAContentOptions extends BaseContentOptio
     qPanelFocusedHeight?: string;
     qPanelExpandedHeight?: string;
     themeArn?: string;
+    questionId?: string;
+    answerId?: string;
 }
 
 export type GenerativeQnAPanelOptions = GenerativeQnAFullPanelOptions | GenerativeQnASearchBarOptions;

@@ -93,8 +93,17 @@ describe('GenerativeQnAExperience', () => {
             {
                 showTopicName: true,
                 showPinboard: false,
+                showSearchBar: true,
+                showInterpretedAs: true,
+                showFeedback: true,
+                showGeneratedNarrative: true,
+                showDidYouMean: true,
+                showComplementaryVisuals: true,
+                showQBusinessInsights: true,
+                showSeeWhy: true,
                 allowTopicSelection: true,
                 allowFullscreen: true,
+                allowReturn: true,
                 searchPlaceholderText: 'custom search placeholder',
                 panelOptions: {
                     panelType: GenerativeQnAPanelType.FULL,
@@ -104,6 +113,8 @@ describe('GenerativeQnAExperience', () => {
                 themeOptions: {
                     themeArn: 'my-theme-arn',
                 },
+                initialQuestionId: 'mockQuestionId',
+                initialAnswerId: 'mockAnswerId',
             },
             TEST_CONTROL_OPTIONS,
             new Set<string>()
@@ -112,7 +123,7 @@ describe('GenerativeQnAExperience', () => {
         const iFrame = TEST_CONTAINER.querySelector('iframe');
         expect(iFrame).toBeDefined();
         expect(iFrame!.src).toEqual(
-            `https://test.amazon.com/embedding/guid/q/search/nre?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&qShowTopicName=true&qShowPinboard=false&qAllowTopicSelection=true&qAllowFullscreen=true&qSearchPlaceholderText=custom%2520search%2520placeholder&qPanelType=FULL&qPanelTitle=custom%2520title&qShowPanelIcon=false&themeArn=my-theme-arn&contextId=testContextId&discriminator=0`
+            `https://test.amazon.com/embedding/guid/q/search/nre?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&qShowTopicName=true&qShowPinboard=false&qShowSearchBar=true&qShowInterpretedAs=true&qShowFeedback=true&qShowGeneratedNarrative=true&qShowDidYouMean=true&qShowComplementaryVisuals=true&qShowQBusinessInsights=true&qShowSeeWhy=true&qAllowTopicSelection=true&qAllowFullscreen=true&qAllowReturn=true&questionId=mockQuestionId&answerId=mockAnswerId&qSearchPlaceholderText=custom%2520search%2520placeholder&qPanelType=FULL&qPanelTitle=custom%2520title&qShowPanelIcon=false&themeArn=my-theme-arn&contextId=testContextId&discriminator=0`
         );
     });
 
@@ -129,8 +140,17 @@ describe('GenerativeQnAExperience', () => {
             {
                 showTopicName: true,
                 showPinboard: false,
+                showSearchBar: false,
+                showInterpretedAs: false,
+                showFeedback: false,
+                showGeneratedNarrative: false,
+                showDidYouMean: false,
+                showComplementaryVisuals: false,
+                showQBusinessInsights: false,
+                showSeeWhy: false,
                 allowTopicSelection: true,
                 allowFullscreen: true,
+                allowReturn: false,
                 searchPlaceholderText: 'custom search placeholder',
                 panelOptions: {
                     panelType: GenerativeQnAPanelType.SEARCH_BAR,
@@ -140,6 +160,8 @@ describe('GenerativeQnAExperience', () => {
                 themeOptions: {
                     themeArn: 'my-theme-arn',
                 },
+                initialQuestionId: 'mockQuestionId',
+                initialAnswerId: 'mockAnswerId',
             },
             TEST_CONTROL_OPTIONS,
             new Set<string>()
@@ -148,7 +170,7 @@ describe('GenerativeQnAExperience', () => {
         const iFrame = TEST_CONTAINER.querySelector('iframe');
         expect(iFrame).toBeDefined();
         expect(iFrame!.src).toEqual(
-            `https://test.amazon.com/embedding/guid/q/search/nre?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&qShowTopicName=true&qShowPinboard=false&qAllowTopicSelection=true&qAllowFullscreen=true&qSearchPlaceholderText=custom%2520search%2520placeholder&qPanelType=SEARCH_BAR&qPanelFocusedHeight=100px&qPanelExpandedHeight=300px&themeArn=my-theme-arn&contextId=testContextId&discriminator=0`
+            `https://test.amazon.com/embedding/guid/q/search/nre?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&qShowTopicName=true&qShowPinboard=false&qShowSearchBar=false&qShowInterpretedAs=false&qShowFeedback=false&qShowGeneratedNarrative=false&qShowDidYouMean=false&qShowComplementaryVisuals=false&qShowQBusinessInsights=false&qShowSeeWhy=false&qAllowTopicSelection=true&qAllowFullscreen=true&qAllowReturn=false&questionId=mockQuestionId&answerId=mockAnswerId&qSearchPlaceholderText=custom%2520search%2520placeholder&qPanelType=SEARCH_BAR&qPanelFocusedHeight=100px&qPanelExpandedHeight=300px&themeArn=my-theme-arn&contextId=testContextId&discriminator=0`
         );
     });
 

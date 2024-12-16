@@ -1915,6 +1915,39 @@ The `showTopicName` property can be used to customize whether or not the QuickSi
 #### 🔹 showPinboard: *boolean* *(optional, default=true)*
 The `showPinboard` property can be used to customize whether or not pinboard button is shown. For more information, see [Pinning visuals in Amazon QuickSight Q](https://docs.aws.amazon.com/quicksight/latest/user/quicksight-q-pin-board.html). This property has no effect for anonymous user embedding, pinboard is usable by registered users only.
 
+#### 🔹 showSearchBar: *boolean* *(optional, default=true)*
+The `showSearchBar` property can be used to customize whether or not search bar is shown in the answer panel.
+
+#### 🔹 showInterpretedAs: *boolean* *(optional, default=true)*
+The `showInterpretedAs` property can be used to customize whether or not interpreted statement is shown in the answer panel.
+
+#### 🔹 showFeedback: *boolean* *(optional, default=true)*
+The `showFeedback` property can be used to customize whether or not feedback button is shown in the answer panel.
+
+#### 🔹 showGeneratedNarrative: *boolean* *(optional, default=true)*
+The `showGeneratedNarrative` property can be used to customize whether or not generated narrative is shown in the answer panel.
+
+#### 🔹 showDidYouMean: *boolean* *(optional, default=true)*
+The `showDidYouMean` property can be used to customize whether or not alternative questions (if any) are shown in the answer panel.
+
+#### 🔹 showComplementaryVisuals: *boolean* *(optional, default=true)*
+The `showComplementaryVisuals` property can be used to customize whether or not complementary visuals are shown in the answer panel.
+
+#### 🔹 showQBusinessInsights: *boolean* *(optional, default=true)*
+The `showQBusinessInsights` property can be used to customize whether or not additional insights from Q business or the notification for enabling Q business insights are shown in the answer panel.
+
+#### 🔹 showSeeWhy: *boolean* *(optional, default=true)*
+The `showSeeWhy` property can be used to customize whether or not see why button is shown in the answer panel.
+
+#### 🔹 allowReturn: *boolean* *(optional, default=true)*
+The `allowReturn` property can be used to customize whether or not the back button to exit from the answer panel will be shown.
+
+#### 🔹 initialQuestionId: *string* *(optional, default='')*
+The `initialQuestionId` property can be used to query existed question and display the answer panel directly.
+
+#### 🔹 initialAnswerId: *string* *(optional, default='')*
+The `initialAnswerId` property can be used to query existed answer of verified question and display the answer panel directly.
+
 #### 🔹 allowTopicSelection: *boolean* *(optional, default=true)*
 The `allowTopicSelection` property can be used to customize whether or not the embedded user can change the selected topic. Note that this can only be set to false if the `initialTopicId` was specified in the embedding API; for more information, see [QuickSight Embedding APIs](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html).
 
