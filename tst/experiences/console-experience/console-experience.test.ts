@@ -131,6 +131,7 @@ describe('ConsoleExperience', () => {
                 toolbarOptions: {
                     executiveSummary: true,
                     dataQnA: true,
+                    buildVisual: true,
                 },
             };
 

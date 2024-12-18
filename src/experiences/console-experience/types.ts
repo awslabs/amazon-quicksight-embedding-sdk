@@ -15,6 +15,7 @@ export interface InternalConsoleExperience extends IConsoleExperience {
 export interface ConsoleToolbarOptions {
     executiveSummary?: boolean | ToolbarOption;
     dataQnA?: boolean | ToolbarOption;
+    buildVisual?: boolean | ToolbarOption;
 }
 
 export interface ConsoleContentOptions extends BaseContentOptions {
@@ -26,4 +27,5 @@ export interface TransformedConsoleContentOptions extends BaseContentOptions {
     locale?: string;
     showExecutiveSummaryIcon?: boolean;
     showDataQnAIcon?: boolean;
+    showBuildVisualIcon?: boolean;
 }

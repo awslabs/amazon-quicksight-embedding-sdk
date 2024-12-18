@@ -152,6 +152,10 @@ export class ConsoleExperience extends BaseExperience<
             transformedContentOptions.showDataQnAIcon = true;
         }
 
+        if (toolbarOptions?.buildVisual === true) {
+            transformedContentOptions.showBuildVisualIcon = true;
+        }
+
         return transformedContentOptions;
     };
 }
