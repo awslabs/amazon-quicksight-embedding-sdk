@@ -1943,10 +1943,10 @@ The `showSeeWhy` property can be used to customize whether or not see why button
 The `allowReturn` property can be used to customize whether or not the back button to exit from the answer panel will be shown.
 
 #### 🔹 initialQuestionId: *string* *(optional, default='')*
-The `initialQuestionId` property can be used to query existed question and display the answer panel directly.
+The `initialQuestionId` property can be used to query existing question and display the answer panel directly.
 
 #### 🔹 initialAnswerId: *string* *(optional, default='')*
-The `initialAnswerId` property can be used to query existed answer of verified question and display the answer panel directly.
+The `initialAnswerId` property can be used to query existing answer of verified question and display the answer panel directly.
 
 #### 🔹 allowTopicSelection: *boolean* *(optional, default=true)*
 The `allowTopicSelection` property can be used to customize whether or not the embedded user can change the selected topic. Note that this can only be set to false if the `initialTopicId` was specified in the embedding API; for more information, see [QuickSight Embedding APIs](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html).
