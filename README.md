@@ -2058,5 +2058,5 @@ This method closes the search bar, returns the iframe to the original search bar
 &nbsp;  
 ## License
 &nbsp;  
-Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2025 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: Apache-2.0
