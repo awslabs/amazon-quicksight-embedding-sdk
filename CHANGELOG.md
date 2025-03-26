@@ -1,3 +1,7 @@
+**2.10.0**
+* Support GenBI/Amazon Q features in console and dashboard embedding.
+* Support embedded schedules, recent snapshots, and threshold alerts.
+
 **2.9.0**
 * Add new content options of Generative Q&A embedding
 * Minor bug fix
