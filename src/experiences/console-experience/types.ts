@@ -16,6 +16,7 @@ export interface ConsoleToolbarOptions {
     executiveSummary?: boolean | ToolbarOption;
     dataQnA?: boolean | ToolbarOption;
     buildVisual?: boolean | ToolbarOption;
+    buildStory?: boolean | ToolbarOption;
 }
 
 export interface ConsoleContentOptions extends BaseContentOptions {
@@ -28,4 +29,5 @@ export interface TransformedConsoleContentOptions extends BaseContentOptions {
     showExecutiveSummaryIcon?: boolean;
     showDataQnAIcon?: boolean;
     showBuildVisualIcon?: boolean;
+    showBuildStoryIcon?: boolean;
 }

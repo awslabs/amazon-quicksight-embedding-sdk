@@ -1,9 +1,10 @@
-import {ExperienceType} from '@experience/base-experience/types';
+import {ExperienceType, FrameOptions} from '@experience/base-experience/types';
 import {ChangeEventLevel, ChangeEventName, MessageEventName} from '@common/events/types';
 import {EventManager} from '@common/event-manager/event-manager';
 import {ConsoleExperience} from '@experience/console-experience/console-experience';
 import {SDK_VERSION} from '@experience/base-experience/frame/experience-frame';
 import {InfoMessageEventName} from '@common/events/messages';
+import {ConsoleContentOptions} from '@experience/console-experience/types';
 
 describe('ConsoleExperience', () => {
     let TEST_CONTAINER: HTMLElement;
@@ -116,7 +117,6 @@ describe('ConsoleExperience', () => {
     describe('Actions', () => {
         let consoleExperience: ConsoleExperience;
         const mockSend = jest.fn();
-        let TEST_CONTAINER: HTMLElement;
 
         beforeEach(() => {
             TEST_CONTAINER = window.document.createElement('div');
@@ -132,6 +132,7 @@ describe('ConsoleExperience', () => {
                     executiveSummary: true,
                     dataQnA: true,
                     buildVisual: true,
+                    buildStory: true,
                 },
             };
 
@@ -300,6 +301,45 @@ describe('ConsoleExperience', () => {
                 );
             });
         });
+
+        describe('buildStoryFromDashboard', () => {
+            it('should not emit BUILD_STORY_FROM_DASHBOARD event when buildStoryFromDashboard is called on default page', () => {
+                const wrapper = async () => {
+                    return await consoleExperience.buildStoryFromDashboard();
+                };
+
+                expect(wrapper).rejects.toThrowError('Cannot call buildStoryFromDashboard from "START" page');
+            });
+
+            it('should not emit BUILD_STORY_FROM_DASHBOARD event when page is anything but DASHBOARD', async () => {
+                (consoleExperience as any).interceptMessage({
+                    eventName: InfoMessageEventName.PAGE_NAVIGATION,
+                    message: {pageType: 'FOLDERS'},
+                });
+                const wrapper = async () => {
+                    return await consoleExperience.buildStoryFromDashboard();
+                };
+
+                expect(wrapper).rejects.toThrowError('Cannot call buildStoryFromDashboard from "FOLDERS" page');
+            });
+
+            it('should call buildStoryFromDashboard if we are on the DASHBOARD page', async () => {
+                (consoleExperience as any).interceptMessage({
+                    eventName: InfoMessageEventName.PAGE_NAVIGATION,
+                    message: {pageType: 'DASHBOARD'},
+                });
+                const mockMessage = {success: true, dashboardId: '123', viewId: 'abc'};
+                mockSend.mockResolvedValue({message: mockMessage});
+
+                // Call buildStoryFromDashboard which should trigger the send method
+                consoleExperience.buildStoryFromDashboard();
+                expect(consoleExperience.send).toBeCalledWith(
+                    expect.objectContaining({
+                        eventName: MessageEventName.OPEN_BUILD_STORY_PANE,
+                    })
+                );
+            });
+        });
     });
 
     it('should throw error if not console url', () => {
@@ -348,5 +388,73 @@ describe('ConsoleExperience', () => {
             },
             {frame: null}
         );
+    });
+
+    describe('ConsoleExperience transformed content options', () => {
+        let dummyContainer: HTMLElement;
+        let frameOptions: FrameOptions;
+        let controlOptions: any;
+        let contentOptions: ConsoleContentOptions;
+
+        beforeEach(() => {
+            dummyContainer = document.createElement('div');
+
+            frameOptions = {
+                url: TEST_CONSOLE_URL,
+                container: dummyContainer,
+                width: '800px',
+                onChange: jest.fn(),
+            };
+
+            controlOptions = {
+                eventManager: new EventManager(),
+                contextId: 'testContextId',
+                urlInfo: {sessionId: '', host: ''},
+            };
+
+            contentOptions = {
+                locale: 'en-US',
+                toolbarOptions: {
+                    executiveSummary: true,
+                    dataQnA: true,
+                    buildVisual: true,
+                    buildStory: false, // default
+                },
+            };
+        });
+
+        it('should not set showBuildStoryIcon when toolbarOptions.buildStory is false', () => {
+            const consoleExperience = new ConsoleExperience(
+                frameOptions,
+                contentOptions,
+                controlOptions,
+                new Set<string>()
+            );
+
+            const transformedOptions = (consoleExperience as any).transformConsoleContentOptions(contentOptions);
+
+            expect(transformedOptions.showBuildStoryIcon).toBeUndefined();
+            expect(transformedOptions.showExecutiveSummaryIcon).toEqual(true);
+            expect(transformedOptions.showDataQnAIcon).toEqual(true);
+            expect(transformedOptions.showBuildVisualIcon).toEqual(true);
+        });
+
+        it('should set showBuildStoryIcon when toolbarOptions.buildStory is true', () => {
+            contentOptions.toolbarOptions!.buildStory = true;
+
+            const consoleExperience = new ConsoleExperience(
+                frameOptions,
+                contentOptions,
+                controlOptions,
+                new Set<string>()
+            );
+
+            const transformedOptions = (consoleExperience as any).transformConsoleContentOptions(contentOptions);
+
+            expect(transformedOptions.showBuildStoryIcon).toEqual(true);
+            expect(transformedOptions.showExecutiveSummaryIcon).toEqual(true);
+            expect(transformedOptions.showDataQnAIcon).toEqual(true);
+            expect(transformedOptions.showBuildVisualIcon).toEqual(true);
+        });
     });
 });

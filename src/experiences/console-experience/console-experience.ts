@@ -97,6 +97,13 @@ export class ConsoleExperience extends BaseExperience<
         return this.send(new EmbeddingMessageEvent(MessageEventName.OPEN_BUILD_VISUAL_PANE));
     };
 
+    buildStoryFromDashboard = async (): Promise<ResponseMessage> => {
+        if (this.currentPage !== 'DASHBOARD') {
+            throw new Error(`Cannot call buildStoryFromDashboard from "${this.currentPage}" page`);
+        }
+        return this.send(new EmbeddingMessageEvent(MessageEventName.OPEN_BUILD_STORY_PANE));
+    };
+
     private interceptMessage = (messageEvent: EmbeddingEvents, metadata?: ExperienceFrameMetadata) => {
         if (messageEvent.eventName === MessageEventName.PAGE_NAVIGATION) {
             this.currentPage = messageEvent?.message?.pageType;
@@ -154,6 +161,10 @@ export class ConsoleExperience extends BaseExperience<
 
         if (toolbarOptions?.buildVisual === true) {
             transformedContentOptions.showBuildVisualIcon = true;
+        }
+
+        if (toolbarOptions?.buildStory === true) {
+            transformedContentOptions.showBuildStoryIcon = true;
         }
 
         return transformedContentOptions;
