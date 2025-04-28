@@ -659,6 +659,66 @@ The bookmarks feature is only available for the embedded dashboards of which emb
 ...
 ```
 
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 thresholdAlerts: *boolean* *(optional, default=false)*
+This can be used to show or hide the threshold alerts button for dashboard embedding.
+
+The thresholdAlerts feature is only available for embedded dashboards generated using `generateEmbedUrlForRegisteredUser` with `ThresholdAlerts` feature enabled in the `FeatureConfigurations` property.
+
+```
+...
+"ExperienceConfiguration": {
+    "Dashboard": {
+        "InitialDashboardId": "<YOUR_DASHBOARD_ID>",
+        "FeatureConfigurations": {
+            "ThresholdAlerts": {
+                "Enabled": true
+            }
+        }
+    }
+}
+...
+```
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 scheduling: *boolean* *(optional, default=false)*
+This can be used to show or hide the schedules button for dashboard embedding.
+
+The scheduling feature is only available for embedded dashboards generated using `generateEmbedUrlForRegisteredUser` with `Schedules` feature enabled in the `FeatureConfigurations` property.
+
+```
+...
+"ExperienceConfiguration": {
+    "Dashboard": {
+        "InitialDashboardId": "<YOUR_DASHBOARD_ID>",
+        "FeatureConfigurations": {
+            "Schedules": {
+                "Enabled": true
+            }
+        }
+    }
+}
+...
+```
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 recentSnapshots: *boolean* *(optional, default=false)*
+This can be used to show or hide the recent snapshots button for dashboard embedding.
+
+The recentSnapshots feature is only available for embedded dashboards generated using `generateEmbedUrlForRegisteredUser` with `RecentSnapshots` feature enabled in the `FeatureConfigurations` property.
+
+```
+...
+"ExperienceConfiguration": {
+    "Dashboard": {
+        "InitialDashboardId": "<YOUR_DASHBOARD_ID>",
+        "FeatureConfigurations": {
+            "RecentSnapshots": {
+                "Enabled": true
+            }
+        }
+    }
+}
+...
+```
+
 #### 🔹 sheetOptions
 
 #### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 initialSheetId: *string* *(optional)*
@@ -1632,6 +1692,36 @@ If you want to share the current view, use the below method:
 
 ```javascript
     embeddedConsoleExperience.createSharedView();
+```
+
+This method can only be called from the `DASHBOARD` route. 
+
+#### 🔹 toggleThresholdAlertsPane *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to toggle the threshold alerts pane, use the following method:
+
+```javascript
+    embeddedConsoleExperience.toggleThresholdAlertsPane();
+```
+
+This method can only be called from the `DASHBOARD` route. 
+
+#### 🔹 toggleSchedulingPane *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to toggle the scheduling pane, use the following method:
+
+```javascript
+    embeddedConsoleExperience.toggleSchedulingPane();
+```
+
+This method can only be called from the `DASHBOARD` route. 
+
+#### 🔹 toggleRecentSnapshotsPane *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to toggle the recent snapshots pane, use the following method:
+
+```javascript
+    embeddedConsoleExperience.toggleRecentSnapshotsPane();
 ```
 
 This method can only be called from the `DASHBOARD` route. 
