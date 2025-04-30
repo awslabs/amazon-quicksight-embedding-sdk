@@ -719,6 +719,113 @@ The recentSnapshots feature is only available for embedded dashboards generated 
 ...
 ```
 
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 executiveSummary: *boolean* *(optional, default=false)*
+This can be used to enable executive summaries as the instant generation of insights from dashboards.
+
+This option is available for both embedded console and embedded dashboard.
+To use, calling `generateEmbedUrlForRegisteredUser` or `generateEmbedUrlForRegisteredUserWithIdentity` 
+with `ExecutiveSummary` feature enabled in the `FeatureConfigurations` property.
+
+```
+...
+"ExperienceConfiguration": {
+    "QuickSightConsole": {
+        "InitialPath": "<INITIAL_PATH>",
+        "FeatureConfigurations": {
+            "ExecutiveSummary": {
+                "Enabled": true
+            }
+        }
+    }
+}
+...
+```
+or
+```
+...
+"ExperienceConfiguration": {
+    "Dashboard": {
+        "InitialDashboardId": "<YOUR_DASHBOARD_ID>",
+        "FeatureConfigurations": {
+            "ExecutiveSummary": {
+                "Enabled": true
+            }
+        }
+    }
+}
+...
+```
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 dataQnA: *boolean* *(optional, default=false)*
+This can be used to enable multi-visual Q&A in console embedding.
+
+This option is only available for embedded console.
+To use, calling `generateEmbedUrlForRegisteredUser` or `generateEmbedUrlForRegisteredUserWithIdentity` 
+with both `GenerativeAuthoring` and `DataQnA` feature enabled in the `FeatureConfigurations` property.
+```
+...
+"ExperienceConfiguration": {
+    "QuickSightConsole": {
+        "InitialPath": "<INITIAL_PATH>",
+        "FeatureConfigurations": {
+            "GenerativeAuthoring": {
+                "Enabled": true
+            },
+            "DataQnA": {
+                "Enabled": true
+            }
+        }
+    }
+}
+...
+```
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 buildVisual: *boolean* *(optional, default=false)*
+This can be used to enable building visuals with the natural language query for authors in console embedding.
+
+This option is only available for embedded console.
+To use, calling `generateEmbedUrlForRegisteredUser` or `generateEmbedUrlForRegisteredUserWithIdentity` 
+with both `GenerativeAuthoring` and `DataQnA` feature enabled in the `FeatureConfigurations` property.
+```
+...
+"ExperienceConfiguration": {
+    "QuickSightConsole": {
+        "InitialPath": "<INITIAL_PATH>",
+        "FeatureConfigurations": {
+            "GenerativeAuthoring": {
+                "Enabled": true
+            },
+            "DataQnA": {
+                "Enabled": true
+            }
+        }
+    }
+}
+...
+```
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 buildStory: *boolean* *(optional, default=false)*
+This can be used to enable building stories from dashboards in console embedding.
+
+This option is only available for embedded console.
+To use, calling `generateEmbedUrlForRegisteredUser` or `generateEmbedUrlForRegisteredUserWithIdentity` 
+with `DataStories` feature enabled in the `FeatureConfigurations` property.
+```
+...
+"ExperienceConfiguration": {
+    "QuickSightConsole": {
+        "InitialPath": "<INITIAL_PATH>",
+        "FeatureConfigurations": {
+            "DataStories": {
+                "Enabled": true
+            }
+        }
+    }
+}
+...
+```
+
+
 #### 🔹 sheetOptions
 
 #### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 initialSheetId: *string* *(optional)*
@@ -1118,7 +1225,6 @@ If you want to toggle the visibility state of the thresholdAlerts pane, use the 
 ```javascript
     embeddedDashboardExperience.toggleThresholdAlertsPane();
 ```
-***
 
 #### 🔹 toggleRecentSnapshotsPane *() => Promise&lt;ResponseMessage&gt;*
 
@@ -1127,6 +1233,15 @@ If you want to toggle the visibility state of the recentSnapshots pane, use the 
 ```javascript
     embeddedDashboardExperience.toggleRecentSnapshotsPane();
 ```
+
+#### 🔹 toggleExecutiveSummaryPane *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to toggle the visibility state of the executive summary pane, use the below method:
+
+```javascript
+    embeddedDashboardExperience.toggleExecutiveSummaryPane();
+```
+
 ***
 
 &nbsp;  
@@ -1698,7 +1813,7 @@ This method can only be called from the `DASHBOARD` route.
 
 #### 🔹 toggleThresholdAlertsPane *() => Promise&lt;ResponseMessage&gt;*
 
-If you want to toggle the threshold alerts pane, use the following method:
+If you want to toggle the threshold alerts pane, use the below method:
 
 ```javascript
     embeddedConsoleExperience.toggleThresholdAlertsPane();
@@ -1708,7 +1823,7 @@ This method can only be called from the `DASHBOARD` route.
 
 #### 🔹 toggleSchedulingPane *() => Promise&lt;ResponseMessage&gt;*
 
-If you want to toggle the scheduling pane, use the following method:
+If you want to toggle the scheduling pane, use the below method:
 
 ```javascript
     embeddedConsoleExperience.toggleSchedulingPane();
@@ -1718,13 +1833,50 @@ This method can only be called from the `DASHBOARD` route.
 
 #### 🔹 toggleRecentSnapshotsPane *() => Promise&lt;ResponseMessage&gt;*
 
-If you want to toggle the recent snapshots pane, use the following method:
+If you want to toggle the recent snapshots pane, use the below method:
 
 ```javascript
     embeddedConsoleExperience.toggleRecentSnapshotsPane();
 ```
 
 This method can only be called from the `DASHBOARD` route. 
+
+#### 🔹 toggleExecutiveSummaryPane *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to toggle the visibility state of the executive summary pane, use the below method:
+
+```javascript
+    embeddedConsoleExperience.toggleExecutiveSummaryPane();
+```
+
+This method can only be called from the `DASHBOARD` route.
+
+#### 🔹 openDataQnAPane *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to toggle the visibility state of the GenBI data QnA pane, use the below method:
+
+```javascript
+    embeddedConsoleExperience.openDataQnAPane();
+```
+
+#### 🔹 openBuildVisualPane *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to toggle the visibility state of the GenBI build visual pane, use the below method:
+
+```javascript
+    embeddedConsoleExperience.openBuildVisualPane();
+```
+
+#### 🔹 buildStoryFromDashboard *() => Promise&lt;ResponseMessage&gt;*
+
+If you want to build story from dashboard, use the below method:
+
+```javascript
+    embeddedConsoleExperience.buildStoryFromDashboard();
+```
+
+This method can only be called from the `DASHBOARD` route.
+
 
 ***
 
