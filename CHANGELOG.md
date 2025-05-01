@@ -1,3 +1,8 @@
+**2.10.1**
+* Updating documentation for GenBI and Schedules/Snapshots/Threshold Alerts
+* Adding support for build story through SDK
+* Dependency and copyright year updates
+
 **2.10.0**
 * Support GenBI/Amazon Q features in console and dashboard embedding.
 * Support embedded schedules, recent snapshots, and threshold alerts.
