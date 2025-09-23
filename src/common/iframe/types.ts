@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export interface EmbeddingIFrameElement extends HTMLIFrameElement {
-    loading: string;
 }
 
 export type IframeOptions = {
