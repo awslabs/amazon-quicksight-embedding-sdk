@@ -2,8 +2,6 @@
 &nbsp;  
 Thank you for using the Amazon QuickSight JavaScript SDK. You can use this SDK to embed Amazon QuickSight in your HTML.
 
-For more information and to learn how to use QuickSight Embedding, please visit [QuickSight Developer Portal Website](https://developer.quicksight.aws/)
-
 Amazon QuickSight offers four different embedding experiences with options for user isolation with namespaces, and custom UI permissions.
 
 * [Dashboard Embedding](#dashboard-embedding)
@@ -19,7 +17,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
 ...
-<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
 <script type="text/javascript">
     const onLoad = async () => {
         const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
@@ -453,7 +451,7 @@ export class DashboardExperience extends BaseExperience<DashboardContentOptions,
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedDashboard = async() => {
                 const {
@@ -723,8 +721,8 @@ The recentSnapshots feature is only available for embedded dashboards generated 
 This can be used to enable executive summaries as the instant generation of insights from dashboards.
 
 This option is available for both embedded console and embedded dashboard.
-To use, calling `generateEmbedUrlForRegisteredUser` or `generateEmbedUrlForRegisteredUserWithIdentity` 
-with `ExecutiveSummary` feature enabled in the `FeatureConfigurations` property.
+To use, calling `generateEmbedUrlForRegisteredUser` or `generateEmbedUrlForRegisteredUserWithIdentity`.
+For Console Embedding, make sure you enable all the features in the same request, as granular control is not supported currently.
 
 ```
 ...
@@ -732,8 +730,19 @@ with `ExecutiveSummary` feature enabled in the `FeatureConfigurations` property.
     "QuickSightConsole": {
         "InitialPath": "<INITIAL_PATH>",
         "FeatureConfigurations": {
-            "ExecutiveSummary": {
-                "Enabled": true
+            "AmazonQInQuickSight": {
+                "DataQnA": {
+                    "Enabled": true
+                },
+                "DataStories": {
+                    "Enabled": true
+                },
+                "ExecutiveSummary": {
+                    "Enabled": true
+                },
+                "GenerativeAuthoring": {
+                    "Enabled": true
+                }
             }
         }
     }
@@ -747,8 +756,10 @@ or
     "Dashboard": {
         "InitialDashboardId": "<YOUR_DASHBOARD_ID>",
         "FeatureConfigurations": {
-            "ExecutiveSummary": {
-                "Enabled": true
+            "AmazonQInQuickSight": {
+                "ExecutiveSummary": {
+                    "Enabled": true
+                }
             }
         }
     }
@@ -760,19 +771,28 @@ or
 This can be used to enable multi-visual Q&A in console embedding.
 
 This option is only available for embedded console.
-To use, calling `generateEmbedUrlForRegisteredUser` or `generateEmbedUrlForRegisteredUserWithIdentity` 
-with both `GenerativeAuthoring` and `DataQnA` feature enabled in the `FeatureConfigurations` property.
+To use, calling `generateEmbedUrlForRegisteredUser` or `generateEmbedUrlForRegisteredUserWithIdentity`.
+For Console Embedding, make sure you enable all the features in the same request, as granular control is not supported currently.
+
 ```
 ...
 "ExperienceConfiguration": {
     "QuickSightConsole": {
         "InitialPath": "<INITIAL_PATH>",
         "FeatureConfigurations": {
-            "GenerativeAuthoring": {
-                "Enabled": true
-            },
-            "DataQnA": {
-                "Enabled": true
+            "AmazonQInQuickSight": {
+                "DataQnA": {
+                    "Enabled": true
+                },
+                "DataStories": {
+                    "Enabled": true
+                },
+                "ExecutiveSummary": {
+                    "Enabled": true
+                },
+                "GenerativeAuthoring": {
+                    "Enabled": true
+                }
             }
         }
     }
@@ -784,19 +804,28 @@ with both `GenerativeAuthoring` and `DataQnA` feature enabled in the `FeatureCon
 This can be used to enable building visuals with the natural language query for authors in console embedding.
 
 This option is only available for embedded console.
-To use, calling `generateEmbedUrlForRegisteredUser` or `generateEmbedUrlForRegisteredUserWithIdentity` 
-with both `GenerativeAuthoring` and `DataQnA` feature enabled in the `FeatureConfigurations` property.
+To use, calling `generateEmbedUrlForRegisteredUser` or `generateEmbedUrlForRegisteredUserWithIdentity`.
+For Console Embedding, make sure you enable all the features in the same request, as granular control is not supported currently.
+
 ```
 ...
 "ExperienceConfiguration": {
     "QuickSightConsole": {
         "InitialPath": "<INITIAL_PATH>",
         "FeatureConfigurations": {
-            "GenerativeAuthoring": {
-                "Enabled": true
-            },
-            "DataQnA": {
-                "Enabled": true
+            "AmazonQInQuickSight": {
+                "DataQnA": {
+                    "Enabled": true
+                },
+                "DataStories": {
+                    "Enabled": true
+                },
+                "ExecutiveSummary": {
+                    "Enabled": true
+                },
+                "GenerativeAuthoring": {
+                    "Enabled": true
+                }
             }
         }
     }
@@ -808,16 +837,28 @@ with both `GenerativeAuthoring` and `DataQnA` feature enabled in the `FeatureCon
 This can be used to enable building stories from dashboards in console embedding.
 
 This option is only available for embedded console.
-To use, calling `generateEmbedUrlForRegisteredUser` or `generateEmbedUrlForRegisteredUserWithIdentity` 
-with `DataStories` feature enabled in the `FeatureConfigurations` property.
+To use, calling `generateEmbedUrlForRegisteredUser` or `generateEmbedUrlForRegisteredUserWithIdentity`.
+For Console Embedding, make sure you enable all the features in the same request, as granular control is not supported currently.
+
 ```
 ...
 "ExperienceConfiguration": {
     "QuickSightConsole": {
         "InitialPath": "<INITIAL_PATH>",
         "FeatureConfigurations": {
-            "DataStories": {
-                "Enabled": true
+            "AmazonQInQuickSight": {
+                "DataQnA": {
+                    "Enabled": true
+                },
+                "DataStories": {
+                    "Enabled": true
+                },
+                "ExecutiveSummary": {
+                    "Enabled": true
+                },
+                "GenerativeAuthoring": {
+                    "Enabled": true
+                }
             }
         }
     }
@@ -1287,7 +1328,7 @@ export class VisualExperience extends BaseExperience<VisualContentOptions, Inter
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedVisual = async() => {    
                 const {
@@ -1721,7 +1762,7 @@ Use `embedConsole` method to embed a QuickSight console. It returns a promise of
 
     <head>
         <title>Console Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedConsole = async() => {
                 const {
@@ -1911,7 +1952,7 @@ export class QSearchExperience extends BaseExperience<QSearchContentOptions, Int
 
     <head>
         <title>Q Search Bar Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQSearchBar = async() => {    
                 const {
@@ -2068,7 +2109,7 @@ export class GenerativeQnAExperience extends BaseExperience<GenerativeQnAContent
 
     <head>
         <title>Generative Q&A Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.1/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedGenerativeQnA = async() => {    
                 const {

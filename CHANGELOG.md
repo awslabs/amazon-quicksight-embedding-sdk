@@ -1,3 +1,8 @@
+**2.10.2**
+* Documentation update:
+  * Removing reference to deprecated developer website.
+  * Updating GenBI url generation instructions.
+
 **2.10.1**
 * Updating documentation for GenBI and Schedules/Snapshots/Threshold Alerts
 * Adding support for build story through SDK
