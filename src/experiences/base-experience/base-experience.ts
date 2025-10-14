@@ -69,6 +69,7 @@ export abstract class BaseExperience<
                 ExperienceType.CONTEXT,
                 ExperienceType.QSEARCH,
                 ExperienceType.GENERATIVEQNA,
+                ExperienceType.QUICKCHAT,
             ].includes(experience.experienceType)
         ) {
             const {contextId, experienceType, discriminator} = experience;

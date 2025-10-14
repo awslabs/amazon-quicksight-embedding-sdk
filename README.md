@@ -110,13 +110,14 @@ The embedding context creates an additional zero-pixel iframe and appends it int
 ## Embedding the Amazon QuickSight Experiences
 &nbsp;  
 
-An `EmbeddingContext` instance exposes 4 experience methods
+An `EmbeddingContext` instance exposes 6 experience methods
 
 * embedDashboard
 * embedVisual
 * embedConsole
 * embedQSearchBar
 * embedGenerativeQnA
+* embedQuickChat
 
 These methods take 2 parameters:
 
@@ -157,6 +158,9 @@ const embeddedConsoleExperience = await embedConsole(frameOptions, contentOption
 
 // Embedding a Q search bar experience
 const embeddedQSearchExperience = await embedQSearchBar(frameOptions, contentOptions);
+
+// Embedding a Quick Chat experience
+const embeddedQuickChatExperience = await embedQuickChat(frameOptions, contentOptions);
 
 ```
 
@@ -2326,6 +2330,94 @@ This method closes the search bar, returns the iframe to the original search bar
 ```javascript
     embeddedGenerativeQnExperience.close();
 ```
+
+***
+
+&nbsp;  
+## Quick Chat Embedding
+&nbsp;  
+
+Quick Chat embedding provides an Amazon Quick Suite chat bot assistant.
+
+&nbsp;  
+### Getting Started
+&nbsp;  
+
+Use `embedQuickChat` method to embed the Quick Chat experience. It returns a promise of `QuickChatExperience` type.
+
+&nbsp;  
+### Example
+&nbsp;  
+
+```html
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Quick Chat Embedding Example</title>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script type="text/javascript">
+            const embedQuickChat = async() => {    
+                const {
+                    createEmbeddingContext,
+                } = QuickSightEmbedding;
+
+                const embeddingContext = await createEmbeddingContext({
+                    onChange: (changeEvent, metadata) => {
+                        console.log('Context received a change', changeEvent, metadata);
+                    },
+                });
+
+                const frameOptions = {
+                    url: "<YOUR_EMBED_URL>", // replace this value with the url generated via embedding API
+                    container: '#experience-container',
+                    height: "700px",
+                    width: "1000px",
+                    onChange: (changeEvent, metadata) => {
+                        switch (changeEvent.eventName) {
+                            case 'FRAME_MOUNTED': {
+                                console.log("Do something when the experience frame is mounted.");
+                                break;
+                            }
+                            case 'FRAME_LOADED': {
+                                console.log("Do something when the experience frame is loaded.");
+                                break;
+                            }
+                        }
+                    },
+                };
+
+                const contentOptions = {
+                    fixedAgentArn: 'arn:aws:quicksight:us-east-1:123456789012:agent/SYSTEM',
+                    initialPrompt: 'Summarize a financial report from the last month.',
+                };
+                const embeddedQuickChatExperience = await embeddingContext.embedQuickChat(frameOptions, contentOptions);
+            };
+        </script>
+    </head>
+
+    <body onload="embedQuickChat()">
+        <div id="experience-container"></div>
+    </body>
+
+</html>
+```
+
+&nbsp;  
+### `frameOptions`
+&nbsp; 
+
+See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange` properties
+
+&nbsp;  
+### `contentOptions`
+&nbsp;  
+
+#### 🔹 fixedAgentArn: *string* *(optional, default=undefined)*
+The `fixedAgentArn` property allows to define an agent that will be pre-selected when the chat starts.
+
+#### 🔹 initialPrompt: *string* *(optional, default=undefined)*
+The `initialPrompt` property can be used to send a prompt right after the chat is loaded.
 
 &nbsp;  
 ## Troubleshooting

@@ -17,6 +17,7 @@ export const InvokerMessageEventName = {
     TOGGLE_SCHEDULING_PANE: 'TOGGLE_SCHEDULING_PANE',
     TOGGLE_RECENT_SNAPSHOTS_PANE: 'TOGGLE_RECENT_SNAPSHOTS_PANE',
     OPEN_BUILD_STORY_PANE: 'OPEN_BUILD_STORY_PANE',
+    SEND_PROMPT: 'SEND_PROMPT',
 } as const;
 
 export type InvokerMessageEventName = (typeof InvokerMessageEventName)[keyof typeof InvokerMessageEventName];

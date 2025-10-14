@@ -24,6 +24,8 @@ import {ChangeEvent} from '@common/events/events';
 import {ControlExperience} from '@experience/control-experience/control-experience';
 import {EventManager} from '@common/event-manager/event-manager';
 import {DefaultLogger, LogProvider} from '../log-provider/log-provider';
+import {QuickChatExperience} from '@experience/quick-chat-experience/quick-chat-experience';
+import {QuickChatContentOptions} from '@experience/quick-chat-experience/types';
 
 /**
  * The embedding context creates an additional zero-pixel iframe and appends it into the body element on the page to centralize communication between the SDK and the embedded QuickSight content
@@ -112,6 +114,20 @@ export class EmbeddingContext implements IEmbeddingContext {
         this.validateFrameOptions(frameOptions, 'embedGenerativeQnA');
         const controlOptions = this.buildControlOptions(frameOptions);
         return new GenerativeQnAExperience(
+            frameOptions,
+            contentOptions,
+            controlOptions,
+            this.experienceIdentifiers
+        ).setLogProvider(this.logger);
+    };
+
+    public embedQuickChat = async (
+        frameOptions: FrameOptions,
+        contentOptions: QuickChatContentOptions = {}
+    ): Promise<QuickChatExperience> => {
+        this.validateFrameOptions(frameOptions, 'embedQuickChat');
+        const controlOptions = this.buildControlOptions(frameOptions);
+        return new QuickChatExperience(
             frameOptions,
             contentOptions,
             controlOptions,

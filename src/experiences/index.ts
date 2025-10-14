@@ -6,3 +6,4 @@ export * from './control-experience';
 export * from './base-experience';
 export * from './generative-qna-experience';
 export * from './internal-q-base-experience';
+export * from './quick-chat-experience';

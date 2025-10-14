@@ -13,6 +13,7 @@ import * as QSearchExperienceTypes from '@experience/q-search-experience/types';
 import * as VisualExperienceTypes from '@experience/visual-experience/types';
 import * as GenerativeQnAExperienceTypes from '@experience/generative-qna-experience/types';
 import * as InternalQBaseExperienceTypes from '@experience/internal-q-base-experience/types';
+import * as QuickChatExperienceTypes from '@experience/quick-chat-experience/types';
 
 export * from './common';
 export * from './experiences';
@@ -37,4 +38,5 @@ export const QSE = {
     ...VisualExperienceTypes,
     ...GenerativeQnAExperienceTypes,
     ...InternalQBaseExperienceTypes,
+    ...QuickChatExperienceTypes,
 };

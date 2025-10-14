@@ -34,6 +34,12 @@ import {
 import {ControlContentOptions, IControlExperience, InternalControlExperience} from '../control-experience';
 import {IContextExperience, InternalContextExperience} from '../../common/embedding-context';
 import {EventListener} from '../../common/event-manager';
+import {
+    InternalQuickChatExperience,
+    IQuickChatExperience,
+    QuickChatContentOptions,
+    TransformedQuickChatContentOptions,
+} from '../quick-chat-experience';
 
 export type ContentOptions =
     | VisualContentOptions
@@ -41,7 +47,8 @@ export type ContentOptions =
     | QSearchContentOptions
     | ConsoleContentOptions
     | ControlContentOptions
-    | GenerativeQnAContentOptions;
+    | GenerativeQnAContentOptions
+    | QuickChatContentOptions;
 
 export type FrameOptions = {
     url: string;
@@ -60,6 +67,7 @@ export type TransformedContentOptions =
     | TransformedQSearchContentOptions
     | TransformedVisualContentOptions
     | TransformedGenerativeQnAContentOptions
+    | TransformedQuickChatContentOptions
     | object;
 
 export type Experiences =
@@ -69,7 +77,8 @@ export type Experiences =
     | IVisualExperience
     | IDashboardExperience
     | IQSearchExperience
-    | IGenerativeQnAExperience;
+    | IGenerativeQnAExperience
+    | IQuickChatExperience;
 
 export type InternalExperiences =
     | InternalConsoleExperience
@@ -78,7 +87,8 @@ export type InternalExperiences =
     | InternalVisualExperience
     | InternalDashboardExperience
     | InternalQSearchExperience
-    | InternalGenerativeQnAExperience;
+    | InternalGenerativeQnAExperience
+    | InternalQuickChatExperience;
 
 export interface InternalExperienceInfo<InternalExperience extends InternalExperiences> {
     experienceIdentifier: string;
@@ -93,6 +103,7 @@ export const ExperienceType = {
     DASHBOARD: 'DASHBOARD',
     QSEARCH: 'QSEARCH',
     GENERATIVEQNA: 'QSEARCH', // Internal experience type unchanged from QSEARCH
+    QUICKCHAT: 'QUICKCHAT',
 } as const;
 
 export type ExperienceType = (typeof ExperienceType)[keyof typeof ExperienceType];

@@ -363,4 +363,50 @@ describe('EmbeddingContext', () => {
             );
         });
     });
+
+    describe('embedQuickChat', () => {
+        let TEST_CONTAINER: HTMLElement;
+        const TEST_QSEARCH_URL = 'https://test.amazon.com/embedding/guid/quick/chat?';
+
+        beforeEach(() => {
+            TEST_CONTAINER = window.document.createElement('div');
+            mockAddEventListener.mockClear();
+        });
+
+        it('should successfully create embedded quick chat', async () => {
+            const embeddingContext = await createEmbeddingContext();
+            await embeddingContext.embedQuickChat({
+                url: TEST_QSEARCH_URL,
+                container: TEST_CONTAINER,
+            });
+
+            const iFrame = TEST_CONTAINER.querySelector('iframe');
+            expect(iFrame).toBeDefined();
+
+            expect(mockAddEventListener).toBeCalledTimes(2);
+
+            expect(mockAddEventListener).toHaveBeenNthCalledWith(1, '1234-1234-CONTROL', expect.any(Function), true);
+            expect(mockAddEventListener).toHaveBeenNthCalledWith(2, '1234-1234-QUICKCHAT', expect.any(Function), true);
+        });
+
+        it('should throw error if frameOptions is not provided for embedQuickChat method', async () => {
+            const embeddingContext = await createEmbeddingContext();
+            const embedExperienceWrapper = async () => {
+                // @ts-expect-error - should throw error when frameOption is invalid
+                return await embeddingContext.embedQuickChat(undefined);
+            };
+            await expect(embedExperienceWrapper).rejects.toThrow('embedQuickChat is called without frameOptions');
+        });
+
+        it('should throw error if invalid frameOptions is provided for embedQuickChat method', async () => {
+            const embeddingContext = await createEmbeddingContext();
+            const embedExperienceWrapper = async () => {
+                // @ts-expect-error - should throw error when frameOption is invalid
+                return await embeddingContext.embedQuickChat(true);
+            };
+            await expect(embedExperienceWrapper).rejects.toThrow(
+                'embedQuickChat is called with non-object frameOptions'
+            );
+        });
+    });
 });

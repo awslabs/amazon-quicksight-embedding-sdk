@@ -31,6 +31,7 @@
             "@experience/q-search-experience/*": ["./src/experiences/q-search-experience/*"],
             "@experience/generative-qna-experience/*": ["src/experiences/generative-qna-experience/*"],
             "@experience/internal-q-base-experience/*": ["./src/experiences/internal-q-base-experience/*"],
+            "@experience/quick-chat-experience/*": ["./src/experiences/quick-chat-experience/*"],
             "@experience/visual-experience/*": ["./src/experiences/visual-experience/*"]
         },
         "baseUrl": "."
