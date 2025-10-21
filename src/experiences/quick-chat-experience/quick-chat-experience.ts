@@ -96,7 +96,12 @@ export class QuickChatExperience extends BaseExperience<
     // Some option names do not match option names that the static content expects
     // This function converts the property names to the query string parameters that the static content expects
     private transformQuickChatContentOptions = (contentOptions: QuickChatContentOptions) => {
-        const {fixedAgentArn, ...unrecognizedContentOptions} = contentOptions;
+        const {
+            fixedAgentArn,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            onMessage, // excluded from unrecognized
+            ...unrecognizedContentOptions
+        } = contentOptions;
 
         const transformedContentOptions = this.transformContentOptions<TransformedQuickChatContentOptions>(
             {
