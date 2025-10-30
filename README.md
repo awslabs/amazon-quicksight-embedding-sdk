@@ -2389,7 +2389,6 @@ Use `embedQuickChat` method to embed the Quick Chat experience. It returns a pro
 
                 const contentOptions = {
                     fixedAgentArn: 'arn:aws:quicksight:us-east-1:123456789012:agent/SYSTEM',
-                    initialPrompt: 'Summarize a financial report from the last month.',
                     onMessage: async (messageEvent, experienceMetadata) => {
                         switch (messageEvent.eventName) {
                             case 'CONTENT_LOADED': {
@@ -2423,9 +2422,6 @@ See [Common Properties of `frameOptions` for All Embedding Experiences](#common-
 
 #### 🔹 fixedAgentArn: *string* *(optional, default=undefined)*
 The `fixedAgentArn` property allows to define an agent that will be pre-selected when the chat starts.
-
-#### 🔹 initialPrompt: *string* *(optional, default=undefined)*
-The `initialPrompt` property can be used to send a prompt right after the chat is loaded.
 
 #### 🔹 onMessage: *EventListener* *(optional)*
 

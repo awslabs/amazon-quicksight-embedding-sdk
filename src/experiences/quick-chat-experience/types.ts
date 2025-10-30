@@ -13,7 +13,6 @@ export interface InternalQuickChatExperience extends IQuickChatExperience {
 
 export interface QuickChatContentOptions extends BaseContentOptions {
     fixedAgentArn?: string;
-    initialPrompt?: string;
 }
 
 export interface TransformedQuickChatContentOptions extends BaseContentOptions {

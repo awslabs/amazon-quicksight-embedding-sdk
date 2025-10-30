@@ -52,8 +52,7 @@ export class QuickChatExperience extends BaseExperience<
             contentOptions,
             this.transformQuickChatContentOptions(contentOptions),
             internalExperience,
-            experienceIdentifier,
-            this.interceptMessage
+            experienceIdentifier
         );
     }
 
@@ -78,18 +77,6 @@ export class QuickChatExperience extends BaseExperience<
         return {
             experienceType: ExperienceType.QUICKCHAT,
         };
-    };
-
-    private interceptMessage = (messageEvent: EmbeddingEvents, metadata?: ExperienceFrameMetadata) => {
-        if (messageEvent.eventName === MessageEventName.EXPERIENCE_INITIALIZED) {
-            if (this.contentOptions.initialPrompt) {
-                this.sendPrompt(this.contentOptions.initialPrompt);
-            }
-        }
-    };
-
-    private sendPrompt = async (prompt: string): Promise<void> => {
-        this.send(new EmbeddingMessageEvent(MessageEventName.SEND_PROMPT, prompt));
     };
 
     // We add content options into the query string of the iframe url.

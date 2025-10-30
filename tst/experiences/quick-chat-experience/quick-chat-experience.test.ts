@@ -54,7 +54,6 @@ describe('Quick Chat Experience', () => {
 
         const contentOptions: QuickChatContentOptions = {
             fixedAgentArn: TEST_AGENT_ARN,
-            initialPrompt: TEST_PROMPT,
         };
 
         const quickChatExperience = new QuickChatExperience(
@@ -135,12 +134,7 @@ describe('Quick Chat Experience', () => {
             width: '800px',
         };
 
-        const quickChatExperience = new QuickChatExperience(
-            frameOptions,
-            {initialPrompt: TEST_PROMPT},
-            TEST_CONTROL_OPTIONS,
-            new Set<string>()
-        );
+        const quickChatExperience = new QuickChatExperience(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
         const mockSend = jest.fn();
         jest.spyOn(quickChatExperience, 'send').mockImplementation(mockSend);
 
@@ -155,13 +149,6 @@ describe('Quick Chat Experience', () => {
                     eventName: InfoMessageEventName.EXPERIENCE_INITIALIZED,
                     message: {},
                 },
-            })
-        );
-
-        expect(quickChatExperience.send).toHaveBeenCalledWith(
-            expect.objectContaining({
-                eventName: MessageEventName.SEND_PROMPT,
-                message: TEST_PROMPT,
             })
         );
     });
