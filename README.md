@@ -17,7 +17,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 **Option 1:** Use the Amazon QuickSight Embedding SDK in the browser:
 ```html
 ...
-<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.11.0/dist/quicksight-embedding-js-sdk.min.js"></script>
 <script type="text/javascript">
     const onLoad = async () => {
         const embeddingContext = await QuickSightEmbedding.createEmbeddingContext();
@@ -455,7 +455,7 @@ export class DashboardExperience extends BaseExperience<DashboardContentOptions,
 
     <head>
         <title>Dashboard Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.11.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedDashboard = async() => {
                 const {
@@ -1332,7 +1332,7 @@ export class VisualExperience extends BaseExperience<VisualContentOptions, Inter
 
     <head>
         <title>Visual Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.11.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedVisual = async() => {    
                 const {
@@ -1766,7 +1766,7 @@ Use `embedConsole` method to embed a QuickSight console. It returns a promise of
 
     <head>
         <title>Console Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.11.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedConsole = async() => {
                 const {
@@ -1956,7 +1956,7 @@ export class QSearchExperience extends BaseExperience<QSearchContentOptions, Int
 
     <head>
         <title>Q Search Bar Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.11.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQSearchBar = async() => {    
                 const {
@@ -2113,7 +2113,7 @@ export class GenerativeQnAExperience extends BaseExperience<GenerativeQnAContent
 
     <head>
         <title>Generative Q&A Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.11.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedGenerativeQnA = async() => {    
                 const {
@@ -2355,7 +2355,7 @@ Use `embedQuickChat` method to embed the Quick Chat experience. It returns a pro
 
     <head>
         <title>Quick Chat Embedding Example</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.10.2/dist/quicksight-embedding-js-sdk.min.js"></script>
+        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@2.11.0/dist/quicksight-embedding-js-sdk.min.js"></script>
         <script type="text/javascript">
             const embedQuickChat = async() => {    
                 const {

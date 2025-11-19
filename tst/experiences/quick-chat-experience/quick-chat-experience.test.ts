@@ -80,7 +80,7 @@ describe('Quick Chat Experience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            `https://test.amazon.com/embedding/af058f19046a4659bc3f233366f9b2af/quick/chat?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=2.10.2&contextId=testContextId&discriminator=0&fixedAgentArn=${TEST_AGENT_ARN}`
+            `https://test.amazon.com/embedding/af058f19046a4659bc3f233366f9b2af/quick/chat?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=2.11.0&contextId=testContextId&discriminator=0&fixedAgentArn=${TEST_AGENT_ARN}`
         );
     });
 
@@ -96,7 +96,7 @@ describe('Quick Chat Experience', () => {
         expect(typeof quickChatExperience.send).toEqual('function');
 
         expect(TEST_CONTAINER.querySelector('iframe')?.src).toEqual(
-            `https://test.amazon.com/embedding/af058f19046a4659bc3f233366f9b2af/quick/chat?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=2.10.2&contextId=testContextId&discriminator=0`
+            `https://test.amazon.com/embedding/af058f19046a4659bc3f233366f9b2af/quick/chat?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=2.11.0&contextId=testContextId&discriminator=0`
         );
     });
 

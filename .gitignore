@@ -7,3 +7,4 @@ coverage/
 rollup.config-*
 ssl
 types/
+.DS_Store

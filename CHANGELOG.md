@@ -1,3 +1,10 @@
+**2.11.0**
+* Adding Quick Chat embedding support with new embedQuickChat function
+* Adding support for fixedAgentArn content option to pre-select an agent when the chat starts
+* Adding support for onMessage event listener in Quick Chat content options
+* Updating CONTENT_LOADED event to notify when the visuals of the quick chat are fully loaded
+* Updating comprehensive test suite for Quick Chat experience
+
 **2.10.2**
 * Documentation update:
   * Removing reference to deprecated developer website.
