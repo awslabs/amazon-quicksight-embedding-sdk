@@ -909,6 +909,8 @@ The `eventName`s the dashboard experience receives
     - `Unauthorized` -- the session obtained from the authentication code expired
     If you follow the instructions to generate the correct URL, but you still receive these error codes, you need to generate a new URL.
     PARAMETERS_CHANGED: Received when the parameters in Amazon QuickSight dashboard changes.
+    PARAMETERS_LOADED: Emitted once per dashboard when its parameters have finished loading. 
+    - This event fires during the initial dashboard load and subsequently whenever navigateToDashboard() transitions to a new dashboard.
     SELECTED_SHEET_CHANGED: Received when the selected sheet in Amazon QuickSight dashboard changes.
     SIZE_CHANGED: Received when the size of the Amazon QuickSight dashboard changes.
     MODAL_OPENED: Received when a modal opened in Amazon QuickSight dashboard.
