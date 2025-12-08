@@ -128,7 +128,7 @@ describe('VisualExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitToIframeWidth=true&contextId=testContextId&discriminator=0#`
+            `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&scaleToContainer=false&fitToIframeWidth=true&contextId=testContextId&discriminator=0#`
         );
     });
 
@@ -169,7 +169,7 @@ describe('VisualExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitToIframeWidth=true&themeArn=arn%3Aaws%3Aquicksight%3A%3Aaws%3Atheme%2FMIDNIGHT&contextId=testContextId&discriminator=0#`
+            `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&scaleToContainer=false&fitToIframeWidth=true&themeArn=arn%3Aaws%3Aquicksight%3A%3Aaws%3Atheme%2FMIDNIGHT&contextId=testContextId&discriminator=0#`
         );
     });
 
@@ -268,7 +268,7 @@ describe('VisualExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitToIframeWidth=true&contextId=testContextId&discriminator=0#p.State=CT`
+            `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&scaleToContainer=false&fitToIframeWidth=true&contextId=testContextId&discriminator=0#p.State=CT`
         );
     });
 
@@ -399,7 +399,7 @@ describe('VisualExperience', () => {
             const iframe = TEST_CONTAINER.querySelector('iframe');
             expect(iframe).toBeDefined();
             expect(iframe?.src).toEqual(
-                `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitToIframeWidth=true&contextId=testContextId&discriminator=0#p.State=CT`
+                `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&scaleToContainer=false&fitToIframeWidth=true&contextId=testContextId&discriminator=0#p.State=CT`
             );
 
             expect(iframe?.height).toEqual('100%');
@@ -417,6 +417,69 @@ describe('VisualExperience', () => {
             );
 
             expect(iframe?.height).toEqual('500px');
+        });
+
+        it('should not resize iframe when resizeHeightOnSizeChangedEvent is enabled but visual is fully responsive to iframe', async () => {
+            const frameOptions: FrameOptions = {
+                url: TEST_VISUAL_URL,
+                container: TEST_CONTAINER,
+                width: '800px',
+                onChange: onChangeSpy,
+                resizeHeightOnSizeChangedEvent: true,
+            };
+
+            const contentOptions: VisualContentOptions = {
+                scaleToContainer: true,
+                parameters: [
+                    {
+                        Name: 'State',
+                        Values: ['CT'],
+                    },
+                ],
+            };
+
+            const visualExperience = new VisualExperience(
+                frameOptions,
+                contentOptions,
+                TEST_CONTROL_OPTIONS,
+                new Set<string>()
+            );
+
+            expect(typeof visualExperience.send).toEqual('function');
+            expect(typeof visualExperience.setParameters).toEqual('function');
+            expect(onChangeSpy).toHaveBeenCalledWith(
+                {
+                    eventName: ChangeEventName.FRAME_STARTED,
+                    eventLevel: ChangeEventLevel.INFO,
+                    message: 'Creating the frame',
+                    data: {
+                        experience: TEST_INTERNAL_EXPERIENCE,
+                    },
+                },
+                {frame: null}
+            );
+
+            const iframe = TEST_CONTAINER.querySelector('iframe');
+            expect(iframe).toBeDefined();
+            expect(iframe?.src).toEqual(
+                `https://test.amazon.com/embed/guid/dashboards/testDashboardId/sheets/testSheetId/visuals/testVisualId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&scaleToContainer=true&fitToIframeWidth=true&contextId=testContextId&discriminator=0#p.State=CT`
+            );
+
+            expect(iframe?.height).toEqual('100%');
+
+            controlExperience.controlFrameMessageListener(
+                new MessageEvent('message', {
+                    data: {
+                        eventTarget: TEST_INTERNAL_EXPERIENCE,
+                        eventName: InfoMessageEventName.SIZE_CHANGED,
+                        message: {
+                            height: '500',
+                        },
+                    },
+                })
+            );
+
+            expect(iframe?.height).toEqual('100%');
         });
     });
 

@@ -19,12 +19,14 @@ export interface InternalVisualExperience extends IVisualExperience {
 export interface VisualContentOptions extends BaseContentOptions {
     locale?: string;
     parameters?: Parameter[];
+    scaleToContainer?: boolean;
     fitToIframeWidth?: boolean;
     themeOptions?: ThemeOptions;
 }
 
 export interface TransformedVisualContentOptions extends BaseContentOptions {
     locale?: string;
+    scaleToContainer?: boolean;
     fitToIframeWidth?: boolean;
     parameters?: ParametersAsObject;
     themeArn?: string;

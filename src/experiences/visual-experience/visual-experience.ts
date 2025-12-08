@@ -174,8 +174,13 @@ export class VisualExperience extends BaseExperience<
 
     private interceptMessage = (messageEvent: EmbeddingEvents, metadata?: ExperienceFrameMetadata) => {
         // Intercepting onMessage
-        // if the resizeHeightOnSizeChangedEvent is true, upon receiving SIZE_CHANGED message, update the height of the iframe
-        if (messageEvent.eventName === 'SIZE_CHANGED' && this.frameOptions.resizeHeightOnSizeChangedEvent) {
+        // If the resizeHeightOnSizeChangedEvent is true and the visual is not fully responsive to the iframe viewport,
+        // upon receiving SIZE_CHANGED message, update the height of the iframe.
+        if (
+            messageEvent.eventName === 'SIZE_CHANGED' &&
+            this.frameOptions.resizeHeightOnSizeChangedEvent &&
+            !this.contentOptions.scaleToContainer
+        ) {
             metadata?.frame?.setAttribute?.('height', `${messageEvent.message?.height}px`);
         }
         if (messageEvent.eventName === 'EXPERIENCE_INITIALIZED' && this.contentOptions?.themeOptions?.themeOverride) {
@@ -191,6 +196,7 @@ export class VisualExperience extends BaseExperience<
     // This function converts the property names to the query string parameters that the static content expects
     private transformVisualContentOptions = (contentOptions: VisualContentOptions) => {
         const {
+            scaleToContainer,
             fitToIframeWidth,
             locale,
             parameters,
@@ -202,6 +208,7 @@ export class VisualExperience extends BaseExperience<
 
         const transformedContentOptions = this.transformContentOptions<TransformedVisualContentOptions>(
             {
+                scaleToContainer: scaleToContainer ?? false,
                 fitToIframeWidth: fitToIframeWidth ?? true,
                 locale,
             },

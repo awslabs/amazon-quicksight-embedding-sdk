@@ -1482,6 +1482,11 @@ In Tiled and Free-form layouts, the width is fixed. When the fitToIframeWidth pr
 
 In Classic layout, the width is responsive. Since the visual already fits to the width of the iframe, it remains full iframe width even when the fitToIframeWidth property is set to false.
 
+#### 🔹 scaleToContainer: *boolean* *(optional, default=false)*
+If this is set to `true`, the visual adjusts its width and height automatically to fit the entire viewport within the iframe while the iframe width and height are adjusted.
+The resizing doesn't adhere to the original aspect ratio.
+This performance will take precedence when both scaleToContainer and fitToIframeWidth are true.
+
 #### 🔹 onMessage: *SimpleMessageEventHandler* *(optional)*
 
 The `eventName`s the visual experience receives
