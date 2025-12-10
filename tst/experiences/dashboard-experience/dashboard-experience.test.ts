@@ -94,7 +94,7 @@ describe('DashboardExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            `https://test.amazon.com/embed/guid/dashboards/testDashboardId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&footerPaddingEnabled=true&printEnabled=true&undoRedoDisabled=true&resetDisabled=true&contextId=testContextId&discriminator=0#`
+            `https://test.amazon.com/embed/guid/dashboards/testDashboardId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitSheetToWidth=true&footerPaddingEnabled=true&printEnabled=true&undoRedoDisabled=true&resetDisabled=true&contextId=testContextId&discriminator=0#`
         );
     });
 
@@ -122,7 +122,7 @@ describe('DashboardExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            `https://test.amazon.com/embed/guid/dashboards/testDashboardId/views/testViewId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&footerPaddingEnabled=true&undoRedoDisabled=true&resetDisabled=true&contextId=testContextId&discriminator=0#`
+            `https://test.amazon.com/embed/guid/dashboards/testDashboardId/views/testViewId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitSheetToWidth=true&footerPaddingEnabled=true&undoRedoDisabled=true&resetDisabled=true&contextId=testContextId&discriminator=0#`
         );
     });
 

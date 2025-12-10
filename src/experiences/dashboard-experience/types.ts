@@ -49,6 +49,7 @@ export interface TransformedDashboardContentOptions extends BaseContentOptions {
     resizeOnSheetChange?: boolean;
     themeArn?: string;
     themeOverride?: ThemeConfiguration;
+    fitSheetToWidth?: boolean;
 }
 
 export interface ToolbarOption {
@@ -78,6 +79,7 @@ export interface SheetOptions {
     initialSheetId?: string;
     singleSheet?: boolean;
     emitSizeChangedEventOnSheetChange?: boolean;
+    fitSheetToWidth?: boolean;
 }
 
 export type NavigateToDashboardOptions = {

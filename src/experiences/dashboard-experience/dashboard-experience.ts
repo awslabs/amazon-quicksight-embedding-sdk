@@ -348,6 +348,7 @@ export class DashboardExperience extends BaseExperience<
         const transformedContentOptions = this.transformContentOptions<TransformedDashboardContentOptions>(
             {
                 locale,
+                fitSheetToWidth: sheetOptions?.fitSheetToWidth ?? true,
             },
             unrecognizedContentOptions
         );

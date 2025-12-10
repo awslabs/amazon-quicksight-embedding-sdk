@@ -892,6 +892,11 @@ The `singleSheet` property can be used to enable or disable sheet tab controls i
 #### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 emitSizeChangedEventOnSheetChange: *boolean* (optional default=false)
 You can use this in combination with `resizeHeightOnSizeChangedEvent: true` frame option, when you want the embedded dashboard height to auto resize based on sheet height, on every sheet change event.
 
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 fitSheetToWidth: *boolean* (optional default=true)
+Using this option, you can change how the sheet content behaves when it comes to whether to auto-fit sheet container size.
+It is set to true by default for the sheet content to automatically adjust to the container's resizing.
+This option is intended to simulate the "Fit to window" feature in the native Quick Suite, thereby enabling users of the embedding JS SDK to customize the resizing behavior of the sheet content.
+
 #### 🔹 attributionOptions
 
 #### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 overlayContent: *boolean* *(optional, default=false)*
