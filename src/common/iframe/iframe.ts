@@ -14,6 +14,7 @@ export class Iframe {
     private readonly payload: IframeOptions['payload'];
     private readonly src: string;
     private readonly onLoad: IframeOptions['onLoad'];
+    private readonly framePermissions: IframeOptions['framePermissions'];
     private readonly iframe: EmbeddingIFrameElement;
     private iframePlaceholder?: HTMLElement;
     private classNames = [Iframe.IFRAME_CLASS_NAME];
@@ -31,12 +32,14 @@ export class Iframe {
             withIframePlaceholder,
             payload,
             className,
+            framePermissions,
         } = options;
 
         this.width = width;
         this.height = height;
         this.onLoad = onLoad;
         this.iframeName = id;
+        this.framePermissions = framePermissions;
 
         this.loading = loading;
 
@@ -104,6 +107,18 @@ export class Iframe {
 
         if (this.width === '0px' && this.height === '0px') {
             iframe.style.position = 'absolute';
+        }
+
+        const allow: string[] = [];
+        if (this.framePermissions?.clipboardRead) {
+            allow.push(`clipboard-read ${new URL(this.src).origin}`);
+        }
+        if (this.framePermissions?.clipboardWrite) {
+            allow.push(`clipboard-write ${new URL(this.src).origin}`);
+        }
+
+        if (allow.length) {
+            iframe.allow = allow.join('; ');
         }
 
         this.container.appendChild(iframe);

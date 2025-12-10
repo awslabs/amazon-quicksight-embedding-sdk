@@ -320,6 +320,15 @@ const frameOptions = {
 };
 ```
 
+#### 🔹 framePermissions: *(optional)*
+The `framePermissions` property can be used to customize the iframe allow permissions.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 clipboardRead: *boolean* *(optional)*
+This determines whether the iframe will have permissions to read from the clipboard.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 clipboardWrite: *boolean* *(optional)*
+This determines whether the iframe will have permissions to write to the clipboard.
+
 &nbsp;  
 ### Common Properties of `contentOptions` for All Embedding Experiences
 &nbsp;  
@@ -583,7 +592,7 @@ export class DashboardExperience extends BaseExperience<DashboardContentOptions,
 ### `frameOptions`
 &nbsp; 
 
-See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange` properties
+See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange`, `framePermissions`, properties
 
 &nbsp;  
 #### resizeHeightOnSizeChangedEvent: *boolean* *(optional, default: false)*
@@ -1434,7 +1443,7 @@ export class VisualExperience extends BaseExperience<VisualContentOptions, Inter
 ### `frameOptions`
 &nbsp; 
 
-See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange` properties
+See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange`, `framePermissions` properties
 
 &nbsp;  
 #### resizeHeightOnSizeChangedEvent: *boolean* *(optional, default: false)*
@@ -1824,7 +1833,7 @@ Use `embedConsole` method to embed a QuickSight console. It returns a promise of
 ### `frameOptions`
 &nbsp; 
 
-See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange` properties
+See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange`, `framePermissions` properties
 
 &nbsp;  
 ### `contentOptions`
@@ -2033,7 +2042,7 @@ export class QSearchExperience extends BaseExperience<QSearchContentOptions, Int
 ### `frameOptions`
 &nbsp; 
 
-See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange` properties
+See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange`, `framePermissions` properties
 
 Note for Q search bar embedding, you'll likely want to use `className` to give the iframe a `position: absolute` so that when expanded it does not shift the contents of your application. If elements in your application are appearing in front of the Q search bar, you can provide the iframe with a higher z-index as well.
 
@@ -2216,7 +2225,7 @@ export class GenerativeQnAExperience extends BaseExperience<GenerativeQnAContent
 ### `frameOptions`
 &nbsp; 
 
-See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange` properties
+See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange`, `framePermissions` properties
 
 Note that while using `SEARCH_BAR` panel type, you'll likely want to use `className` to give the iframe a `position: absolute` so that when expanded it does not shift the contents of your application. If elements in your application are appearing in front of the search bar, you can provide the iframe with a higher z-index as well.
 
@@ -2414,7 +2423,9 @@ Use `embedQuickChat` method to embed the Quick Chat experience. It returns a pro
 ### `frameOptions`
 &nbsp; 
 
-See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange` properties
+See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange`, `framePermissions` properties
+
+Note: `frameOptions.framePermissions.clipboardRead` and `frameOptions.framePermissions.clipboardWrite` default to `true` for Quick Chat Embedding.
 
 &nbsp;  
 ### `contentOptions`

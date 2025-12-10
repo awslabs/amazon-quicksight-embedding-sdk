@@ -194,6 +194,7 @@ export abstract class BaseExperienceFrame<
                 onLoad: this.onLoadHandler,
                 withIframePlaceholder: this.frameOptions.withIframePlaceholder,
                 className: this.frameOptions.className,
+                framePermissions: this.frameOptions.framePermissions,
             }).getIframe();
         } catch (err) {
             this.onChange(
@@ -232,8 +233,8 @@ export abstract class BaseExperienceFrame<
         };
     };
 
-    private validateBaseUrl = (url: string) => {
-        if (!url) {
+    private validateBaseUrl = (baseUrl: string) => {
+        if (!baseUrl) {
             this.onChange(
                 new ChangeEvent(ChangeEventName.NO_URL, ChangeEventLevel.ERROR, 'Url is required for the experience', {
                     experience: this.internalExperience,
@@ -243,7 +244,19 @@ export abstract class BaseExperienceFrame<
             throw new Error('Url is required for the experience');
         }
 
-        return url;
+        try {
+            new URL(baseUrl);
+        } catch (e) {
+            this.onChange(
+                new ChangeEvent(ChangeEventName.INVALID_URL, ChangeEventLevel.ERROR, 'Invalid experience url', {
+                    experience: this.internalExperience,
+                })
+            );
+
+            throw new Error('Invalid experience url');
+        }
+
+        return baseUrl;
     };
 
     private setTimeoutInstance = () => {

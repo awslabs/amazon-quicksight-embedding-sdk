@@ -59,7 +59,13 @@ export type FrameOptions = {
     withIframePlaceholder?: boolean | HTMLElement;
     className?: string;
     onChange?: EventListener;
+    framePermissions?: FramePermissionOptions;
 };
+
+export interface FramePermissionOptions {
+    clipboardRead?: boolean;
+    clipboardWrite?: boolean;
+}
 
 export type TransformedContentOptions =
     | TransformedConsoleContentOptions

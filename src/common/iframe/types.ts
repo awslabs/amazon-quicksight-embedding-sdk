@@ -1,6 +1,8 @@
 // Copyright 2025 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import {FramePermissionOptions} from '@experience/base-experience/types';
+
 export interface EmbeddingIFrameElement extends HTMLIFrameElement {
     loading: string;
 }
@@ -16,4 +18,5 @@ export type IframeOptions = {
     withIframePlaceholder?: boolean | HTMLElement;
     payload?: {[key: string]: string};
     className?: string;
+    framePermissions?: FramePermissionOptions;
 };

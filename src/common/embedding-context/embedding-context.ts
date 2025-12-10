@@ -173,6 +173,7 @@ export class EmbeddingContext implements IEmbeddingContext {
             'withIframePlaceholder',
             'onChange',
             'className',
+            'framePermissions',
         ];
 
         const unrecognizedFrameOptionNames = Object.keys(frameOptions).filter(key => !recognizedKeys.includes(key));

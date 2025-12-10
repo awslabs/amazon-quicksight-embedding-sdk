@@ -29,11 +29,17 @@ export class QuickChatExperience extends BaseExperience<
     protected readonly experienceId: string;
 
     constructor(
-        frameOptions: FrameOptions,
+        frameOpts: FrameOptions,
         contentOptions: QuickChatContentOptions,
         controlOptions: ControlOptions,
         experienceIdentifiers: Set<string>
     ) {
+        const frameOptions = {
+            // Clipboard permissions default to true for Quick Chat Experience
+            framePermissions: {clipboardRead: true, clipboardWrite: true, ...frameOpts.framePermissions},
+            ...frameOpts,
+        } satisfies FrameOptions;
+
         super(frameOptions, contentOptions, controlOptions, experienceIdentifiers);
 
         this.experience = this.extractExperienceFromUrl(frameOptions.url);

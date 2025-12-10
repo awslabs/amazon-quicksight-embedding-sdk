@@ -107,6 +107,28 @@ describe('BaseExperience', () => {
         expect(wrapper).toThrowError('Url is required for the experience');
     });
 
+    it('should throw error if frame url is invalid', () => {
+        const wrapper = () => {
+            new TestExperienceFrame(
+                {
+                    container: TEST_CONTAINER,
+                    url: 'invalid-url',
+                },
+                {
+                    contextId: '',
+                    eventManager: new EventManager(),
+                    urlInfo: {sessionId: '', host: ''},
+                },
+                {},
+                {},
+                {contextId: '1234', experienceType: ExperienceType.CONTROL},
+                '1234'
+            );
+        };
+
+        expect(wrapper).toThrow('Invalid experience url');
+    });
+
     it('should return success response when event is acknowledge type', async () => {
         const testExperience = new TestExperienceFrame(
             {

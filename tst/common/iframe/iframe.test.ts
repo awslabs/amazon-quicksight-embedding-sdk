@@ -31,6 +31,7 @@ describe('IFrame', () => {
         expect(appendChildSpy).toHaveBeenCalledTimes(1);
         expect(iframe.getIframe().width).toEqual('100%');
         expect(iframe.getIframe().height).toEqual('100%');
+        expect(iframe.getIframe().allow).toBeUndefined();
     });
 
     it('should create iframe placeholder and trigger remove when load event is fired', () => {
@@ -87,7 +88,7 @@ describe('IFrame', () => {
         const options = {
             ...DEFAULT_OPTIONS,
             width: TEST_WIDTH,
-        };
+        } satisfies IframeOptions;
 
         const iframe = new Iframe(options);
         expect(iframe.getIframe().width).toEqual(TEST_WIDTH);
@@ -117,6 +118,21 @@ describe('IFrame', () => {
         new Iframe(options);
 
         expect(TEST_CONTAINER?.querySelector('[id="custom-el"]')?.textContent).toBeDefined();
+    });
+
+    it('should create iframe with user defined clipboard permissions', () => {
+        const options = {
+            ...DEFAULT_OPTIONS,
+            framePermissions: {
+                clipboardRead: true,
+                clipboardWrite: true,
+            },
+        } satisfies IframeOptions;
+
+        const iframe = new Iframe(options);
+        const allow = iframe.getIframe().allow;
+        expect(allow).toContain(`clipboard-read ${new URL(TEST_URL).origin}`);
+        expect(allow).toContain(`clipboard-write ${new URL(TEST_URL).origin}`);
     });
 
     it('should create iframe using postRequest', () => {
