@@ -16,7 +16,9 @@ export const InvokerMessageEventName = {
     TOGGLE_THRESHOLD_ALERTS_PANE: 'TOGGLE_THRESHOLD_ALERTS_PANE',
     TOGGLE_SCHEDULING_PANE: 'TOGGLE_SCHEDULING_PANE',
     TOGGLE_RECENT_SNAPSHOTS_PANE: 'TOGGLE_RECENT_SNAPSHOTS_PANE',
+    IMPORT_OBJECTS: 'IMPORT_OBJECTS',
     OPEN_BUILD_STORY_PANE: 'OPEN_BUILD_STORY_PANE',
+    SEND_PROMPT: 'SEND_PROMPT',
 } as const;
 
 export type InvokerMessageEventName = (typeof InvokerMessageEventName)[keyof typeof InvokerMessageEventName];
@@ -39,4 +41,6 @@ export type InvokerMessageEvents =
     | EmbeddingMessageEvent<typeof InvokerMessageEventName.OPEN_BUILD_VISUAL_PANE, SuccessResponse | ErrorResponse>
     | EmbeddingMessageEvent<typeof InvokerMessageEventName.OPEN_DATA_QNA_PANE, SuccessResponse | ErrorResponse>
     | EmbeddingMessageEvent<typeof InvokerMessageEventName.TOGGLE_BOOKMARKS_PANE, SuccessResponse | ErrorResponse>
-    | EmbeddingMessageEvent<typeof InvokerMessageEventName.OPEN_BUILD_STORY_PANE, SuccessResponse | ErrorResponse>;
+    | EmbeddingMessageEvent<typeof InvokerMessageEventName.IMPORT_OBJECTS, SuccessResponse | ErrorResponse>
+    | EmbeddingMessageEvent<typeof InvokerMessageEventName.OPEN_BUILD_STORY_PANE, SuccessResponse | ErrorResponse>
+    | EmbeddingMessageEvent<typeof InvokerMessageEventName.SEND_PROMPT, SuccessResponse | ErrorResponse>;

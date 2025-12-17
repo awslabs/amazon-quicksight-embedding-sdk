@@ -6,10 +6,15 @@ import {QuickChatExperience} from '@experience/quick-chat-experience/quick-chat-
 import {QuickChatContentOptions} from '@experience/quick-chat-experience/types';
 import {ControlExperience} from '@experience/control-experience/control-experience';
 import {InfoMessageEventName} from '@common/events/messages';
+import {SDK_VERSION} from '@experience/base-experience/frame/experience-frame';
 
 describe('Quick Chat Experience', () => {
+    let TEST_CONTROL_OPTIONS: ControlOptions;
+    let TEST_FRAME_OPTIONS: FrameOptions;
     let TEST_CONTAINER: HTMLElement;
-    const TEST_AGENT_ARN = 'arn';
+
+    const TEST_AGENT_ID = 'test-agent-id';
+    const TEST_AGENT_ARN = `arn:aws:quicksight:us-east-1:123456789012:agent/${TEST_AGENT_ID}`;
     const TEST_PROMPT = 'initial prompt';
     const TEST_CONTEXT_ID = 'testContextId';
     const TEST_URL = 'https://test.amazon.com/embedding/af058f19046a4659bc3f233366f9b2af/quick/chat';
@@ -18,12 +23,11 @@ describe('Quick Chat Experience', () => {
         contextId: TEST_CONTEXT_ID,
         discriminator: 0,
     };
+    const TEST_EXPERIENCE_QUERY_STRING = `?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&contextId=${TEST_INTERNAL_EXPERIENCE.contextId}&discriminator=${TEST_INTERNAL_EXPERIENCE.discriminator}`;
 
     const onChangeSpy = jest.fn();
 
-    let TEST_CONTROL_OPTIONS: ControlOptions;
-
-    beforeAll(() => {
+    beforeEach(() => {
         const eventManager = new EventManager();
 
         TEST_CONTROL_OPTIONS = {
@@ -34,10 +38,14 @@ describe('Quick Chat Experience', () => {
                 host: 'https://localhost.com',
             },
         };
-    });
 
-    beforeEach(() => {
         TEST_CONTAINER = window.document.createElement('div');
+        TEST_FRAME_OPTIONS = {
+            url: TEST_URL,
+            container: TEST_CONTAINER,
+            width: '800px',
+            onChange: onChangeSpy,
+        };
     });
 
     afterEach(() => {
@@ -45,25 +53,20 @@ describe('Quick Chat Experience', () => {
     });
 
     it('should create quick chat experience', () => {
-        const frameOptions: FrameOptions = {
-            url: TEST_URL,
-            container: TEST_CONTAINER,
-            width: '800px',
-            onChange: onChangeSpy,
-        };
-
         const contentOptions: QuickChatContentOptions = {
             fixedAgentArn: TEST_AGENT_ARN,
         };
 
         const quickChatExperience = new QuickChatExperience(
-            frameOptions,
+            TEST_FRAME_OPTIONS,
             contentOptions,
             TEST_CONTROL_OPTIONS,
             new Set<string>()
         );
 
         expect(typeof quickChatExperience.send).toEqual('function');
+        expect(typeof quickChatExperience.sendPrompt).toEqual('function');
+
         expect(onChangeSpy).toHaveBeenCalledWith(
             {
                 eventName: ChangeEventName.FRAME_STARTED,
@@ -78,40 +81,32 @@ describe('Quick Chat Experience', () => {
 
         const iFrame = TEST_CONTAINER.querySelector('iframe');
         expect(iFrame).toBeDefined();
+        const iframeSrc = TEST_CONTAINER.querySelector('iframe')?.src ?? '';
 
-        expect(iFrame?.src).toEqual(
-            `https://test.amazon.com/embedding/af058f19046a4659bc3f233366f9b2af/quick/chat?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=2.11.0&contextId=testContextId&discriminator=0&fixedAgentArn=${TEST_AGENT_ARN}`
-        );
+        expect(iframeSrc.startsWith(`${TEST_URL}${TEST_EXPERIENCE_QUERY_STRING}`)).toBe(true);
+        const searchParams = new URL(iframeSrc).searchParams;
+        expect(searchParams.get('fixedAgentId')).toEqual(TEST_AGENT_ID);
     });
 
     it('should create quick chat experience without parameters', () => {
-        const frameOptions: FrameOptions = {
-            url: TEST_URL,
-            container: TEST_CONTAINER,
-            width: '800px',
-        };
-
-        const quickChatExperience = new QuickChatExperience(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
+        const quickChatExperience = new QuickChatExperience(
+            TEST_FRAME_OPTIONS,
+            {},
+            TEST_CONTROL_OPTIONS,
+            new Set<string>()
+        );
 
         expect(typeof quickChatExperience.send).toEqual('function');
 
-        expect(TEST_CONTAINER.querySelector('iframe')?.src).toEqual(
-            `https://test.amazon.com/embedding/af058f19046a4659bc3f233366f9b2af/quick/chat?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=2.11.0&contextId=testContextId&discriminator=0`
-        );
+        expect(TEST_CONTAINER.querySelector('iframe')?.src).toEqual(`${TEST_URL}${TEST_EXPERIENCE_QUERY_STRING}`);
     });
 
     it('should emit warning if with unrecognized content options', () => {
-        const frameOptions = {
-            url: TEST_URL,
-            container: TEST_CONTAINER,
-            width: '800px',
-            onChange: onChangeSpy,
-        };
         const contentOptions = {
             unknownOption: 'test',
-        } as any;
+        } as unknown as QuickChatContentOptions;
 
-        new QuickChatExperience(frameOptions, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+        new QuickChatExperience(TEST_FRAME_OPTIONS, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
         expect(onChangeSpy).toHaveBeenCalledWith(
             {
                 eventName: ChangeEventName.UNRECOGNIZED_CONTENT_OPTIONS,
@@ -125,16 +120,20 @@ describe('Quick Chat Experience', () => {
         );
     });
 
-    it('should send an initial prompt on EXPERIENCE_INITIALIZED if provided', () => {
+    it('should send a SEND_PROMPT event with initial prompt on EXPERIENCE_INITIALIZED if provided', () => {
         const body = window.document.querySelector('body');
         const controlExperience = new ControlExperience(body!, TEST_CONTROL_OPTIONS);
-        const frameOptions: FrameOptions = {
-            url: TEST_URL,
-            container: TEST_CONTAINER,
-            width: '800px',
-        };
 
-        const quickChatExperience = new QuickChatExperience(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
+        const quickChatExperience = new QuickChatExperience(
+            TEST_FRAME_OPTIONS,
+            {
+                promptOptions: {
+                    initialPrompt: TEST_PROMPT,
+                },
+            },
+            TEST_CONTROL_OPTIONS,
+            new Set<string>()
+        );
         const mockSend = jest.fn();
         jest.spyOn(quickChatExperience, 'send').mockImplementation(mockSend);
 
@@ -151,18 +150,22 @@ describe('Quick Chat Experience', () => {
                 },
             })
         );
+
+        expect(quickChatExperience.send).toHaveBeenCalledWith(
+            expect.objectContaining({eventName: MessageEventName.SEND_PROMPT, message: {prompt: TEST_PROMPT}})
+        );
     });
 
-    it('should not send an initial prompt on EXPERIENCE_INITIALIZED if not provided', () => {
+    it('should not send a SEND_PROMPT event with initial prompt on EXPERIENCE_INITIALIZED if not provided', () => {
         const body = window.document.querySelector('body');
         const controlExperience = new ControlExperience(body!, TEST_CONTROL_OPTIONS);
-        const frameOptions: FrameOptions = {
-            url: TEST_URL,
-            container: TEST_CONTAINER,
-            width: '800px',
-        };
 
-        const quickChatExperience = new QuickChatExperience(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
+        const quickChatExperience = new QuickChatExperience(
+            TEST_FRAME_OPTIONS,
+            {},
+            TEST_CONTROL_OPTIONS,
+            new Set<string>()
+        );
         const mockSend = jest.fn();
         jest.spyOn(quickChatExperience, 'send').mockImplementation(mockSend);
 
@@ -185,14 +188,224 @@ describe('Quick Chat Experience', () => {
 
     it('should throw error if not Quick Chat url', () => {
         const frameOptions = {
+            ...TEST_FRAME_OPTIONS,
             url: 'https://exmaple.com',
-            container: TEST_CONTAINER,
-            width: '800px',
-        };
+        } satisfies FrameOptions;
 
         const createQSearchFrameWrapper = () => {
             new QuickChatExperience(frameOptions, {}, TEST_CONTROL_OPTIONS, new Set<string>());
         };
         expect(createQSearchFrameWrapper).toThrow(new Error('Invalid quick chat experience url'));
+    });
+
+    it('should create quick chat experience with fixedAgentArn', () => {
+        const contentOptions: QuickChatContentOptions = {
+            fixedAgentArn: TEST_AGENT_ARN,
+        };
+
+        new QuickChatExperience(TEST_FRAME_OPTIONS, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+
+        const iframeSrc = TEST_CONTAINER.querySelector('iframe')?.src ?? '';
+        const searchParams = new URL(iframeSrc).searchParams;
+
+        expect(searchParams.get('fixedAgentId')).toBe(TEST_AGENT_ID);
+    });
+
+    it('should create quick chat experience with agentOptions.fixedAgentId', () => {
+        const contentOptions: QuickChatContentOptions = {
+            agentOptions: {
+                fixedAgentId: TEST_AGENT_ID,
+            },
+        };
+
+        new QuickChatExperience(TEST_FRAME_OPTIONS, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+
+        const iframeSrc = TEST_CONTAINER.querySelector('iframe')?.src ?? '';
+        const searchParams = new URL(iframeSrc).searchParams;
+
+        expect(searchParams.get('fixedAgentId')).toBe(TEST_AGENT_ID);
+    });
+
+    it('should throw error if both fixedAgentArn and agentOptions.fixedAgentId are specified', () => {
+        const contentOptions: QuickChatContentOptions = {
+            fixedAgentArn: TEST_AGENT_ARN,
+            agentOptions: {
+                fixedAgentId: TEST_AGENT_ID,
+            },
+        };
+
+        expect(() => {
+            new QuickChatExperience(TEST_FRAME_OPTIONS, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+        }).toThrow(
+            'Both fixedAgentArn and agentOptions.fixedAgentId cannot be specified. Use agentOptions.fixedAgentId.'
+        );
+    });
+
+    it('should throw error if fixedAgentArn is invalid', () => {
+        const contentOptions: QuickChatContentOptions = {
+            fixedAgentArn: 'invalid-arn',
+        };
+
+        expect(() => {
+            new QuickChatExperience(TEST_FRAME_OPTIONS, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+        }).toThrow('Invalid fixedAgentArn.');
+    });
+
+    it('should create quick chat experience with promptOptions', () => {
+        const contentOptions: QuickChatContentOptions = {
+            promptOptions: {
+                showAgentKnowledgeBoundary: true,
+                allowFileAttachments: true,
+                showWebSearch: true,
+            },
+        };
+
+        new QuickChatExperience(TEST_FRAME_OPTIONS, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+
+        const iframeSrc = TEST_CONTAINER.querySelector('iframe')?.src ?? '';
+        const searchParams = new URL(iframeSrc).searchParams;
+
+        expect(searchParams.get('showAgentKnowledgeBoundary')).toBe('true');
+        expect(searchParams.get('allowFileAttachments')).toBe('true');
+        expect(searchParams.get('showWebSearch')).toBe('true');
+    });
+
+    it('should create quick chat experience with footerOptions', () => {
+        const contentOptions: QuickChatContentOptions = {
+            footerOptions: {
+                showBrandAttribution: true,
+                showUsagePolicy: true,
+            },
+        };
+
+        new QuickChatExperience(TEST_FRAME_OPTIONS, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+
+        const iframeSrc = TEST_CONTAINER.querySelector('iframe')?.src ?? '';
+        const searchParams = new URL(iframeSrc).searchParams;
+
+        expect(searchParams.get('showBrandAttribution')).toBe('true');
+        expect(searchParams.get('showUsagePolicy')).toBe('true');
+    });
+
+    it('should emit warning for unrecognized agentOptions', () => {
+        const contentOptions = {
+            agentOptions: {
+                unknownAgentOption: 'test',
+            },
+        } as unknown as QuickChatContentOptions;
+
+        new QuickChatExperience(TEST_FRAME_OPTIONS, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+
+        expect(onChangeSpy).toHaveBeenCalledWith(
+            {
+                eventName: ChangeEventName.UNRECOGNIZED_CONTENT_OPTIONS,
+                eventLevel: ChangeEventLevel.WARN,
+                message: 'Experience content options contain unrecognized properties',
+                data: {
+                    unrecognizedContentOptions: ['agentOptions.unknownAgentOption'],
+                },
+            },
+            {frame: null}
+        );
+    });
+
+    it('should emit warning for unrecognized promptOptions', () => {
+        const contentOptions = {
+            promptOptions: {
+                unknownPromptOption: 'test',
+            },
+        } as unknown as QuickChatContentOptions;
+
+        new QuickChatExperience(TEST_FRAME_OPTIONS, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+
+        expect(onChangeSpy).toHaveBeenCalledWith(
+            {
+                eventName: ChangeEventName.UNRECOGNIZED_CONTENT_OPTIONS,
+                eventLevel: ChangeEventLevel.WARN,
+                message: 'Experience content options contain unrecognized properties',
+                data: {
+                    unrecognizedContentOptions: ['promptOptions.unknownPromptOption'],
+                },
+            },
+            {frame: null}
+        );
+    });
+
+    it('should emit warning for unrecognized footerOptions', () => {
+        const contentOptions = {
+            footerOptions: {
+                unknownFooterOption: 'test',
+            },
+        } as unknown as QuickChatContentOptions;
+
+        new QuickChatExperience(TEST_FRAME_OPTIONS, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+
+        expect(onChangeSpy).toHaveBeenCalledWith(
+            {
+                eventName: ChangeEventName.UNRECOGNIZED_CONTENT_OPTIONS,
+                eventLevel: ChangeEventLevel.WARN,
+                message: 'Experience content options contain unrecognized properties',
+                data: {
+                    unrecognizedContentOptions: ['footerOptions.unknownFooterOption'],
+                },
+            },
+            {frame: null}
+        );
+    });
+
+    it('should create quick chat experience with all content options', () => {
+        const contentOptions: QuickChatContentOptions = {
+            agentOptions: {
+                fixedAgentId: TEST_AGENT_ID,
+            },
+            promptOptions: {
+                showAgentKnowledgeBoundary: true,
+                allowFileAttachments: false,
+                showWebSearch: true,
+            },
+            footerOptions: {
+                showBrandAttribution: false,
+                showUsagePolicy: true,
+            },
+        };
+
+        new QuickChatExperience(TEST_FRAME_OPTIONS, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+
+        const iframeSrc = TEST_CONTAINER.querySelector('iframe')?.src ?? '';
+        const searchParams = new URL(iframeSrc).searchParams;
+
+        expect(searchParams.get('fixedAgentId')).toBe(TEST_AGENT_ID);
+        expect(searchParams.get('showAgentKnowledgeBoundary')).toBe('true');
+        expect(searchParams.get('allowFileAttachments')).toBe('false');
+        expect(searchParams.get('showWebSearch')).toBe('true');
+        expect(searchParams.get('showBrandAttribution')).toBe('false');
+        expect(searchParams.get('showUsagePolicy')).toBe('true');
+    });
+
+    describe('Actions', () => {
+        let quickChatExperience: QuickChatExperience;
+
+        beforeEach(() => {
+            quickChatExperience = new QuickChatExperience(
+                TEST_FRAME_OPTIONS,
+                {},
+                TEST_CONTROL_OPTIONS,
+                new Set<string>()
+            );
+
+            jest.spyOn(quickChatExperience, 'send');
+        });
+
+        it('should emit SEND_PROMPT event when sendPrompt is called', () => {
+            const testPrompt = 'Hello, this is a test prompt';
+            quickChatExperience.sendPrompt(testPrompt);
+
+            expect(quickChatExperience.send).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    eventName: MessageEventName.SEND_PROMPT,
+                    message: {prompt: testPrompt},
+                })
+            );
+        });
     });
 });

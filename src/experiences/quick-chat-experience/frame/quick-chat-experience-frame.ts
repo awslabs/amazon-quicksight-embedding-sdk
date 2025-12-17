@@ -35,14 +35,12 @@ export class QuickChatExperienceFrame extends BaseExperienceFrame<
     }
 
     buildExperienceUrl = (baseUrl: string) => {
-        const {fixedAgentArn, ...otherOptions} = this.transformedContentOptions;
         const {contextId, discriminator} = this.internalExperience;
 
         const queryString = this.buildQueryString({
-            ...otherOptions,
             contextId,
             discriminator,
-            fixedAgentArn,
+            ...this.transformedContentOptions,
         });
 
         return [baseUrl, queryString].join(baseUrl.includes('?') ? '&' : '?');

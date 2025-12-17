@@ -9,6 +9,7 @@ Amazon QuickSight offers four different embedding experiences with options for u
 * [Console Embedding](#console-embedding)
 * [QSearchBar Embedding](#qsearchbar-embedding)
 * [Generative Q&A Embedding](#generative-qa-embedding)
+* [Quick Chat Embedding](#quick-chat-embedding)
 
 &nbsp;  
 ## Installation
@@ -2354,6 +2355,12 @@ Quick Chat embedding provides an Amazon Quick Suite chat bot assistant.
 
 Use `embedQuickChat` method to embed the Quick Chat experience. It returns a promise of `QuickChatExperience` type.
 
+```typescript
+export class QuickChatExperience extends BaseExperience<QuickChatContentOptions, InternalQuickChatExperience, IQuickChatExperience, TransformedQuickChatContentOptions, QuickChatExperienceFrame> {
+   sendPrompt: (prompt: string) => Promise<SuccessResponseMessage | ErrorResponseMessage>;
+}
+```
+
 &nbsp;  
 ### Example
 &nbsp;  
@@ -2397,7 +2404,19 @@ Use `embedQuickChat` method to embed the Quick Chat experience. It returns a pro
                 };
 
                 const contentOptions = {
-                    fixedAgentArn: 'arn:aws:quicksight:us-east-1:123456789012:agent/SYSTEM',
+                    agentOptions: {
+                        fixedAgentId: 'your-agent-id',
+                    },
+                    promptOptions: {
+                        allowFileAttachments: true,
+                        initialPrompt: 'What is the total revenue for Q4?',
+                        showAgentKnowledgeBoundary: true,
+                        showWebSearch: true,
+                    },
+                    footerOptions: {
+                        showBrandAttribution: true,
+                        showUsagePolicy: true,
+                    },
                     onMessage: async (messageEvent, experienceMetadata) => {
                         switch (messageEvent.eventName) {
                             case 'CONTENT_LOADED': {
@@ -2431,14 +2450,57 @@ Note: `frameOptions.framePermissions.clipboardRead` and `frameOptions.framePermi
 ### `contentOptions`
 &nbsp;  
 
-#### 🔹 fixedAgentArn: *string* *(optional, default=undefined)*
-The `fixedAgentArn` property allows to define an agent that will be pre-selected when the chat starts.
+#### 🔹 agentOptions: *(optional)*
+The `agentOptions` property can be used to customize agent-related settings.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 fixedAgentId: *string* *(optional)*
+The `fixedAgentId` property can be used to specify an agent selected for the duration of the session. This also disables the agent selector.
+
+#### 🔹 promptOptions: *(optional)*
+The `promptOptions` property can be used to customize prompt-related settings and UI elements.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 initialPrompt: *string* *(optional)*
+The `initialPrompt` property can be used to define a prompt that will be sent once on initial chat panel load.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showAgentKnowledgeBoundary: *boolean* *(optional, default=true)*
+The `showAgentKnowledgeBoundary` property can be used to show or hide the agent knowledge boundary menu.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 allowFileAttachments: *boolean* *(optional, default=true)*
+The `allowFileAttachments` property can be used to show or hide the file attachment button and also enable or disable attaching files to the conversation by drag and drop onto the prompt.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showWebSearch: *boolean* *(optional, default=true)*
+The `showWebSearch` property can be used to show or hide the web search button.
+
+#### 🔹 footerOptions: *(optional)*
+The `footerOptions` property can be used to customize footer-related UI elements.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showBrandAttribution: *boolean* *(optional, default=true)*
+The `showBrandAttribution` property can be used to show or hide the Amazon Quick Suite brand attribution statement.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showUsagePolicy: *boolean* *(optional, default=true)*
+The `showUsagePolicy` property can be used to show or hide the Amazon usage policy statement and link.
+
+#### 🔹 fixedAgentArn: *string* *(optional, deprecated)*
+The `fixedAgentArn` property can be used to specify an agent selected for the duration of the session. This also disables the agent selector. This property is deprecated, use `agentOptions.fixedAgentId` instead.
 
 #### 🔹 onMessage: *EventListener* *(optional)*
 
 The `eventName`s the quick chat experience receives
 
-    CONTENT_LOADED: Received when the visuals of the quick chat are fully loaded
+    CONTENT_LOADED: Received when the experience is loaded
+    ERROR_OCCURRED: Received when an error occurs.
+
+&nbsp;  
+### Actions
+&nbsp;  
+
+#### 🔹 sendPrompt
+
+This method sends a prompt to the chat experience.
+
+```javascript
+    embeddedQuickChatExperience.sendPrompt('What is the total revenue for Q4?');
+```
 
 &nbsp;  
 ## Troubleshooting
