@@ -1,3 +1,7 @@
+**2.11.1**
+* Adding Quick Chat embedding clipboard permission options
+* Adding customization options for Quick Chat embedding experience including agent selection, prompt configuration, and UI elements control.
+
 **2.11.0**
 * Adding Quick Chat embedding support with new embedQuickChat function
 * Adding support for fixedAgentArn content option to pre-select an agent when the chat starts
