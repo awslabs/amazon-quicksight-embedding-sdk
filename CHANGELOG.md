@@ -1,3 +1,8 @@
+**2.11.2**
+* Support new SDK event `PARAMETERS_LOADED`.
+* Onboard new sheet option `fitSheetToWidth` for dashboard embedding.
+* Onboard new content option `scaleToContainer` for visual embedding.
+
 **2.11.1**
 * Adding Quick Chat embedding clipboard permission options
 * Adding customization options for Quick Chat embedding experience including agent selection, prompt configuration, and UI elements control.
