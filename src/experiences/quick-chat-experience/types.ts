@@ -43,6 +43,10 @@ export interface PromptOptions {
      */
     showAgentKnowledgeBoundary?: boolean;
     /**
+     * Whether to show a user message from the configured initial prompt.
+     */
+    showInitialPromptMessage?: boolean;
+    /**
      * Whether the web search button will be shown.
      */
     showWebSearch?: boolean;
@@ -62,8 +66,10 @@ export interface FooterOptions {
 export interface TransformedQuickChatContentOptions extends BaseContentOptions {
     allowFileAttachments?: boolean;
     fixedAgentId?: string;
+    initialPrompt?: string;
     showAgentKnowledgeBoundary?: boolean;
     showBrandAttribution?: boolean;
+    showInitialPromptMessage?: boolean;
     showUsagePolicy?: boolean;
     showWebSearch?: boolean;
 }

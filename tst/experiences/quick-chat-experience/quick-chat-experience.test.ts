@@ -4,8 +4,6 @@ import {EventManager} from '@common/event-manager/event-manager';
 import {ChangeEventLevel, ChangeEventName, MessageEventName} from '@common/events/types';
 import {QuickChatExperience} from '@experience/quick-chat-experience/quick-chat-experience';
 import {QuickChatContentOptions} from '@experience/quick-chat-experience/types';
-import {ControlExperience} from '@experience/control-experience/control-experience';
-import {InfoMessageEventName} from '@common/events/messages';
 import {SDK_VERSION} from '@experience/base-experience/frame/experience-frame';
 
 describe('Quick Chat Experience', () => {
@@ -15,7 +13,7 @@ describe('Quick Chat Experience', () => {
 
     const TEST_AGENT_ID = 'test-agent-id';
     const TEST_AGENT_ARN = `arn:aws:quicksight:us-east-1:123456789012:agent/${TEST_AGENT_ID}`;
-    const TEST_PROMPT = 'initial prompt';
+    const TEST_INITIAL_PROMPT = 'test initial prompt';
     const TEST_CONTEXT_ID = 'testContextId';
     const TEST_URL = 'https://test.amazon.com/embedding/af058f19046a4659bc3f233366f9b2af/quick/chat';
     const TEST_INTERNAL_EXPERIENCE = {
@@ -120,72 +118,6 @@ describe('Quick Chat Experience', () => {
         );
     });
 
-    it('should send a SEND_PROMPT event with initial prompt on EXPERIENCE_INITIALIZED if provided', () => {
-        const body = window.document.querySelector('body');
-        const controlExperience = new ControlExperience(body!, TEST_CONTROL_OPTIONS);
-
-        const quickChatExperience = new QuickChatExperience(
-            TEST_FRAME_OPTIONS,
-            {
-                promptOptions: {
-                    initialPrompt: TEST_PROMPT,
-                },
-            },
-            TEST_CONTROL_OPTIONS,
-            new Set<string>()
-        );
-        const mockSend = jest.fn();
-        jest.spyOn(quickChatExperience, 'send').mockImplementation(mockSend);
-
-        controlExperience.controlFrameMessageListener(
-            new MessageEvent('message', {
-                data: {
-                    eventTarget: {
-                        experienceType: ExperienceType.QUICKCHAT,
-                        discriminator: 0,
-                        contextId: TEST_CONTEXT_ID,
-                    },
-                    eventName: InfoMessageEventName.EXPERIENCE_INITIALIZED,
-                    message: {},
-                },
-            })
-        );
-
-        expect(quickChatExperience.send).toHaveBeenCalledWith(
-            expect.objectContaining({eventName: MessageEventName.SEND_PROMPT, message: {prompt: TEST_PROMPT}})
-        );
-    });
-
-    it('should not send a SEND_PROMPT event with initial prompt on EXPERIENCE_INITIALIZED if not provided', () => {
-        const body = window.document.querySelector('body');
-        const controlExperience = new ControlExperience(body!, TEST_CONTROL_OPTIONS);
-
-        const quickChatExperience = new QuickChatExperience(
-            TEST_FRAME_OPTIONS,
-            {},
-            TEST_CONTROL_OPTIONS,
-            new Set<string>()
-        );
-        const mockSend = jest.fn();
-        jest.spyOn(quickChatExperience, 'send').mockImplementation(mockSend);
-
-        controlExperience.controlFrameMessageListener(
-            new MessageEvent('message', {
-                data: {
-                    eventTarget: {
-                        experienceType: ExperienceType.QUICKCHAT,
-                        discriminator: 0,
-                        contextId: TEST_CONTEXT_ID,
-                    },
-                    eventName: InfoMessageEventName.EXPERIENCE_INITIALIZED,
-                    message: {},
-                },
-            })
-        );
-
-        expect(quickChatExperience.send).not.toHaveBeenCalled();
-    });
-
     it('should throw error if not Quick Chat url', () => {
         const frameOptions = {
             ...TEST_FRAME_OPTIONS,
@@ -254,8 +186,10 @@ describe('Quick Chat Experience', () => {
     it('should create quick chat experience with promptOptions', () => {
         const contentOptions: QuickChatContentOptions = {
             promptOptions: {
-                showAgentKnowledgeBoundary: true,
                 allowFileAttachments: true,
+                initialPrompt: TEST_INITIAL_PROMPT,
+                showAgentKnowledgeBoundary: true,
+                showInitialPromptMessage: true,
                 showWebSearch: true,
             },
         };
@@ -265,8 +199,10 @@ describe('Quick Chat Experience', () => {
         const iframeSrc = TEST_CONTAINER.querySelector('iframe')?.src ?? '';
         const searchParams = new URL(iframeSrc).searchParams;
 
-        expect(searchParams.get('showAgentKnowledgeBoundary')).toBe('true');
         expect(searchParams.get('allowFileAttachments')).toBe('true');
+        expect(searchParams.get('initialPrompt')).toBe(TEST_INITIAL_PROMPT);
+        expect(searchParams.get('showAgentKnowledgeBoundary')).toBe('true');
+        expect(searchParams.get('showInitialPromptMessage')).toBe('true');
         expect(searchParams.get('showWebSearch')).toBe('true');
     });
 
@@ -359,8 +295,10 @@ describe('Quick Chat Experience', () => {
                 fixedAgentId: TEST_AGENT_ID,
             },
             promptOptions: {
-                showAgentKnowledgeBoundary: true,
                 allowFileAttachments: false,
+                initialPrompt: TEST_INITIAL_PROMPT,
+                showAgentKnowledgeBoundary: true,
+                showInitialPromptMessage: true,
                 showWebSearch: true,
             },
             footerOptions: {
@@ -374,12 +312,14 @@ describe('Quick Chat Experience', () => {
         const iframeSrc = TEST_CONTAINER.querySelector('iframe')?.src ?? '';
         const searchParams = new URL(iframeSrc).searchParams;
 
-        expect(searchParams.get('fixedAgentId')).toBe(TEST_AGENT_ID);
-        expect(searchParams.get('showAgentKnowledgeBoundary')).toBe('true');
         expect(searchParams.get('allowFileAttachments')).toBe('false');
-        expect(searchParams.get('showWebSearch')).toBe('true');
+        expect(searchParams.get('fixedAgentId')).toBe(TEST_AGENT_ID);
+        expect(searchParams.get('initialPrompt')).toBe(TEST_INITIAL_PROMPT);
+        expect(searchParams.get('showAgentKnowledgeBoundary')).toBe('true');
         expect(searchParams.get('showBrandAttribution')).toBe('false');
+        expect(searchParams.get('showInitialPromptMessage')).toBe('true');
         expect(searchParams.get('showUsagePolicy')).toBe('true');
+        expect(searchParams.get('showWebSearch')).toBe('true');
     });
 
     describe('Actions', () => {

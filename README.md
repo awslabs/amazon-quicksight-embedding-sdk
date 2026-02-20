@@ -2423,6 +2423,7 @@ export class QuickChatExperience extends BaseExperience<QuickChatContentOptions,
                         allowFileAttachments: true,
                         initialPrompt: 'What is the total revenue for Q4?',
                         showAgentKnowledgeBoundary: true,
+                        showInitialPromptMessage: true,
                         showWebSearch: true,
                     },
                     footerOptions: {
@@ -2474,11 +2475,14 @@ The `promptOptions` property can be used to customize prompt-related settings an
 #### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 initialPrompt: *string* *(optional)*
 The `initialPrompt` property can be used to define a prompt that will be sent once on initial chat panel load.
 
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 allowFileAttachments: *boolean* *(optional, default=true)*
+The `allowFileAttachments` property can be used to show or hide the file attachment button and also enable or disable attaching files to the conversation by drag and drop onto the prompt.
+
 #### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showAgentKnowledgeBoundary: *boolean* *(optional, default=true)*
 The `showAgentKnowledgeBoundary` property can be used to show or hide the agent knowledge boundary menu.
 
-#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 allowFileAttachments: *boolean* *(optional, default=true)*
-The `allowFileAttachments` property can be used to show or hide the file attachment button and also enable or disable attaching files to the conversation by drag and drop onto the prompt.
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showInitialPromptMessage: *boolean* *(optional, default=true)*
+The `showInitialPromptMessage` property can be used to show or hide the user message bubble from the configured `initialPrompt`. When set to `false`, the initial prompt is still sent but the user message is not displayed in the chat.
 
 #### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showWebSearch: *boolean* *(optional, default=true)*
 The `showWebSearch` property can be used to show or hide the web search button.

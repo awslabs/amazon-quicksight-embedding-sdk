@@ -11,10 +11,9 @@ import {
 import {ExperienceType, FrameOptions} from '../base-experience';
 import {ControlOptions} from '../control-experience';
 
-import {ExperienceFrameMetadata} from '../../common/embedding-context';
 import {BaseExperience} from '@experience/base-experience/base-experience';
 import {ChangeEvent, EmbeddingMessageEvent, ResponseMessage} from '@common/events/events';
-import {ChangeEventLevel, ChangeEventName, EmbeddingEvents, MessageEventName} from '@common/events/types';
+import {ChangeEventLevel, ChangeEventName, MessageEventName} from '@common/events/types';
 
 export class QuickChatExperience extends BaseExperience<
     QuickChatContentOptions,
@@ -58,8 +57,7 @@ export class QuickChatExperience extends BaseExperience<
             contentOptions,
             this.transformQuickChatContentOptions(contentOptions),
             internalExperience,
-            experienceIdentifier,
-            this.interceptMessage
+            experienceIdentifier
         );
     }
 
@@ -84,15 +82,6 @@ export class QuickChatExperience extends BaseExperience<
         return {
             experienceType: ExperienceType.QUICKCHAT,
         };
-    };
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    private interceptMessage = (messageEvent: EmbeddingEvents, _metadata?: ExperienceFrameMetadata) => {
-        if (messageEvent.eventName === MessageEventName.EXPERIENCE_INITIALIZED) {
-            if (this.contentOptions.promptOptions?.initialPrompt) {
-                this.sendPrompt(this.contentOptions.promptOptions.initialPrompt);
-            }
-        }
     };
 
     public sendPrompt = (prompt: string): Promise<ResponseMessage> => {
@@ -129,9 +118,9 @@ export class QuickChatExperience extends BaseExperience<
 
         const {
             allowFileAttachments,
+            initialPrompt,
             showAgentKnowledgeBoundary,
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            initialPrompt, // excluded from unrecognized
+            showInitialPromptMessage,
             showWebSearch,
             ...unrecognizedPromptOptions
         } = promptOptions;
@@ -148,8 +137,10 @@ export class QuickChatExperience extends BaseExperience<
 
         const transformedContentOptions: TransformedQuickChatContentOptions = {
             allowFileAttachments,
+            initialPrompt,
             showAgentKnowledgeBoundary,
             showBrandAttribution,
+            showInitialPromptMessage,
             showUsagePolicy,
             showWebSearch,
             fixedAgentId: validatedFixedAgentId,
