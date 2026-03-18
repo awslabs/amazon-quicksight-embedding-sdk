@@ -34,6 +34,7 @@ export class EmbeddingContext implements IEmbeddingContext {
     private readonly experienceIdentifiers: Set<string>;
     private readonly eventManager: EventManager;
     private readonly contextId: string;
+    private readonly sessionId: string;
     private readonly contextOnChange;
     private controlOptions?: ControlOptions;
     private readonly logger: LogProvider;
@@ -42,6 +43,7 @@ export class EmbeddingContext implements IEmbeddingContext {
         // The contextId is shared with experiences to create a communication context
         // Experiences with not-matching contextId is outside the communication context
         this.contextId = v4();
+        this.sessionId = v4().replaceAll('-', '');
         this.experienceIdentifiers = new Set();
 
         // The eventManager instance below is passed to all experiences to create a unified event management
@@ -229,17 +231,27 @@ export class EmbeddingContext implements IEmbeddingContext {
     };
 
     private getControlUrlInfo = (url: string) => {
-        const matches: Array<string> = /^(https:\/\/[^/]+)\/(embedding|embed)\/([^/]+)\/[^?]+\?(.*)/i.exec(url) || [];
-
-        if (matches?.length < 4) {
-            throw new Error(`Invalid embedding url: "${url}"`);
+        const apiMatches = /^(https:\/\/[^/]+)\/(embedding|embed)\/([^/]+)\/[^?]+\?(.*)/i.exec(url);
+        if (apiMatches && apiMatches.length >= 4) {
+            return {
+                sessionId: apiMatches[3],
+                host: apiMatches[1],
+                urlSearchParams: new URLSearchParams(apiMatches[4]),
+            };
         }
 
-        return {
-            sessionId: matches[3],
-            host: matches[1],
-            urlSearchParams: new URLSearchParams(matches[4]),
-        };
+        const oneClickMatches =
+            /^(https:\/\/[^/]+)\/sn(\/account\/[^/]+)?\/embed\/share\/accounts\/([^/]+)\/[^?]+(?:\?(.*))?/i.exec(url);
+        if (oneClickMatches && oneClickMatches.length >= 4) {
+            const oneClickSessionId = this.sessionId;
+            return {
+                sessionId: oneClickSessionId,
+                host: oneClickMatches[1],
+                urlSearchParams: new URLSearchParams(oneClickMatches[4]),
+            };
+        }
+
+        throw new Error(`Invalid embedding url: "${url}"`);
     };
 
     private getBodyElement = () => {

@@ -292,7 +292,14 @@ export class DashboardExperience extends BaseExperience<
     };
 
     protected extractExperienceFromUrl = (url: string): IDashboardExperience => {
-        const matches: Array<string> = /^https:\/\/[^/]+\/embed\/[^/]+\/dashboards\/([\w-]+)(\?|$)/i.exec(url) || [];
+        // API-based:  https://<host>/embed/<id>/dashboards/<dashboardId>(/views/<viewId>)?
+        const apiMatches = /^https:\/\/[^/]+\/embed\/[^/]+\/dashboards\/([\w-]+)(\/views\/[\w-]+)?(\?|$)/i.exec(url);
+        // 1-click:    https://<host>/sn(/account/<id>)?/embed/share(/accounts/<id>)?/dashboards/<dashboardId>(/views/<viewId>)?
+        const oneClickMatches =
+            /^https:\/\/[^/]+\/sn(?:\/account\/[^/]+)?\/embed\/share\/accounts\/[^/]+\/dashboards\/([\w-]+)(\/views\/[\w-]+)?(\?|$)/i.exec(
+                url
+            );
+        const matches: Array<string> = apiMatches || oneClickMatches || [];
         if (matches.length < 3) {
             this.frameOptions.onChange?.(
                 new ChangeEvent(

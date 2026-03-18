@@ -49,32 +49,100 @@ describe('EmbeddingContext', () => {
     describe('embedDashboard', () => {
         let TEST_CONTAINER: HTMLElement;
         const TEST_DASHBOARD_ID = 'testDashboardId';
-        const TEST_DASHBOARD_URL = `https://test.amazon.com/embed/guid/dashboards/${TEST_DASHBOARD_ID}?authcode=1234`;
+        const TEST_API_DASHBOARD_URL = `https://test.amazon.com/embed/guid/dashboards/${TEST_DASHBOARD_ID}?authcode=1234`;
+        const TEST_1_CLICK_DASHBOARD_URL = `https://test.amazon.com/sn/account/test-account/embed/share/accounts/guid/dashboards/${TEST_DASHBOARD_ID}?authcode=1234`;
+
+        const TEST_DASHBOARD_URLS: [string, string][] = [
+            ['API-based', TEST_API_DASHBOARD_URL],
+            ['1-click', TEST_1_CLICK_DASHBOARD_URL],
+        ];
 
         beforeEach(() => {
             TEST_CONTAINER = window.document.createElement('div');
             mockAddEventListener.mockClear();
         });
 
-        it('should successfully create embedded dashboard', async () => {
-            const embeddingContext = await createEmbeddingContext();
-            await embeddingContext.embedDashboard({
-                url: TEST_DASHBOARD_URL,
-                container: TEST_CONTAINER,
+        describe.each(TEST_DASHBOARD_URLS)('%s dashboard embedding', (_label, TEST_URL) => {
+            it('should successfully create embedded dashboard', async () => {
+                const embeddingContext = await createEmbeddingContext();
+                await embeddingContext.embedDashboard({
+                    url: TEST_URL,
+                    container: TEST_CONTAINER,
+                });
+
+                const iFrame = TEST_CONTAINER.querySelector('iframe');
+                expect(iFrame).toBeDefined();
+
+                expect(mockAddEventListener).toBeCalledTimes(2);
+
+                expect(mockAddEventListener).toHaveBeenNthCalledWith(
+                    1,
+                    '1234-1234-CONTROL',
+                    expect.any(Function),
+                    true
+                );
+                expect(mockAddEventListener).toHaveBeenNthCalledWith(
+                    2,
+                    `1234-1234-DASHBOARD-${TEST_DASHBOARD_ID}`,
+                    expect.any(Function),
+                    true
+                );
             });
 
-            const iFrame = TEST_CONTAINER.querySelector('iframe');
-            expect(iFrame).toBeDefined();
+            it('should throw error if body element is missing in DOM', async () => {
+                const mockContextOnChange = jest.fn();
+                jest.spyOn(document, 'getElementsByTagName').mockImplementation(
+                    // @ts-expect-error - Stubbing method to generate error
+                    () => []
+                );
+                const embeddingContext = await createEmbeddingContext({
+                    onChange: mockContextOnChange,
+                });
+                const embedExperienceWrapper = async () => {
+                    return await embeddingContext.embedDashboard({
+                        container: TEST_CONTAINER,
+                        url: TEST_URL,
+                    });
+                };
+                await expect(embedExperienceWrapper).rejects.toThrow('could not locate <body> element in the page');
 
-            expect(mockAddEventListener).toBeCalledTimes(2);
+                expect(mockContextOnChange).toBeCalledWith(
+                    {
+                        eventLevel: ChangeEventLevel.ERROR,
+                        eventName: ChangeEventName.NO_BODY,
+                        message: 'could not locate <body> element in the page',
+                    },
+                    {frame: null}
+                );
 
-            expect(mockAddEventListener).toHaveBeenNthCalledWith(1, '1234-1234-CONTROL', expect.any(Function), true);
-            expect(mockAddEventListener).toHaveBeenNthCalledWith(
-                2,
-                `1234-1234-DASHBOARD-${TEST_DASHBOARD_ID}`,
-                expect.any(Function),
-                true
-            );
+                jest.restoreAllMocks();
+            });
+
+            it('should emit warning if frameOptions contains unrecognized properties', async () => {
+                const onChangeSpy = jest.fn();
+                const embeddingContext = await createEmbeddingContext();
+
+                await embeddingContext.embedDashboard({
+                    url: TEST_URL,
+                    container: TEST_CONTAINER,
+                    // @ts-expect-error - should throw error when frameOption is invalid
+                    banana: '1234',
+                    onChange: onChangeSpy,
+                });
+
+                expect(onChangeSpy).toHaveBeenNthCalledWith(
+                    1,
+                    {
+                        eventLevel: ChangeEventLevel.WARN,
+                        eventName: ChangeEventName.UNRECOGNIZED_FRAME_OPTIONS,
+                        message: 'embedDashboard is called with unrecognized properties',
+                        data: {
+                            unrecognizedFrameOptions: ['banana'],
+                        },
+                    },
+                    {frame: null}
+                );
+            });
         });
 
         it('should throw error if frameOptions is not provided for embedDashboard method', async () => {
@@ -112,36 +180,7 @@ describe('EmbeddingContext', () => {
             );
         });
 
-        it('should throw error if body element is missing in DOM', async () => {
-            const mockContextOnChange = jest.fn();
-            jest.spyOn(document, 'getElementsByTagName').mockImplementation(
-                // @ts-expect-error - Stubbing method to generate error
-                () => []
-            );
-            const embeddingContext = await createEmbeddingContext({
-                onChange: mockContextOnChange,
-            });
-            const embedExperienceWrapper = async () => {
-                return await embeddingContext.embedDashboard({
-                    container: TEST_CONTAINER,
-                    url: TEST_DASHBOARD_URL,
-                });
-            };
-            await expect(embedExperienceWrapper).rejects.toThrow('could not locate <body> element in the page');
-
-            expect(mockContextOnChange).toBeCalledWith(
-                {
-                    eventLevel: ChangeEventLevel.ERROR,
-                    eventName: ChangeEventName.NO_BODY,
-                    message: 'could not locate <body> element in the page',
-                },
-                {frame: null}
-            );
-
-            jest.restoreAllMocks();
-        });
-
-        it('should throw error if control url is invalid', async () => {
+        it('should throw error if API-based control url is invalid', async () => {
             const embeddingContext = await createEmbeddingContext();
             const embedExperienceWrapper = async () => {
                 return await embeddingContext.embedDashboard({
@@ -154,30 +193,15 @@ describe('EmbeddingContext', () => {
             );
         });
 
-        it('should emit warning if frameOptions contains unrecognized properties', async () => {
-            const onChangeSpy = jest.fn();
+        it('should throw error if 1-click control url is invalid', async () => {
             const embeddingContext = await createEmbeddingContext();
-
-            await embeddingContext.embedDashboard({
-                url: TEST_DASHBOARD_URL,
-                container: TEST_CONTAINER,
-                // @ts-expect-error - should throw error when frameOption is invalid
-                banana: '1234',
-                onChange: onChangeSpy,
-            });
-
-            expect(onChangeSpy).toHaveBeenNthCalledWith(
-                1,
-                {
-                    eventLevel: ChangeEventLevel.WARN,
-                    eventName: ChangeEventName.UNRECOGNIZED_FRAME_OPTIONS,
-                    message: 'embedDashboard is called with unrecognized properties',
-                    data: {
-                        unrecognizedFrameOptions: ['banana'],
-                    },
-                },
-                {frame: null}
-            );
+            const embedExperienceWrapper = async () => {
+                return await embeddingContext.embedDashboard({
+                    container: TEST_CONTAINER,
+                    url: `https://test.amazon.com/sn/embed/share/dashboards/${TEST_DASHBOARD_ID}`,
+                });
+            };
+            await expect(embedExperienceWrapper).rejects.toThrow('Invalid embedding url');
         });
     });
 
