@@ -122,6 +122,9 @@ export class QuickChatExperience extends BaseExperience<
             showAgentKnowledgeBoundary,
             showInitialPromptMessage,
             showWebSearch,
+            showPromptArea,
+            showChatHistory,
+            enablePrivateMode,
             ...unrecognizedPromptOptions
         } = promptOptions;
 
@@ -143,6 +146,9 @@ export class QuickChatExperience extends BaseExperience<
             showInitialPromptMessage,
             showUsagePolicy,
             showWebSearch,
+            showPromptArea,
+            showChatHistory,
+            enablePrivateMode,
             fixedAgentId: validatedFixedAgentId,
         };
 

@@ -50,6 +50,18 @@ export interface PromptOptions {
      * Whether the web search button will be shown.
      */
     showWebSearch?: boolean;
+    /**
+     * Whether to show or hide the prompt box and disclaimer.
+     */
+    showPromptArea?: boolean;
+    /**
+     * Whether to show or hide the header with the action buttons and history..
+     */
+    showChatHistory?: boolean;
+    /**
+     * Whether to toggle private mode for the embedded chat.
+     */
+    enablePrivateMode?: boolean;
 }
 
 export interface FooterOptions {
@@ -72,4 +84,7 @@ export interface TransformedQuickChatContentOptions extends BaseContentOptions {
     showInitialPromptMessage?: boolean;
     showUsagePolicy?: boolean;
     showWebSearch?: boolean;
+    showPromptArea?: boolean;
+    showChatHistory?: boolean;
+    enablePrivateMode?: boolean;
 }

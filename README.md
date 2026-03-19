@@ -2425,6 +2425,9 @@ export class QuickChatExperience extends BaseExperience<QuickChatContentOptions,
                         showAgentKnowledgeBoundary: true,
                         showInitialPromptMessage: true,
                         showWebSearch: true,
+                        showChatHistory: true,
+                        showPromptArea: true,
+                        enablePrivateMode: false,
                     },
                     footerOptions: {
                         showBrandAttribution: true,
@@ -2483,6 +2486,15 @@ The `showAgentKnowledgeBoundary` property can be used to show or hide the agent 
 
 #### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showInitialPromptMessage: *boolean* *(optional, default=true)*
 The `showInitialPromptMessage` property can be used to show or hide the user message bubble from the configured `initialPrompt`. When set to `false`, the initial prompt is still sent but the user message is not displayed in the chat.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showPromptArea: *boolean* *(optional, default=true)*
+The `showPromptArea` property can be used to show or hide the prompt input and disclaimer at the bottom of the chat thread. When set to `false`, the prompt input and AWS disclaimer will be hidden.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showChatHistory: *boolean* *(optional, default=true)*
+The `showChatHistory` property can be used to show or hide header above the chat thread that includes the chat history button. When set to `false`, header and chat history button will be hidden.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 enablePrivateMode: *boolean* *(optional, default=false)*
+The `enablePrivateMode` property can be used to enforce private mode on the chat. When set to `true`, the conversation will start with private mode toggled on.
 
 #### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showWebSearch: *boolean* *(optional, default=true)*
 The `showWebSearch` property can be used to show or hide the web search button.

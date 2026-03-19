@@ -191,6 +191,9 @@ describe('Quick Chat Experience', () => {
                 showAgentKnowledgeBoundary: true,
                 showInitialPromptMessage: true,
                 showWebSearch: true,
+                showPromptArea: true,
+                showChatHistory: true,
+                enablePrivateMode: false,
             },
         };
 
@@ -204,6 +207,9 @@ describe('Quick Chat Experience', () => {
         expect(searchParams.get('showAgentKnowledgeBoundary')).toBe('true');
         expect(searchParams.get('showInitialPromptMessage')).toBe('true');
         expect(searchParams.get('showWebSearch')).toBe('true');
+        expect(searchParams.get('showPromptArea')).toBe('true');
+        expect(searchParams.get('showChatHistory')).toBe('true');
+        expect(searchParams.get('enablePrivateMode')).toBe('false');
     });
 
     it('should create quick chat experience with footerOptions', () => {
@@ -300,6 +306,9 @@ describe('Quick Chat Experience', () => {
                 showAgentKnowledgeBoundary: true,
                 showInitialPromptMessage: true,
                 showWebSearch: true,
+                showPromptArea: true,
+                showChatHistory: true,
+                enablePrivateMode: false,
             },
             footerOptions: {
                 showBrandAttribution: false,
@@ -320,6 +329,9 @@ describe('Quick Chat Experience', () => {
         expect(searchParams.get('showInitialPromptMessage')).toBe('true');
         expect(searchParams.get('showUsagePolicy')).toBe('true');
         expect(searchParams.get('showWebSearch')).toBe('true');
+        expect(searchParams.get('showPromptArea')).toBe('true');
+        expect(searchParams.get('showChatHistory')).toBe('true');
+        expect(searchParams.get('enablePrivateMode')).toBe('false');
     });
 
     describe('Actions', () => {
