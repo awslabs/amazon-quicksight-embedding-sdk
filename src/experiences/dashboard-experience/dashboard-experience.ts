@@ -396,6 +396,10 @@ export class DashboardExperience extends BaseExperience<
             transformedContentOptions.showThresholdAlertsIcon = true;
         }
 
+        if (toolbarOptions?.dashboardCustomizationSummary === true) {
+            transformedContentOptions.showDashboardCustomizationSummaryIcon = true;
+        }
+
         if (toolbarOptions?.scheduling === true) {
             transformedContentOptions.showSchedulingIcon = true;
         }

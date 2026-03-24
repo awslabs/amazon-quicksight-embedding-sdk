@@ -40,6 +40,7 @@ export interface TransformedDashboardContentOptions extends BaseContentOptions {
     printEnabled?: boolean;
     showBookmarksIcon?: boolean;
     showThresholdAlertsIcon?: boolean;
+    showDashboardCustomizationSummaryIcon?: boolean;
     showSchedulingIcon?: boolean;
     showRecentSnapshotsIcon?: boolean;
     showExecutiveSummaryIcon?: boolean;
@@ -66,6 +67,7 @@ export interface ToolbarOptions {
     reset?: boolean | ToolbarOption;
     bookmarks?: boolean | ToolbarOption;
     thresholdAlerts?: boolean | ToolbarOption;
+    dashboardCustomizationSummary?: boolean | ToolbarOption;
     scheduling?: boolean | ToolbarOption;
     recentSnapshots?: boolean | ToolbarOption;
     executiveSummary?: boolean | ToolbarOption;

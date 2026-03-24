@@ -238,6 +238,7 @@ describe('DashboardExperience', () => {
                     scheduling: true,
                     recentSnapshots: true,
                     thresholdAlerts: true,
+                    dashboardCustomizationSummary: true,
                     executiveSummary: true,
                 },
             };
@@ -261,6 +262,7 @@ describe('DashboardExperience', () => {
             expect(url.searchParams.has('printEnabled')).toBeTruthy();
             expect(url.searchParams.has('showBookmarksIcon')).toBeTruthy();
             expect(url.searchParams.has('showThresholdAlertsIcon')).toBeTruthy();
+            expect(url.searchParams.has('showDashboardCustomizationSummaryIcon')).toBeTruthy();
             expect(url.searchParams.has('showSchedulingIcon')).toBeTruthy();
             expect(url.searchParams.has('showRecentSnapshotsIcon')).toBeTruthy();
             expect(url.searchParams.has('showExecutiveSummaryIcon')).toBeTruthy();
@@ -282,6 +284,7 @@ describe('DashboardExperience', () => {
                     scheduling: false,
                     recentSnapshots: false,
                     thresholdAlerts: false,
+                    dashboardCustomizationSummary: false,
                     executiveSummary: false,
                 },
             };
@@ -305,6 +308,7 @@ describe('DashboardExperience', () => {
             expect(url.searchParams.has('printEnabled')).toBeFalsy();
             expect(url.searchParams.has('showBookmarksIcon')).toBeFalsy();
             expect(url.searchParams.has('showThresholdAlertsIcon')).toBeFalsy();
+            expect(url.searchParams.has('showDashboardCustomizationSummaryIcon')).toBeFalsy();
             expect(url.searchParams.has('showSchedulingIcon')).toBeFalsy();
             expect(url.searchParams.has('showRecentSnapshotsIcon')).toBeFalsy();
             expect(url.searchParams.has('showExecutiveSummaryIcon')).toBeFalsy();
