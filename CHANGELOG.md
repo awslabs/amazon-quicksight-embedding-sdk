@@ -1,5 +1,5 @@
 **2.11.3**
-* Adding customization options for Quick Chat embedded experience including prompt area, history and private mode.
+* Adding customization options for Quick Chat embedded experience including prompt area, chat history, initial prompt, and private mode.
 
 **2.11.2**
 * Support new SDK event `PARAMETERS_LOADED`.
