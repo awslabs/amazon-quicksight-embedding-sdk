@@ -1,3 +1,6 @@
+**2.11.3**
+* Adding customization options for Quick Chat embedded experience including prompt area, history and private mode.
+
 **2.11.2**
 * Support new SDK event `PARAMETERS_LOADED`.
 * Onboard new sheet option `fitSheetToWidth` for dashboard embedding.
