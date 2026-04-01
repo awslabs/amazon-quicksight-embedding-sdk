@@ -640,7 +640,7 @@ For more information about parameters in Amazon QuickSight, see https://docs.aws
 
 #### 🔹 toolbarOptions
 
-If sub-properties of the toolbarOptions are set to false, then the navrbar is hidden.
+If sub-properties of the toolbarOptions are set to false, then the navbar is hidden.
 
 #### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 export: *boolean* *(optional, default=false)*
 This can be used to show or hide export icon for dashboard embedding. 
