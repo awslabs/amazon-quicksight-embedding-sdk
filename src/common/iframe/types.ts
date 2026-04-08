@@ -4,7 +4,6 @@
 import {FramePermissionOptions} from '@experience/base-experience/types';
 
 export interface EmbeddingIFrameElement extends HTMLIFrameElement {
-    loading: string;
 }
 
 export type IframeOptions = {
