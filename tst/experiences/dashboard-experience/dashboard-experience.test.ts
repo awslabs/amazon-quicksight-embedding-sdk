@@ -96,7 +96,7 @@ describe('DashboardExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            `https://test.amazon.com/sn/account/test-account/embed/share/accounts/guid/dashboards/testDashboardId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitSheetToWidth=true&footerPaddingEnabled=true&printEnabled=true&undoRedoDisabled=true&resetDisabled=true&enableReflow=false&contextId=testContextId&discriminator=0#`
+            `https://test.amazon.com/sn/account/test-account/embed/share/accounts/guid/dashboards/testDashboardId?test=test&punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitSheetToWidth=true&footerPaddingEnabled=true&printEnabled=true&undoRedoDisabled=true&resetDisabled=true&contextId=testContextId&discriminator=0#`
         );
     });
 
@@ -152,9 +152,8 @@ describe('DashboardExperience', () => {
         expect(iFrame).toBeDefined();
 
         expect(iFrame?.src).toEqual(
-            `https://test.amazon.com/sn/account/test-account/embed/share/accounts/guid/dashboards/testDashboardId/views/testViewId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitSheetToWidth=true&footerPaddingEnabled=true&undoRedoDisabled=true&resetDisabled=true&enableReflow=false&contextId=testContextId&discriminator=0#`
+            `https://test.amazon.com/sn/account/test-account/embed/share/accounts/guid/dashboards/testDashboardId/views/testViewId?punyCodeEmbedOrigin=http%3A%2F%2Flocalhost%2F-&sdkVersion=${SDK_VERSION}&fitSheetToWidth=true&footerPaddingEnabled=true&undoRedoDisabled=true&resetDisabled=true&contextId=testContextId&discriminator=0#`
         );
-
     });
 
     it('should throw error if no url', () => {
@@ -377,116 +376,6 @@ describe('DashboardExperience', () => {
 
             const url = new URL(iFrame!.src);
             expect(url.searchParams.has('themeArn')).toBeTruthy();
-        });
-
-        it('should create dashboard frame with accessibilityOptions enableReflow set to false', () => {
-            const frameOptions = {
-                url: TEST_URL,
-                container: TEST_CONTAINER,
-                width: '800px',
-                onChange: onChangeSpy,
-            };
-            const contentOptions: DashboardContentOptions = {
-                accessibilityOptions: {
-                    enableReflow: false,
-                },
-            };
-            const dashboardFrame = new DashboardExperience(
-                frameOptions,
-                contentOptions,
-                TEST_CONTROL_OPTIONS,
-                new Set<string>()
-            );
-
-            expect(typeof dashboardFrame.send).toEqual('function');
-            expect(typeof dashboardFrame.setParameters).toEqual('function');
-            expect(typeof dashboardFrame.initiatePrint).toEqual('function');
-            const iFrame = TEST_CONTAINER.querySelector('iframe');
-            expect(iFrame).toBeDefined();
-
-            const url = new URL(iFrame!.src);
-            expect(url.searchParams.get('enableReflow')).toEqual('false');
-        });
-
-        it('should create dashboard frame with accessibilityOptions enableReflow set to true', () => {
-            const frameOptions = {
-                url: TEST_URL,
-                container: TEST_CONTAINER,
-                width: '800px',
-                onChange: onChangeSpy,
-            };
-            const contentOptions: DashboardContentOptions = {
-                accessibilityOptions: {
-                    enableReflow: true,
-                },
-            };
-            const dashboardFrame = new DashboardExperience(
-                frameOptions,
-                contentOptions,
-                TEST_CONTROL_OPTIONS,
-                new Set<string>()
-            );
-
-            expect(typeof dashboardFrame.send).toEqual('function');
-            expect(typeof dashboardFrame.setParameters).toEqual('function');
-            expect(typeof dashboardFrame.initiatePrint).toEqual('function');
-            const iFrame = TEST_CONTAINER.querySelector('iframe');
-            expect(iFrame).toBeDefined();
-
-            const url = new URL(iFrame!.src);
-            expect(url.searchParams.get('enableReflow')).toEqual('true');
-        });
-
-        it('should default enableReflow to false when accessibilityOptions is not provided', () => {
-            const frameOptions = {
-                url: TEST_URL,
-                container: TEST_CONTAINER,
-                width: '800px',
-                onChange: onChangeSpy,
-            };
-            const contentOptions: DashboardContentOptions = {};
-            const dashboardFrame = new DashboardExperience(
-                frameOptions,
-                contentOptions,
-                TEST_CONTROL_OPTIONS,
-                new Set<string>()
-            );
-
-            expect(typeof dashboardFrame.send).toEqual('function');
-            expect(typeof dashboardFrame.setParameters).toEqual('function');
-            expect(typeof dashboardFrame.initiatePrint).toEqual('function');
-            const iFrame = TEST_CONTAINER.querySelector('iframe');
-            expect(iFrame).toBeDefined();
-
-            const url = new URL(iFrame!.src);
-            expect(url.searchParams.get('enableReflow')).toEqual('false');
-        });
-
-        it('should default enableReflow to false when enableReflow is undefined', () => {
-            const frameOptions = {
-                url: TEST_URL,
-                container: TEST_CONTAINER,
-                width: '800px',
-                onChange: onChangeSpy,
-            };
-            const contentOptions: DashboardContentOptions = {
-                accessibilityOptions: {},
-            };
-            const dashboardFrame = new DashboardExperience(
-                frameOptions,
-                contentOptions,
-                TEST_CONTROL_OPTIONS,
-                new Set<string>()
-            );
-
-            expect(typeof dashboardFrame.send).toEqual('function');
-            expect(typeof dashboardFrame.setParameters).toEqual('function');
-            expect(typeof dashboardFrame.initiatePrint).toEqual('function');
-            const iFrame = TEST_CONTAINER.querySelector('iframe');
-            expect(iFrame).toBeDefined();
-
-            const url = new URL(iFrame!.src);
-            expect(url.searchParams.get('enableReflow')).toEqual('false');
         });
 
         it('should create dashboard frame with themeOverride', () => {

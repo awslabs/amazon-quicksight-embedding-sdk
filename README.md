@@ -171,11 +171,14 @@ const embeddedQuickChatExperience = await embedQuickChat(frameOptions, contentOp
 
 #### 🔹 url: *string* *(required)*
 
-This is the embed URL you have generated using the [QuickSight API Operations for Embedding](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html).
-
-Follow [Embedding with the QuickSight API](https://docs.aws.amazon.com/quicksight/latest/user/embedded-analytics-api.html) in the Amazon QuickSight User Guide to generate the url.
+This is the embed URL you have generated using the [QuickSight API Operations for Embedding](https://docs.aws.amazon.com/en_us/quicksight/latest/APIReference/embedding-quicksight.html). Follow [Embedding with the QuickSight API](https://docs.aws.amazon.com/quicksight/latest/user/embedded-analytics-api.html) in the Amazon QuickSight User Guide to generate the url.
 
 For each experience, you need to make sure that the users are granted the necessary permissions to view the embedded experience.
+
+Note that dashboard embedding also supports [1-click embedding URLs](https://docs.aws.amazon.com/quicksight/latest/user/1-click-embedding.html) in addition to API-based embedding URLs.
+
+- API-based URL: `https://<amazon quick host>/embed/<embedding session id>/dashboards/<dashboard id>`
+- 1-click URL: `https://<amazon quick host>/sn/account/<account alias>/embed/share/accounts/<account id>/dashboards/<dashboard id>`
 
 #### 🔹 container: *string | HTMLElement* *(required)*
 
@@ -479,7 +482,7 @@ export class DashboardExperience extends BaseExperience<DashboardContentOptions,
                 });
 
                 const frameOptions = {
-                    url: '<YOUR_EMBED_URL>',
+                    url: '<YOUR_EMBED_URL>', // replace this value with the url generated via embedding API or 1-click embedding URL
                     container: '#experience-container',
                     height: "700px",
                     width: "300px",
@@ -2460,7 +2463,9 @@ export class QuickChatExperience extends BaseExperience<QuickChatContentOptions,
 
 See [Common Properties of `frameOptions` for All Embedding Experiences](#common-properties-of-frameoptions-for-all-embedding-experiences) for `url`, `container`, `width`, `height`, `className`, `withIframePlaceholder`, `onChange`, `framePermissions` properties
 
-Note: `frameOptions.framePermissions.clipboardRead` and `frameOptions.framePermissions.clipboardWrite` default to `true` for Quick Chat Embedding.
+Note:
+- `frameOptions.framePermissions.clipboardRead` and `frameOptions.framePermissions.clipboardWrite` default to `true` for Quick Chat Embedding.
+- `frameOptions.url` for Quick Chat embedding only supports API-based embedding URLs. 1-click chat embedding is available but not through the embedding SDK.
 
 &nbsp;  
 ### `contentOptions`
