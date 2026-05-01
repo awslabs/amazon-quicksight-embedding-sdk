@@ -1,3 +1,7 @@
+**2.12.0**
+* Add `dashboardCustomizationSummary` toolbar option for dashboard embedding.
+* Support 1-click embed URL pattern.
+
 **2.11.3**
 * Adding customization options for Quick Chat embedded experience including prompt area, chat history, initial prompt, and private mode.
 
