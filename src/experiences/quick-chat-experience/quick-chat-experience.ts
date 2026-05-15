@@ -125,6 +125,8 @@ export class QuickChatExperience extends BaseExperience<
             showPromptArea,
             showChatHistory,
             enablePrivateMode,
+            showReasoningModeSelection,
+            defaultReasoningMode,
             ...unrecognizedPromptOptions
         } = promptOptions;
 
@@ -149,6 +151,8 @@ export class QuickChatExperience extends BaseExperience<
             showPromptArea,
             showChatHistory,
             enablePrivateMode,
+            showReasoningModeSelection,
+            defaultReasoningMode,
             fixedAgentId: validatedFixedAgentId,
         };
 

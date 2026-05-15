@@ -194,6 +194,8 @@ describe('Quick Chat Experience', () => {
                 showPromptArea: true,
                 showChatHistory: true,
                 enablePrivateMode: false,
+                showReasoningModeSelection: false,
+                defaultReasoningMode: 'SMART',
             },
         };
 
@@ -210,6 +212,8 @@ describe('Quick Chat Experience', () => {
         expect(searchParams.get('showPromptArea')).toBe('true');
         expect(searchParams.get('showChatHistory')).toBe('true');
         expect(searchParams.get('enablePrivateMode')).toBe('false');
+        expect(searchParams.get('showReasoningModeSelection')).toBe('false');
+        expect(searchParams.get('defaultReasoningMode')).toBe('SMART');
     });
 
     it('should create quick chat experience with footerOptions', () => {
@@ -309,6 +313,8 @@ describe('Quick Chat Experience', () => {
                 showPromptArea: true,
                 showChatHistory: true,
                 enablePrivateMode: false,
+                showReasoningModeSelection: false,
+                defaultReasoningMode: 'SMART',
             },
             footerOptions: {
                 showBrandAttribution: false,
@@ -332,6 +338,8 @@ describe('Quick Chat Experience', () => {
         expect(searchParams.get('showPromptArea')).toBe('true');
         expect(searchParams.get('showChatHistory')).toBe('true');
         expect(searchParams.get('enablePrivateMode')).toBe('false');
+        expect(searchParams.get('showReasoningModeSelection')).toBe('false');
+        expect(searchParams.get('defaultReasoningMode')).toBe('SMART');
     });
 
     describe('Actions', () => {

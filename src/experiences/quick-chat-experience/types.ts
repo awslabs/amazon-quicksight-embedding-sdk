@@ -62,7 +62,17 @@ export interface PromptOptions {
      * Whether to toggle private mode for the embedded chat.
      */
     enablePrivateMode?: boolean;
+    /**
+     * Whether to show the reasoning mode dropdown.
+     */
+    showReasoningModeSelection?: boolean;
+    /**
+     * The default reasoning mode for the chat.
+     */
+    defaultReasoningMode?: ReasoningMode;
 }
+
+export type ReasoningMode = 'SMART' | 'FAST' | 'ADVANCED';
 
 export interface FooterOptions {
     /**
@@ -87,4 +97,6 @@ export interface TransformedQuickChatContentOptions extends BaseContentOptions {
     showPromptArea?: boolean;
     showChatHistory?: boolean;
     enablePrivateMode?: boolean;
+    showReasoningModeSelection?: boolean;
+    defaultReasoningMode?: ReasoningMode;
 }

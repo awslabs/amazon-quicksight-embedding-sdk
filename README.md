@@ -2431,6 +2431,8 @@ export class QuickChatExperience extends BaseExperience<QuickChatContentOptions,
                         showChatHistory: true,
                         showPromptArea: true,
                         enablePrivateMode: false,
+                        showReasoningModeSelection: false,
+                        defaultReasoningMode: 'SMART',
                     },
                     footerOptions: {
                         showBrandAttribution: true,
@@ -2500,6 +2502,12 @@ The `showChatHistory` property can be used to show or hide header above the chat
 
 #### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 enablePrivateMode: *boolean* *(optional, default=false)*
 The `enablePrivateMode` property can be used to enforce private mode on the chat. When set to `true`, the conversation will start with private mode toggled on.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showReasoningModeSelection: *boolean* *(optional, default=false)*
+The `showReasoningModeSelection` property can be used to show or hide the reasoning mode selection. When set to `true`, the reasoning mode selection will be displayed.
+
+#### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 defaultReasoningMode: *'SMART' | 'FAST' | 'ADVANCED'* *(optional, default='SMART')*
+The `defaultReasoningMode` property can be used to set the default reasoning mode for the chat.
 
 #### &nbsp;&nbsp;&nbsp;&nbsp; 🔹 showWebSearch: *boolean* *(optional, default=true)*
 The `showWebSearch` property can be used to show or hide the web search button.
