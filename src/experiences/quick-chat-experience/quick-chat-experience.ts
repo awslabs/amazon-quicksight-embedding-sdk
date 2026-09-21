@@ -102,6 +102,7 @@ export class QuickChatExperience extends BaseExperience<
 
         const {
             fixedAgentArn,
+            locale,
             agentOptions = {},
             promptOptions = {},
             footerOptions = {},
@@ -143,6 +144,7 @@ export class QuickChatExperience extends BaseExperience<
         const transformedContentOptions: TransformedQuickChatContentOptions = {
             allowFileAttachments,
             initialPrompt,
+            locale,
             showAgentKnowledgeBoundary,
             showBrandAttribution,
             showInitialPromptMessage,

@@ -1,0 +1,10 @@
+# Additional Dry Run Build targets for SpaceNeedleEmbeddingJSSDK.
+#
+# spaceneedle/live is frequently stale (its npm mirror snapshot lags newest
+# publishes), which produces spurious ETARGET/notarget failures unrelated to
+# the change under review. Building against the consuming playground website's
+# development version set gives a fresher, more representative sanity check.
+#
+# The DRB analyzer always also builds the workspace version set, so this is
+# additive.
+SpaceNeedleEmbeddingPlaygroundWebsite/development

@@ -16,6 +16,11 @@ export interface QuickChatContentOptions extends BaseContentOptions {
      * @deprecated use {@link AgentOptions.fixedAgentId} instead
      **/
     fixedAgentArn?: string;
+    /**
+     * The locale to use for the embedded chat session, e.g. 'en-US', 'ja-JP'.
+     * Any unsupported locale value falls back to 'en-US'.
+     */
+    locale?: string;
     agentOptions?: AgentOptions;
     promptOptions?: PromptOptions;
     footerOptions?: FooterOptions;
@@ -88,6 +93,7 @@ export interface FooterOptions {
 export interface TransformedQuickChatContentOptions extends BaseContentOptions {
     allowFileAttachments?: boolean;
     fixedAgentId?: string;
+    locale?: string;
     initialPrompt?: string;
     showAgentKnowledgeBoundary?: boolean;
     showBrandAttribution?: boolean;

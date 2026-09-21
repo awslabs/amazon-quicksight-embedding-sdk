@@ -158,6 +158,26 @@ describe('Quick Chat Experience', () => {
         expect(searchParams.get('fixedAgentId')).toBe(TEST_AGENT_ID);
     });
 
+    it('should create quick chat experience with locale', () => {
+        const contentOptions: QuickChatContentOptions = {
+            locale: 'ja-JP',
+        };
+
+        new QuickChatExperience(TEST_FRAME_OPTIONS, contentOptions, TEST_CONTROL_OPTIONS, new Set<string>());
+
+        const iframeSrc = TEST_CONTAINER.querySelector('iframe')?.src ?? '';
+        const searchParams = new URL(iframeSrc).searchParams;
+
+        expect(searchParams.get('locale')).toBe('ja-JP');
+        // locale is a recognized option and must not be reported as unrecognized
+        expect(onChangeSpy).not.toHaveBeenCalledWith(
+            expect.objectContaining({
+                eventName: ChangeEventName.UNRECOGNIZED_CONTENT_OPTIONS,
+            }),
+            expect.anything()
+        );
+    });
+
     it('should throw error if both fixedAgentArn and agentOptions.fixedAgentId are specified', () => {
         const contentOptions: QuickChatContentOptions = {
             fixedAgentArn: TEST_AGENT_ARN,
@@ -301,6 +321,7 @@ describe('Quick Chat Experience', () => {
 
     it('should create quick chat experience with all content options', () => {
         const contentOptions: QuickChatContentOptions = {
+            locale: 'ja-JP',
             agentOptions: {
                 fixedAgentId: TEST_AGENT_ID,
             },
@@ -329,6 +350,7 @@ describe('Quick Chat Experience', () => {
 
         expect(searchParams.get('allowFileAttachments')).toBe('false');
         expect(searchParams.get('fixedAgentId')).toBe(TEST_AGENT_ID);
+        expect(searchParams.get('locale')).toBe('ja-JP');
         expect(searchParams.get('initialPrompt')).toBe(TEST_INITIAL_PROMPT);
         expect(searchParams.get('showAgentKnowledgeBoundary')).toBe('true');
         expect(searchParams.get('showBrandAttribution')).toBe('false');
