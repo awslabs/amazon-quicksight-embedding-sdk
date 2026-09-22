@@ -1,3 +1,8 @@
+**2.12.1**
+* Add localization support for Quick Chat embedded with `locale`
+* Add options to toggle on reasoning mode selector on Quick Chat with `showReasoningModeSelection`
+* Add option to set default reasoning mode with `defaultReasoningMode`
+
 **2.12.0**
 * Add `dashboardCustomizationSummary` toolbar option for dashboard embedding.
 * Support 1-click embed URL pattern.
