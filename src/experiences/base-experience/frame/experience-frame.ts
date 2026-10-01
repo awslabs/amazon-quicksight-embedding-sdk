@@ -41,7 +41,7 @@ export abstract class BaseExperienceFrame<
     protected readonly internalExperience: InternalExperience;
     protected readonly onChange: EventListener;
     protected url: string;
-    private readonly MESSAGE_RESPONSE_TIMEOUT = 5000;
+    private readonly MESSAGE_RESPONSE_TIMEOUT = 20000;
 
     public iframe: EmbeddingIFrameElement | null = null;
     public container: HTMLElement;
